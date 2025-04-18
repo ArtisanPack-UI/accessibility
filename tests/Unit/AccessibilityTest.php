@@ -1,9 +1,8 @@
 <?php
 
 use Digitalshopfront\Accessibility\A11y;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses( RefreshDatabase::class );
+uses();
 
 test( 'returns correct text color for background color', function () {
     $a11y = new A11y();
