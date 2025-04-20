@@ -2,7 +2,8 @@
     "name": "digitalshopfront/accessibility",
     "description": "A package for all accessibility functions for the Digital Shopfront CMS.",
     "type": "library",
-    "version": "1.0.0",
+    "license": "GPL-3.0-or-later",
+    "version": "1.0.1",
     "autoload": {
         "psr-4": {
             "Digitalshopfront\\Accessibility\\": "src/"
