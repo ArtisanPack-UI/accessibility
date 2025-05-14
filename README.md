@@ -1,22 +1,21 @@
-# Digital Shopfront CMS Accessibility
+# ArtisanPack UI Accessibility
 
-This is the repository for the Digital Shopfront CMS Accessibility composer package. You can learn more
-about [Digital Shopfront CMS here](https://gitlab.com/jacob-martella-web-design/digital-shopfront/digital-shopfront-core/digital-shopfront).
+This is the repository for the ArtisanPack UI Accessibility composer package.
 
-The package adds in accessibility functions for the CMS, such as color contrast checking, toast duration and more.
+The package adds in accessibility functions, such as color contrast checking, toast duration and more.
 
 ## Installation
 
 You can install the accessibility package by running the following composer command.
 
-`composer require digitalshopfront/accessibility`
+`composer require artisanpack-ui/accessibility`
 
 ## Usage
 
 You can use any of the accessibility functions like this:
 
 ```
-use Digitalshopfront\Accessibility\Facades\A11y as A11y;
+use ArtisanPackUI\Accessibility\Facades\A11y as A11y;
 
 echo A11y::a11yCSSVarBlackOrWhite('#38ed24');
 ```
