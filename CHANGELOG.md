@@ -1,5 +1,9 @@
 # Digital Shopfront CMS Accessibility Changelog
 
+## 1.0.3 - May 14, 2025
+
+- Fixed issue with the renaming process.
+
 ## 1.0.2 - May 14, 2025
 
 - Changed the vendor name to ArtisanPack UI.
