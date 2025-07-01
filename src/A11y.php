@@ -1,14 +1,37 @@
 <?php
+/**
+ * Accessibility Utility Class
+ *
+ * Provides utility methods for accessibility-related functionality,
+ * including color contrast checking and text color determination.
+ *
+ * @since      1.0.0
+ * @package    ArtisanPackUI\Accessibility
+ */
 
 namespace ArtisanPackUI\Accessibility;
+
+/**
+ * Main accessibility utility class.
+ *
+ * This class provides methods for determining appropriate text colors
+ * based on background colors, checking contrast ratios, and managing
+ * accessibility-related user settings.
+ *
+ * @since 1.0.0
+ */
 class A11y
 {
 	/**
 	 * Returns whether a text color should be black or white based on the background color.
 	 *
-	 * @param string $hexColor The hex code for the background color.
-	 * @return string
+	 * Analyzes the provided hex color and determines if black or white text
+	 * would provide better contrast against it.
+	 *
 	 * @since 1.0.0
+	 *
+	 * @param string $hexColor The hex code for the background color.
+	 * @return string          Either 'black' or 'white' as a string.
 	 */
 	public function a11yCSSVarBlackOrWhite( string $hexColor ): string
 	{
@@ -20,11 +43,15 @@ class A11y
 	}
 
 	/**
-	 * Returns whether a text color should be black or white based on the background color.
+	 * Determines whether black or white text has better contrast against a background color.
+	 *
+	 * Calculates the contrast ratio between the background color and both black and white,
+	 * then returns the hex code for the color (black or white) with better contrast.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @param string $hexColor The hex code for the background color.
-	 * @return string
-	 * @since 1.0.0
+	 * @return string          The hex code for either black (#000000) or white (#FFFFFF).
 	 */
 	public function a11yGetContrastColor( string $hexColor ): string
 	{
@@ -67,8 +94,12 @@ class A11y
 	/**
 	 * Gets the user's setting for how long the toast element should stay on the screen.
 	 *
-	 * @return float|int
+	 * Retrieves the user's preference for toast notification duration from their settings.
+	 * If no setting is found, defaults to 5 seconds. The value is returned in milliseconds.
+	 *
 	 * @since 1.0.0
+	 *
+	 * @return float|int The toast duration in milliseconds.
 	 */
 	public function getToastDuration(): float|int
 	{
@@ -77,12 +108,17 @@ class A11y
 	}
 
 	/**
-	 * Returns whether two given colors have the correct amount of contrast between them.
+	 * Checks if two colors have sufficient contrast for accessibility.
 	 *
-	 * @param string $firstHexColor  The first color to check.
-	 * @param string $secondHexColor The second color to check.
-	 * @return bool
+	 * Calculates the contrast ratio between two colors according to WCAG 2.0 guidelines.
+	 * Returns true if the contrast ratio is at least 4.5:1, which is the minimum
+	 * recommended for normal text to be considered accessible.
+	 *
 	 * @since 1.0.0
+	 *
+	 * @param string $firstHexColor  The first color to check (hex format).
+	 * @param string $secondHexColor The second color to check (hex format).
+	 * @return bool                  True if contrast is sufficient (≥4.5:1), false otherwise.
 	 */
 	public function a11yCheckContrastColor( string $firstHexColor, string $secondHexColor ): bool
 	{
