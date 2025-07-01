@@ -1,12 +1,27 @@
 <?php
+/**
+ * Accessibility Helper Functions
+ *
+ * Provides global helper functions for accessibility-related functionality.
+ * These functions serve as convenient wrappers around the A11y class methods.
+ *
+ * @since      1.0.0
+ * @package    ArtisanPackUI\Accessibility
+ */
 
 use ArtisanPackUI\Accessibility\A11y;
+use ArtisanPackUI\Accessibility\AccessibleColorGenerator;
 
-if ( !function_exists( 'a11y' ) ) {
+if ( ! function_exists( 'a11y' ) ) {
 	/**
-	 * Get the Eventy instance.
+	 * Get the A11y instance from the service container.
 	 *
-	 * @return A11y
+	 * Provides a convenient way to access the A11y service throughout
+	 * the application without needing to use dependency injection.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return A11y The A11y service instance.
 	 */
 	function a11y()
 	{
@@ -14,13 +29,18 @@ if ( !function_exists( 'a11y' ) ) {
 	}
 }
 
-if ( !function_exists( 'a11yCSSVarBlackOrWhite' ) ) {
+if ( ! function_exists( 'a11yCSSVarBlackOrWhite' ) ) {
 	/**
 	 * Returns whether a text color should be black or white based on the background color.
 	 *
-	 * @param string $hexColor The hex code for the background color.
-	 * @return string
+	 * Analyzes the provided hex color and determines if black or white text
+	 * would provide better contrast against it. This is a helper function that
+	 * calls the corresponding method on the A11y class.
+	 *
 	 * @since 1.0.0
+	 *
+	 * @param string $hexColor The hex code for the background color.
+	 * @return string          Either 'black' or 'white' as a string.
 	 */
 	function a11yCSSVarBlackOrWhite( string $hexColor ): string
 	{
@@ -28,13 +48,18 @@ if ( !function_exists( 'a11yCSSVarBlackOrWhite' ) ) {
 	}
 }
 
-if ( !function_exists( 'a11yGetContrastColor' ) ) {
+if ( ! function_exists( 'a11yGetContrastColor' ) ) {
 	/**
-	 * Returns whether a text color should be black or white based on the background color.
+	 * Determines whether black or white text has better contrast against a background color.
+	 *
+	 * Calculates the contrast ratio between the background color and both black and white,
+	 * then returns the hex code for the color (black or white) with better contrast.
+	 * This is a helper function that calls the corresponding method on the A11y class.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @param string $hexColor The hex code for the background color.
-	 * @return string
-	 * @since 1.0.0
+	 * @return string          The hex code for either black (#000000) or white (#FFFFFF).
 	 */
 	function a11yGetContrastColor( string $hexColor ): string
 	{
@@ -42,12 +67,17 @@ if ( !function_exists( 'a11yGetContrastColor' ) ) {
 	}
 }
 
-if ( !function_exists( 'getToastDuration' ) ) {
+if ( ! function_exists( 'getToastDuration' ) ) {
 	/**
 	 * Gets the user's setting for how long the toast element should stay on the screen.
 	 *
-	 * @return float|int
+	 * Retrieves the user's preference for toast notification duration from their settings.
+	 * If no setting is found, defaults to 5 seconds. The value is returned in milliseconds.
+	 * This is a helper function that calls the corresponding method on the A11y class.
+	 *
 	 * @since 1.0.0
+	 *
+	 * @return float|int The toast duration in milliseconds.
 	 */
 	function getToastDuration(): float|int
 	{
@@ -55,17 +85,47 @@ if ( !function_exists( 'getToastDuration' ) ) {
 	}
 }
 
-if ( !function_exists( 'a11yCheckContrastColor' ) ) {
+if ( ! function_exists( 'a11yCheckContrastColor' ) ) {
 	/**
-	 * Returns whether two given colors have the correct amount of contrast between them.
+	 * Checks if two colors have sufficient contrast for accessibility.
 	 *
-	 * @param string $firstHexColor  The first color to check.
-	 * @param string $secondHexColor The second color to check.
-	 * @return bool
+	 * Calculates the contrast ratio between two colors according to WCAG 2.0 guidelines.
+	 * Returns true if the contrast ratio is at least 4.5:1, which is the minimum
+	 * recommended for normal text to be considered accessible.
+	 * This is a helper function that calls the corresponding method on the A11y class.
+	 *
 	 * @since 1.0.0
+	 *
+	 * @param string $firstHexColor  The first color to check (hex format).
+	 * @param string $secondHexColor The second color to check (hex format).
+	 * @return bool                  True if contrast is sufficient (≥4.5:1), false otherwise.
 	 */
 	function a11yCheckContrastColor( string $firstHexColor, string $secondHexColor ): bool
 	{
 		return a11y()->a11yCheckContrastColor( $firstHexColor, $secondHexColor );
+	}
+}
+
+if ( ! function_exists( 'generateAccessibleTextColor' ) ) {
+	/**
+	 * Generates an accessible text color for a given background color.
+	 *
+	 * This function determines the best-contrasting text color. It can return
+	 * either black or white, or it can generate a lighter/darker shade of
+	 * the original background color that meets accessibility standards.
+	 * This is a helper function that creates an instance of AccessibleColorGenerator
+	 * and calls its generateAccessibleTextColor method.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $backgroundColor The background color. Can be a hex code (e.g., '#3b82f6')
+	 *                                or a Tailwind color name (e.g., 'blue-500').
+	 * @param bool   $tint            Optional. If true, generates an accessible tint or shade.
+	 *                                If false, returns black or white. Default false.
+	 * @return string                 The generated accessible hex color string.
+	 */
+	function generateAccessibleTextColor( string $backgroundColor, bool $tint = false ): string
+	{
+		return ( new AccessibleColorGenerator() )->generateAccessibleTextColor( $backgroundColor, $tint );
 	}
 }
