@@ -1,5 +1,9 @@
 # Digital Shopfront CMS Accessibility Changelog
 
+## 1.1.0 - July 1, 2025
+
+- Added in a method to set the correct text color based on background for color contrast.
+
 ## 1.0.3 - May 14, 2025
 
 - Fixed issue with the renaming process.
