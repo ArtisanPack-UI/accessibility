@@ -1,6 +1,6 @@
 # Digital Shopfront CMS Accessibility Changelog
 
-## 1.1.0 - July 1, 2025
+## 1.1.1 - July 1, 2025
 
 - Added in a method to set the correct text color based on background for color contrast.
 
