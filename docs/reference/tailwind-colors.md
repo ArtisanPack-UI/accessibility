@@ -1,3 +1,7 @@
+---
+title: Tailwind Colors Reference
+---
+
 # Tailwind Colors Reference
 
 The ArtisanPack UI Accessibility package supports all standard Tailwind CSS color names. This reference lists all the available color names and their corresponding hex values that can be used with the `AccessibleColorGenerator` class and the `generateAccessibleTextColor` helper function.

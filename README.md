@@ -73,10 +73,27 @@ $hexColor = A11y::a11yGetContrastColor('#3b82f6');
 
 ## Documentation
 
-- [Getting Started Guide](docs/getting-started.md)
-- [Usage Guide](docs/usage.md)
-- [API Reference](docs/api-reference.md)
-- [Tailwind Colors Reference](docs/tailwind-colors.md)
+For complete documentation, visit the [Documentation Home](docs/home.md).
+
+### Quick Links
+
+**Guides**
+- [Getting Started](docs/guides/getting-started.md) - Installation and setup instructions
+- [Usage Guide](docs/guides/usage.md) - Detailed examples and practical implementations
+
+**Reference**
+- [API Reference](docs/reference/api-reference.md) - Complete technical documentation
+- [Tailwind Colors Reference](docs/reference/tailwind-colors.md) - Supported color names and values
+
+**Guidelines**
+- [AI Guidelines](docs/guidelines/ai-guidelines.md) - Best practices for AI-assisted development
+
+### Documentation Structure
+
+The documentation is organized into three main sections:
+- **[Guides](docs/guides.md)**: Step-by-step instructions and usage examples
+- **[Reference](docs/reference.md)**: Technical documentation and API references  
+- **[Guidelines](docs/guidelines.md)**: Best practices and development guidelines
 
 ## Requirements
 

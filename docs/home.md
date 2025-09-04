@@ -1,14 +1,26 @@
+---
+title: ArtisanPack UI Accessibility Documentation
+---
+
 # ArtisanPack UI Accessibility Documentation
 
 Welcome to the documentation for the ArtisanPack UI Accessibility package. This documentation will help you get started with the package and provide detailed information about its features and usage.
 
 ## Documentation Contents
 
-- [Getting Started](getting-started.md): Installation and basic setup instructions
-- [Usage Guide](usage.md): Detailed examples of how to use the package's features
-- [API Reference](api-reference.md): Comprehensive reference for all classes, methods, and functions
-- [Tailwind Colors Reference](tailwind-colors.md): Complete list of supported Tailwind CSS color names
-- [AI Guidelines](ai-guidelines.md): Guidelines for AI systems generating accessible UI components
+### [Guides](guides)
+Complete guides to help you get started and effectively use the package:
+- [Getting Started](guides/getting-started): Installation and basic setup instructions
+- [Usage Guide](guides/usage): Detailed examples of how to use the package's features
+
+### [Reference](reference)
+Comprehensive technical documentation and references:
+- [API Reference](reference/api-reference): Complete reference for all classes, methods, and functions
+- [Tailwind Colors Reference](reference/tailwind-colors): Complete list of supported Tailwind CSS color names
+
+### [Guidelines](guidelines)
+Best practices and guidelines for accessible development:
+- [AI Guidelines](guidelines/ai-guidelines): Guidelines for AI systems generating accessible UI components
 
 ## Overview
 
