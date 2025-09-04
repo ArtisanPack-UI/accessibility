@@ -1,3 +1,7 @@
+---
+title: API Reference
+---
+
 # API Reference
 
 This document provides a comprehensive reference for all classes, methods, and functions available in the ArtisanPack UI Accessibility package.

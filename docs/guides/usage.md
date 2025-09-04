@@ -1,3 +1,7 @@
+---
+title: Usage Guide for ArtisanPack UI Accessibility
+---
+
 # Usage Guide for ArtisanPack UI Accessibility
 
 This guide provides detailed examples of how to use the ArtisanPack UI Accessibility package in your projects.
@@ -109,7 +113,7 @@ $textColor = $generator->generateAccessibleTextColor('blue-500'); // Same as usi
 $tintedColor = $generator->generateAccessibleTextColor('red-700', true);
 ```
 
-See the [Tailwind Colors Reference](tailwind-colors.md) for a complete list of supported color names.
+See the [Tailwind Colors Reference](tailwind-colors) for a complete list of supported color names.
 
 ### Helper Function
 

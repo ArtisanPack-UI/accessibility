@@ -1,3 +1,7 @@
+---
+title: Getting Started with ArtisanPack UI Accessibility
+---
+
 # Getting Started with ArtisanPack UI Accessibility
 
 This guide will help you get started with the ArtisanPack UI Accessibility package, which provides tools for ensuring your web applications meet accessibility standards, particularly for color contrast.
@@ -88,6 +92,6 @@ $hexColor = A11y::a11yGetContrastColor('#3b82f6');
 
 ## Next Steps
 
-- Check out the [Usage Guide](usage.md) for more detailed examples
-- See the [API Reference](api-reference.md) for a complete list of available methods
-- Learn about [Tailwind Color Support](tailwind-colors.md) for using Tailwind CSS color names
+- Check out the [Usage Guide](usage) for more detailed examples
+- See the [API Reference](api-reference) for a complete list of available methods
+- Learn about [Tailwind Color Support](tailwind-colors) for using Tailwind CSS color names
