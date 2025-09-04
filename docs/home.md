@@ -8,6 +8,7 @@ Welcome to the documentation for the ArtisanPack UI Accessibility package. This 
 - [Usage Guide](usage.md): Detailed examples of how to use the package's features
 - [API Reference](api-reference.md): Comprehensive reference for all classes, methods, and functions
 - [Tailwind Colors Reference](tailwind-colors.md): Complete list of supported Tailwind CSS color names
+- [AI Guidelines](ai-guidelines.md): Guidelines for AI systems generating accessible UI components
 
 ## Overview
 
