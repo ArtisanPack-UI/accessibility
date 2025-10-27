@@ -11,6 +11,8 @@
 
 namespace ArtisanPackUI\Accessibility;
 
+use ArtisanPackUI\Accessibility\Constants;
+
 /**
  * Main accessibility utility class.
  *
@@ -67,13 +69,13 @@ class A11y
 		$B2BlackColor = hexdec( substr( $blackColor, 5, 2 ) );
 
 		// Calc contrast ratio
-		$L1 = 0.2126 * pow( $R1 / 255, 2.2 ) +
-			0.7152 * pow( $G1 / 255, 2.2 ) +
-			0.0722 * pow( $B1 / 255, 2.2 );
+		$L1 = Constants::LUMINANCE_RED_COEFFICIENT * pow( $R1 / Constants::RGB_MAX, 2.2 ) +
+			Constants::LUMINANCE_GREEN_COEFFICIENT * pow( $G1 / Constants::RGB_MAX, 2.2 ) +
+			Constants::LUMINANCE_BLUE_COEFFICIENT * pow( $B1 / Constants::RGB_MAX, 2.2 );
 
-		$L2 = 0.2126 * pow( $R2BlackColor / 255, 2.2 ) +
-			0.7152 * pow( $G2BlackColor / 255, 2.2 ) +
-			0.0722 * pow( $B2BlackColor / 255, 2.2 );
+		$L2 = Constants::LUMINANCE_RED_COEFFICIENT * pow( $R2BlackColor / Constants::RGB_MAX, 2.2 ) +
+			Constants::LUMINANCE_GREEN_COEFFICIENT * pow( $G2BlackColor / Constants::RGB_MAX, 2.2 ) +
+			Constants::LUMINANCE_BLUE_COEFFICIENT * pow( $B2BlackColor / Constants::RGB_MAX, 2.2 );
 
 		$contrastRatio = 0;
 		if ( $L1 > $L2 ) {
@@ -83,7 +85,7 @@ class A11y
 		}
 
 		// If contrast is more than 5, return black color
-		if ( $contrastRatio > 4.5 ) {
+		if ( $contrastRatio > Constants::WCAG_CONTRAST_AA ) {
 			return '#000000';
 		} else {
 			// if not, return white color.
@@ -133,13 +135,13 @@ class A11y
 		$B3 = hexdec( substr( $secondHexColor, 5, 2 ) );
 
 		// Calc contrast ratio
-		$L1 = 0.2126 * pow( $R1 / 255, 2.2 ) +
-			0.7152 * pow( $G1 / 255, 2.2 ) +
-			0.0722 * pow( $B1 / 255, 2.2 );
+		$L1 = Constants::LUMINANCE_RED_COEFFICIENT * pow( $R1 / Constants::RGB_MAX, 2.2 ) +
+			Constants::LUMINANCE_GREEN_COEFFICIENT * pow( $G1 / Constants::RGB_MAX, 2.2 ) +
+			Constants::LUMINANCE_BLUE_COEFFICIENT * pow( $B1 / Constants::RGB_MAX, 2.2 );
 
-		$L2 = 0.2126 * pow( $R2 / 255, 2.2 ) +
-			0.7152 * pow( $G2 / 255, 2.2 ) +
-			0.0722 * pow( $B3 / 255, 2.2 );
+		$L2 = Constants::LUMINANCE_RED_COEFFICIENT * pow( $R2 / Constants::RGB_MAX, 2.2 ) +
+			Constants::LUMINANCE_GREEN_COEFFICIENT * pow( $G2 / Constants::RGB_MAX, 2.2 ) +
+			Constants::LUMINANCE_BLUE_COEFFICIENT * pow( $B3 / Constants::RGB_MAX, 2.2 );
 
 		$contrastRatio = 0;
 		if ( $L1 > $L2 ) {
@@ -149,7 +151,7 @@ class A11y
 		}
 
 		// If contrast is more than 5, return black color
-		if ( $contrastRatio >= 4.5 ) {
+		if ( $contrastRatio >= Constants::WCAG_CONTRAST_AA ) {
 			return true;
 		}
 
