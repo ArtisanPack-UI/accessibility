@@ -6,7 +6,7 @@ A PHP package for ensuring web applications meet accessibility standards, partic
 
 - **Color Contrast Checking**: Determine if text colors have sufficient contrast against background colors
 - **Accessible Text Color Generation**: Generate accessible text colors based on background colors
-- **Tailwind CSS Integration**: Support for Tailwind CSS color names
+- **Color Format Support**: Support for hex, Tailwind CSS, `rgb()`, and `hsl()` color formats.
 - **User Accessibility Settings**: Manage user preferences for accessibility features
 - **Laravel Integration**: Seamless integration with Laravel applications
 
@@ -50,6 +50,12 @@ $tintedColor = $generator->generateAccessibleTextColor('#3b82f6', true);
 
 // Using Tailwind color names
 $textColor = $generator->generateAccessibleTextColor('blue-500');
+
+// Using rgb() color strings
+$textColor = $generator->generateAccessibleTextColor('rgb(59, 130, 246)');
+
+// Using hsl() color strings
+$textColor = $generator->generateAccessibleTextColor('hsl(217, 91%, 60%)');
 ```
 
 ### Helper Functions
