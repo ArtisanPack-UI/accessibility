@@ -20,86 +20,84 @@ composer require artisanpack-ui/accessibility
 
 For detailed installation instructions, including Laravel integration, see the [Getting Started Guide](docs/getting-started.md).
 
-## Basic Usage
+## Usage
 
-### Color Contrast Utilities
+Here is a practical, real-world example of how to use the package to create an accessible button component in Laravel.
 
-```php
-// Check if text should be black or white on a background
-$textColor = a11yCSSVarBlackOrWhite('#3b82f6'); // Returns 'black' or 'white'
+### Creating an Accessible Button Component
 
-// Get the hex code for the most accessible text color
-$hexColor = a11yGetContrastColor('#3b82f6'); // Returns '#000000' or '#FFFFFF'
+**1. Create a new Blade component:**
 
-// Check if two colors have sufficient contrast
-$hasGoodContrast = a11yCheckContrastColor('#3b82f6', '#ffffff'); // Returns true or false
+```bash
+php artisan make:component Button
 ```
 
-### Accessible Color Generator
+**2. Modify the component class:**
+
+In `app/View/Components/Button.php`, we'll accept a background color and automatically determine the correct text color.
 
 ```php
-use ArtisanPackUI\Accessibility\AccessibleColorGenerator;
+// app/View/Components/Button.php
 
-$generator = new AccessibleColorGenerator();
+namespace App\View\Components;
 
-// Get black or white text color based on background
-$textColor = $generator->generateAccessibleTextColor('#3b82f6');
+use Illuminate\View\Component;
 
-// Generate a tinted/shaded version that's accessible
-$tintedColor = $generator->generateAccessibleTextColor('#3b82f6', true);
+class Button extends Component
+{
+    public string $bgColor;
+    public string $textColor;
 
-// Using Tailwind color names
-$textColor = $generator->generateAccessibleTextColor('blue-500');
+    public function __construct(string $bgColor = '#3b82f6')
+    {
+        $this->bgColor = $bgColor;
+        $this->textColor = a11yGetContrastColor($this->bgColor);
+    }
 
-// Using rgb() color strings
-$textColor = $generator->generateAccessibleTextColor('rgb(59, 130, 246)');
-
-// Using hsl() color strings
-$textColor = $generator->generateAccessibleTextColor('hsl(217, 91%, 60%)');
+    public function render()
+    {
+        return view('components.button');
+    }
+}
 ```
 
-### Helper Functions
+**3. Update the component view:**
 
-```php
-// Simple usage (black or white)
-$textColor = generateAccessibleTextColor('#3b82f6');
+In `resources/views/components/button.blade.php`, we'll apply the colors as inline styles.
 
-// Tinted/shaded version
-$tintedColor = generateAccessibleTextColor('#3b82f6', true);
+```blade
+// resources/views/components/button.blade.php
+
+@props(['bgColor', 'textColor'])
+
+<button {{ $attributes->merge(['class' => 'px-4 py-2 rounded']) }} style="background-color: {{ $bgColor }}; color: {{ $textColor }};">
+    {{ $slot }}
+</button>
 ```
 
-### Laravel Facade
+**4. Use the component in your views:**
 
-```php
-use ArtisanPackUI\Accessibility\Facades\A11y;
+Now you can easily create accessible buttons with any background color.
 
-$textColor = A11y::a11yCSSVarBlackOrWhite('#3b82f6');
-$hexColor = A11y::a11yGetContrastColor('#3b82f6');
+```blade
+<x-button>Click Me</x-button>
+
+<x-button bg-color="#dc2626">Delete</x-button>
+
+<x-button bg-color="rgb(16, 185, 129)">Success</x-button>
 ```
+
+For more detailed examples, including Livewire components and dynamic theming, see the [Real-World Examples](docs/examples.md) documentation.
 
 ## Documentation
 
-For complete documentation, visit the [Documentation Home](docs/home.md).
+For complete documentation, please visit the links below.
 
-### Quick Links
-
-**Guides**
-- [Getting Started](docs/guides/getting-started.md) - Installation and setup instructions
-- [Usage Guide](docs/guides/usage.md) - Detailed examples and practical implementations
-
-**Reference**
-- [API Reference](docs/reference/api-reference.md) - Complete technical documentation
-- [Tailwind Colors Reference](docs/reference/tailwind-colors.md) - Supported color names and values
-
-**Guidelines**
-- [AI Guidelines](docs/guidelines/ai-guidelines.md) - Best practices for AI-assisted development
-
-### Documentation Structure
-
-The documentation is organized into three main sections:
-- **[Guides](docs/guides.md)**: Step-by-step instructions and usage examples
-- **[Reference](docs/reference.md)**: Technical documentation and API references  
-- **[Guidelines](docs/guidelines.md)**: Best practices and development guidelines
+- [**Real-World Examples**](docs/examples.md) - Practical examples of Blade and Livewire components.
+- [**Best Practices**](docs/best-practices.md) - Learn how to use the package efficiently and performantly.
+- [**Migration and Advanced Usage**](docs/migration.md) - Guide for migrating to a more advanced architecture.
+- [**Troubleshooting**](docs/troubleshooting.md) - Solutions for common issues.
+- [**API Reference**](docs/reference/api-reference.md) - Complete technical documentation.
 
 ## Requirements
 
