@@ -25,6 +25,7 @@ test( 'correctly checks the contrast between two colors', function () {
 																   ->and( $a11y->a11yCheckContrastColor( '#2B37C9', '#FF7CE6' ) )->toBeFalse();
 } );
 
+<<<<<<< HEAD
 test( 'converts hex color to RGB array correctly', function () {
 	$a11y = new A11y();
 	$reflection = new ReflectionClass( $a11y );
@@ -103,3 +104,29 @@ test( 'calculates contrast ratio according to WCAG 2.0', function () {
 	// #2B37C9 vs #FFFFFF should pass 4.5:1 (test expects true)
 	expect( $method->invoke( $a11y, '#2B37C9', '#FFFFFF' ) )->toBeGreaterThanOrEqual( 4.5 );
 } );
+=======
+test('handles malformed hex codes in a11yGetContrastColor', function ($malformedHex) {
+    $a11y = new A11y();
+    // It should return white as it will treat the malformed hex as black
+    expect($a11y->a11yGetContrastColor($malformedHex))->toBe('#FFFFFF');
+})->with([
+    'invalid characters' => '#GHIJKL',
+    'wrong length (short)' => '#12345',
+    'wrong length (long)' => '#1234567',
+    'not a hex' => 'not a hex',
+]);
+
+test('handles malformed hex codes in a11yCheckContrastColor', function ($malformedHex) {
+    $a11y = new A11y();
+    // It will treat the malformed hex as black, so contrast with white is high
+    expect($a11y->a11yCheckContrastColor($malformedHex, '#FFFFFF'))->toBeTrue();
+    // It will treat the malformed hex as black, so contrast with black is low, so it should be false
+    expect($a11y->a11yCheckContrastColor($malformedHex, '#000000'))->toBeFalse();
+})->with([
+    'invalid characters' => '#GHIJKL',
+    'wrong length (short)' => '#12345',
+    'wrong length (long)' => '#1234567',
+    'not a hex' => 'not a hex',
+]);
+
+>>>>>>> tests/comprehensive-edge-cases
