@@ -10,4 +10,5 @@ class Constants
     public const LUMINANCE_RED_COEFFICIENT = 0.2126;
     public const LUMINANCE_GREEN_COEFFICIENT = 0.7152;
     public const LUMINANCE_BLUE_COEFFICIENT = 0.0722;
+    public const CACHE_SIZE_LIMIT = 1000;
 }
