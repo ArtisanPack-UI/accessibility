@@ -11,6 +11,7 @@
 namespace ArtisanPackUI\Accessibility;
 
 use ArtisanPackUI\Accessibility\A11y;
+use ArtisanPackUI\Accessibility\Constants;
 
 /**
  * Generates accessible text colors.
@@ -453,9 +454,9 @@ class AccessibleColorGenerator
 		$g = hexdec( substr( $hex, 2, 2 ) );
 		$b = hexdec( substr( $hex, 4, 2 ) );
 
-		$r = round( max( 0, min( 255, $r + ( 255 * $factor ) ) ) );
-		$g = round( max( 0, min( 255, $g + ( 255 * $factor ) ) ) );
-		$b = round( max( 0, min( 255, $b + ( 255 * $factor ) ) ) );
+		$r = round( max( Constants::RGB_MIN, min( Constants::RGB_MAX, $r + ( Constants::RGB_MAX * $factor ) ) ) );
+		$g = round( max( Constants::RGB_MIN, min( Constants::RGB_MAX, $g + ( Constants::RGB_MAX * $factor ) ) ) );
+		$b = round( max( Constants::RGB_MIN, min( Constants::RGB_MAX, $b + ( Constants::RGB_MAX * $factor ) ) ) );
 
 		return '#' . str_pad( dechex( $r ), 2, '0', STR_PAD_LEFT )
 			. str_pad( dechex( $g ), 2, '0', STR_PAD_LEFT )
