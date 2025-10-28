@@ -25,6 +25,28 @@ use ArtisanPackUI\Accessibility\Constants;
 class AccessibleColorGenerator
 {
 
+	private static array $shadeCache = [];
+    public static int $cacheHits = 0;
+    public static int $cacheMisses = 0;
+
+    public static function getCacheHits(): int
+    {
+        return self::$cacheHits;
+    }
+
+    public static function getCacheMisses(): int
+    {
+        return self::$cacheMisses;
+    }
+
+    public static function clearCache(): void
+    {
+        self::$shadeCache = [];
+        self::$cacheHits = 0;
+        self::$cacheMisses = 0;
+    }
+
+
 	/**
 	 * The A11y utility class instance.
 	 *
@@ -466,30 +488,40 @@ class AccessibleColorGenerator
 	 * @param string $baseHex The hex color to find a variant for.
 	 * @return string          The accessible hex color variant.
 	 */
-	protected function findClosestAccessibleShade( string $baseHex ): string
-	{
-		// Iterate from 10% to 100% in steps of 5%.
-		for ( $i = 1; $i <= 20; $i++ ) {
-			$step = $i / 20.0; // 0.05, 0.10, ... 1.0
-
-			$lighter = $this->adjustBrightness( $baseHex, $step );
-			$darker  = $this->adjustBrightness( $baseHex, -$step );
-
-			// Check the lighter color's contrast against the original background.
-			if ( $this->a11y->a11yCheckContrastColor( $baseHex, $lighter ) ) {
-				return $lighter;
-			}
-
-			// Check the darker color's contrast against the original background.
-			if ( $this->a11y->a11yCheckContrastColor( $baseHex, $darker ) ) {
-				return $darker;
-			}
-		}
-
-		// If no accessible tint/shade is found, fallback to black or white.
-		return $this->a11y->a11yGetContrastColor( $baseHex );
-	}
-
+	    protected function findClosestAccessibleShade( string $baseHex ): string
+	    {
+	        if (isset(self::$shadeCache[$baseHex])) {
+	            self::$cacheHits++;
+	            return self::$shadeCache[$baseHex];
+	        }
+	
+	        self::$cacheMisses++;
+	
+	        if (count(self::$shadeCache) >= Constants::CACHE_SIZE_LIMIT) {
+	            array_shift(self::$shadeCache);
+	        }
+	
+	        // Iterate from 10% to 100% in steps of 5%.
+	        for ( $i = 1; $i <= 20; $i++ ) {
+	            $step = $i / 20.0; // 0.05, 0.10, ... 1.0
+	
+	            $lighter = $this->adjustBrightness( $baseHex, $step );
+	            $darker  = $this->adjustBrightness( $baseHex, -$step );
+	
+	            // Check the lighter color's contrast against the original background.
+	            if ( $this->a11y->a11yCheckContrastColor( $baseHex, $lighter ) ) {
+	                return self::$shadeCache[$baseHex] = $lighter;
+	            }
+	
+	            // Check the darker color's contrast against the original background.
+	            if ( $this->a11y->a11yCheckContrastColor( $baseHex, $darker ) ) {
+	                return self::$shadeCache[$baseHex] = $darker;
+	            }
+	        }
+	
+	        // If no accessible tint/shade is found, fallback to black or white.
+	        return self::$shadeCache[$baseHex] = $this->a11y->a11yGetContrastColor( $baseHex );
+	    }
 	/**
 	 * Increases or decreases the brightness of a hex color.
 	 *

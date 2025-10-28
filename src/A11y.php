@@ -25,6 +25,27 @@ use InvalidArgumentException;
  */
 class A11y
 {
+    private static array $contrastCache = [];
+    public static int $cacheHits = 0;
+    public static int $cacheMisses = 0;
+
+    public static function getCacheHits(): int
+    {
+        return self::$cacheHits;
+    }
+
+    public static function getCacheMisses(): int
+    {
+        return self::$cacheMisses;
+    }
+
+    public static function clearCache(): void
+    {
+        self::$contrastCache = [];
+        self::$cacheHits = 0;
+        self::$cacheMisses = 0;
+    }
+
     /**
      * Returns whether a text color should be black or white based on the background color.
      *
@@ -183,6 +204,21 @@ class A11y
      */
     private function calculateContrastRatio(string $color1, string $color2): float
     {
+        $colors = [$color1, $color2];
+        sort($colors);
+        $cacheKey = implode('-', $colors);
+
+        if (isset(self::$contrastCache[$cacheKey])) {
+            self::$cacheHits++;
+            return self::$contrastCache[$cacheKey];
+        }
+
+        self::$cacheMisses++;
+
+        if (count(self::$contrastCache) >= Constants::CACHE_SIZE_LIMIT) {
+            array_shift(self::$contrastCache);
+        }
+
         $rgb1 = $this->hexToRgb($color1);
         $rgb2 = $this->hexToRgb($color2);
 
@@ -190,9 +226,11 @@ class A11y
         $L2 = $this->calculateRelativeLuminance($rgb2);
 
         if ($L1 > $L2) {
-            return (float) (($L1 + 0.05) / ($L2 + 0.05));
+            $ratio = (float) (($L1 + 0.05) / ($L2 + 0.05));
         } else {
-            return (float) (($L2 + 0.05) / ($L1 + 0.05));
+            $ratio = (float) (($L2 + 0.05) / ($L1 + 0.05));
         }
+
+        return self::$contrastCache[$cacheKey] = $ratio;
     }
 }
