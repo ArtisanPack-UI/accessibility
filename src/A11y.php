@@ -130,7 +130,7 @@ class A11y
 		// Black RGB
 		$R2 = hexdec( substr( $secondHexColor, 1, 2 ) );
 		$G2 = hexdec( substr( $secondHexColor, 3, 2 ) );
-		$B3 = hexdec( substr( $secondHexColor, 5, 2 ) );
+		$B2 = hexdec( substr( $secondHexColor, 5, 2 ) );
 
 		// Calc contrast ratio
 		$L1 = 0.2126 * pow( $R1 / 255, 2.2 ) +
@@ -139,7 +139,7 @@ class A11y
 
 		$L2 = 0.2126 * pow( $R2 / 255, 2.2 ) +
 			0.7152 * pow( $G2 / 255, 2.2 ) +
-			0.0722 * pow( $B3 / 255, 2.2 );
+			0.0722 * pow( $B2 / 255, 2.2 );
 
 		$contrastRatio = 0;
 		if ( $L1 > $L2 ) {

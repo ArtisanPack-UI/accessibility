@@ -47,5 +47,8 @@
         "A11y": "ArtisanPackUI\\Accessibility\\Facades\\A11y"
       }
     }
+  },
+  "scripts": {
+    "test": "vendor/bin/pest"
   }
 }
