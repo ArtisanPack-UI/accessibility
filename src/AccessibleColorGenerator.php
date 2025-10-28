@@ -392,9 +392,67 @@ class AccessibleColorGenerator
 			return $colorString;
 		}
 
+        // Check if it's an rgb color
+        if (strpos($colorString, 'rgb') === 0) {
+            preg_match('/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/', $colorString, $matches);
+            if (count($matches) === 4) {
+                return $this->rgbToHex((int)$matches[1], (int)$matches[2], (int)$matches[3]);
+            }
+        }
+
+        // Check if it's an hsl color
+        if (strpos($colorString, 'hsl') === 0) {
+            preg_match('/hsl\(\s*(\d+)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)/', $colorString, $matches);
+            if (count($matches) === 4) {
+                return $this->hslToHex((int)$matches[1], (int)$matches[2], (int)$matches[3]);
+            }
+        }
+
 		// Check if it's a known Tailwind color.
 		return $this->tailwindColors[ $colorString ] ?? null;
 	}
+
+    protected function rgbToHex(int $r, int $g, int $b): string
+    {
+        return '#' . str_pad(dechex($r), 2, '0', STR_PAD_LEFT) . str_pad(dechex($g), 2, '0', STR_PAD_LEFT) . str_pad(dechex($b), 2, '0', STR_PAD_LEFT);
+    }
+
+    protected function hslToHex(int $h, int $s, int $l): string
+    {
+        $s /= 100;
+        $l /= 100;
+
+        $c = (1 - abs(2 * $l - 1)) * $s;
+        $x = $c * (1 - abs(fmod($h / 60, 2) - 1));
+        $m = $l - $c / 2;
+        $r = $g = $b = 0;
+
+        if (0 <= $h && $h < 60) {
+            $r = $c;
+            $g = $x;
+        } else if (60 <= $h && $h < 120) {
+            $r = $x;
+            $g = $c;
+        } else if (120 <= $h && $h < 180) {
+            $g = $c;
+            $b = $x;
+        } else if (180 <= $h && $h < 240) {
+            $g = $x;
+            $b = $c;
+        } else if (240 <= $h && $h < 300) {
+            $r = $x;
+            $b = $c;
+        } else if (300 <= $h && $h < 360) {
+            $r = $c;
+            $b = $x;
+        }
+
+        $r = round(($r + $m) * 255);
+        $g = round(($g + $m) * 255);
+        $b = round(($b + $m) * 255);
+
+        return $this->rgbToHex($r, $g, $b);
+    }
 
 	/**
 	 * Finds the closest accessible tint or shade of a base color.

@@ -101,7 +101,7 @@ This is useful for creating more aesthetically pleasing color combinations while
 
 ### Using Tailwind Color Names
 
-The `AccessibleColorGenerator` supports Tailwind CSS color names:
+The `AccessibleColorGenerator` supports Tailwind CSS color names, as well as `rgb()` and `hsl()` color strings:
 
 ```php
 use ArtisanPackUI\Accessibility\AccessibleColorGenerator;
@@ -111,6 +111,12 @@ $generator = new AccessibleColorGenerator();
 // Using Tailwind color names
 $textColor = $generator->generateAccessibleTextColor('blue-500'); // Same as using '#3b82f6'
 $tintedColor = $generator->generateAccessibleTextColor('red-700', true);
+
+// Using rgb() color strings
+$textColor = $generator->generateAccessibleTextColor('rgb(59, 130, 246)');
+
+// Using hsl() color strings
+$textColor = $generator->generateAccessibleTextColor('hsl(217, 91%, 60%)');
 ```
 
 See the [Tailwind Colors Reference](tailwind-colors) for a complete list of supported color names.
@@ -124,10 +130,16 @@ For convenience, a global helper function is provided:
 $textColor = generateAccessibleTextColor('#3b82f6');
 
 // Tinted/shaded version
-$tintedColor = generateAccessibleTextColor('#3b82f6', true);
+$tintedColor = generateAccessibleTSC('#3b82f6', true);
 
 // Using Tailwind color names
 $textColor = generateAccessibleTextColor('blue-500');
+
+// Using rgb() color strings
+$textColor = generateAccessibleTextColor('rgb(59, 130, 246)');
+
+// Using hsl() color strings
+$textColor = generateAccessibleTextColor('hsl(217, 91%, 60%)');
 ```
 
 ## User Accessibility Settings
