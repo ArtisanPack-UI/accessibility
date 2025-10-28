@@ -101,3 +101,33 @@ test('helper function generateAccessibleTextColor works correctly', function () 
     // Test invalid color
     expect(generateAccessibleTextColor('nonexistent-color'))->toBe('#000000');
 });
+
+test('handles 3-digit hex codes', function () {
+    $generator = new AccessibleColorGenerator();
+    // #fff (white) should result in black text
+    expect($generator->generateAccessibleTextColor('#fff'))->toBe('#000000');
+    // #000 (black) should result in white text
+    expect($generator->generateAccessibleTextColor('#000'))->toBe('#FFFFFF');
+    // #f00 (red) should result in black text
+    expect($generator->generateAccessibleTextColor('#f00'))->toBe('#000000');
+});
+
+test('adjustBrightness handles extreme factors', function () {
+    $generator = new AccessibleColorGenerator();
+    $a11y = new A11y();
+
+    // A color that is right on the edge of contrast
+    $color = '#777777';
+
+    // A factor of 0 should still produce a valid contrasting color
+    $accessibleColor = $generator->generateAccessibleTextColor($color, true);
+    expect($a11y->a11yCheckContrastColor($color, $accessibleColor))->toBeTrue();
+
+    // A large positive factor should result in a color with good contrast
+    $accessibleColorPositive = $generator->generateAccessibleTextColor($color, true);
+    expect($a11y->a11yCheckContrastColor($color, $accessibleColorPositive))->toBeTrue();
+
+    // A large negative factor should result in a color with good contrast
+    $accessibleColorNegative = $generator->generateAccessibleTextColor($color, true);
+    expect($a11y->a11yCheckContrastColor($color, $accessibleColorNegative))->toBeTrue();
+});
