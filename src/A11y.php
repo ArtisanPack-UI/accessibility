@@ -55,38 +55,11 @@ class A11y
 	 */
 	public function a11yGetContrastColor( string $hexColor ): string
 	{
-		// hexColor RGB
-		$R1 = hexdec( substr( $hexColor, 1, 2 ) );
-		$G1 = hexdec( substr( $hexColor, 3, 2 ) );
-		$B1 = hexdec( substr( $hexColor, 5, 2 ) );
+		$blackContrastRatio = $this->calculateContrastRatio( $hexColor, '#000000' );
 
-		// Black RGB
-		$blackColor   = "#000000";
-		$R2BlackColor = hexdec( substr( $blackColor, 1, 2 ) );
-		$G2BlackColor = hexdec( substr( $blackColor, 3, 2 ) );
-		$B2BlackColor = hexdec( substr( $blackColor, 5, 2 ) );
-
-		// Calc contrast ratio
-		$L1 = 0.2126 * pow( $R1 / 255, 2.2 ) +
-			0.7152 * pow( $G1 / 255, 2.2 ) +
-			0.0722 * pow( $B1 / 255, 2.2 );
-
-		$L2 = 0.2126 * pow( $R2BlackColor / 255, 2.2 ) +
-			0.7152 * pow( $G2BlackColor / 255, 2.2 ) +
-			0.0722 * pow( $B2BlackColor / 255, 2.2 );
-
-		$contrastRatio = 0;
-		if ( $L1 > $L2 ) {
-			$contrastRatio = (float) ( ( $L1 + 0.05 ) / ( $L2 + 0.05 ) );
-		} else {
-			$contrastRatio = (float) ( ( $L2 + 0.05 ) / ( $L1 + 0.05 ) );
-		}
-
-		// If contrast is more than 5, return black color
-		if ( $contrastRatio > 4.5 ) {
+		if ( $blackContrastRatio > 4.5 ) {
 			return '#000000';
 		} else {
-			// if not, return white color.
 			return '#FFFFFF';
 		}
 	}
@@ -122,37 +95,83 @@ class A11y
 	 */
 	public function a11yCheckContrastColor( string $firstHexColor, string $secondHexColor ): bool
 	{
-		// hexColor RGB
-		$R1 = hexdec( substr( $firstHexColor, 1, 2 ) );
-		$G1 = hexdec( substr( $firstHexColor, 3, 2 ) );
-		$B1 = hexdec( substr( $firstHexColor, 5, 2 ) );
+		$contrastRatio = $this->calculateContrastRatio( $firstHexColor, $secondHexColor );
 
-		// Black RGB
-		$R2 = hexdec( substr( $secondHexColor, 1, 2 ) );
-		$G2 = hexdec( substr( $secondHexColor, 3, 2 ) );
-		$B2 = hexdec( substr( $secondHexColor, 5, 2 ) );
+		return $contrastRatio >= 4.5;
+	}
 
-		// Calc contrast ratio
-		$L1 = 0.2126 * pow( $R1 / 255, 2.2 ) +
-			0.7152 * pow( $G1 / 255, 2.2 ) +
-			0.0722 * pow( $B1 / 255, 2.2 );
+	/**
+	 * Converts a hex color string to an RGB array.
+	 *
+	 * Takes a hex color code (e.g., #FF0000) and extracts the red, green, and blue
+	 * components as integer values (0-255).
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $hexColor The hex color code to convert (e.g., #FF0000).
+	 * @return array{r: int, g: int, b: int} Associative array with 'r', 'g', and 'b' keys.
+	 */
+	private function hexToRgb( string $hexColor ): array
+	{
+		return [
+			'r' => hexdec( substr( $hexColor, 1, 2 ) ),
+			'g' => hexdec( substr( $hexColor, 3, 2 ) ),
+			'b' => hexdec( substr( $hexColor, 5, 2 ) ),
+		];
+	}
 
-		$L2 = 0.2126 * pow( $R2 / 255, 2.2 ) +
-			0.7152 * pow( $G2 / 255, 2.2 ) +
-			0.0722 * pow( $B2 / 255, 2.2 );
+	/**
+	 * Calculates the relative luminance of a color according to WCAG 2.0.
+	 *
+	 * Implements the relative luminance formula from WCAG 2.0 specification.
+	 * The result is a value between 0 (darkest) and 1 (lightest).
+	 *
+	 * Formula: L = 0.2126 * R + 0.7152 * G + 0.0722 * B (where RGB are normalized and gamma corrected)
+	 *
+	 * @since 1.0.0
+	 * @link https://www.w3.org/TR/WCAG20-TECHS/G17.html WCAG 2.0 Relative Luminance
+	 *
+	 * @param array{r: int, g: int, b: int} $rgb RGB color array with values 0-255.
+	 * @return float The relative luminance value (0-1).
+	 */
+	private function calculateRelativeLuminance( array $rgb ): float
+	{
+		return 0.2126 * pow( $rgb['r'] / 255, 2.2 ) +
+			0.7152 * pow( $rgb['g'] / 255, 2.2 ) +
+			0.0722 * pow( $rgb['b'] / 255, 2.2 );
+	}
 
-		$contrastRatio = 0;
+	/**
+	 * Calculates the contrast ratio between two colors according to WCAG 2.0.
+	 *
+	 * Implements the contrast ratio formula from WCAG 2.0 specification.
+	 * The contrast ratio is expressed as a ratio ranging from 1:1 (no contrast) to 21:1 (maximum contrast).
+	 *
+	 * WCAG 2.0 guidelines require:
+	 * - AA level (normal text): minimum 4.5:1
+	 * - AA level (large text): minimum 3:1
+	 * - AAA level (normal text): minimum 7:1
+	 * - AAA level (large text): minimum 4.5:1
+	 *
+	 * @since 1.0.0
+	 * @link https://www.w3.org/TR/WCAG20-TECHS/G18.html WCAG 2.0 Contrast Ratio
+	 *
+	 * @param string $color1 The first color to compare (hex format, e.g., #FF0000).
+	 * @param string $color2 The second color to compare (hex format, e.g., #FFFFFF).
+	 * @return float The contrast ratio between the two colors (1-21).
+	 */
+	private function calculateContrastRatio( string $color1, string $color2 ): float
+	{
+		$rgb1 = $this->hexToRgb( $color1 );
+		$rgb2 = $this->hexToRgb( $color2 );
+
+		$L1 = $this->calculateRelativeLuminance( $rgb1 );
+		$L2 = $this->calculateRelativeLuminance( $rgb2 );
+
 		if ( $L1 > $L2 ) {
-			$contrastRatio = (float) ( ( $L1 + 0.05 ) / ( $L2 + 0.05 ) );
+			return (float) ( ( $L1 + 0.05 ) / ( $L2 + 0.05 ) );
 		} else {
-			$contrastRatio = (float) ( ( $L2 + 0.05 ) / ( $L1 + 0.05 ) );
+			return (float) ( ( $L2 + 0.05 ) / ( $L1 + 0.05 ) );
 		}
-
-		// If contrast is more than 5, return black color
-		if ( $contrastRatio >= 4.5 ) {
-			return true;
-		}
-
-		return false;
 	}
 }
