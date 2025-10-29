@@ -2,14 +2,17 @@
 
 use ArtisanPackUI\Accessibility\AccessibleColorGenerator;
 use ArtisanPackUI\Accessibility\A11y;
+use Tests\TestCase;
+
+uses(TestCase::class);
 
 it( 'can be instantiated', function () {
-	$generator = new AccessibleColorGenerator();
+	$generator = app(AccessibleColorGenerator::class);
 	expect( $generator )->toBeInstanceOf( AccessibleColorGenerator::class );
 } );
 
 test( 'getHexFromColorString converts Tailwind colors to hex', function () {
-	$generator  = new AccessibleColorGenerator();
+	$generator  = app(AccessibleColorGenerator::class);
 	$reflection = new ReflectionClass( $generator );
 	$method     = $reflection->getMethod( 'getHexFromColorString' );
 	$method->setAccessible( true );
@@ -23,7 +26,7 @@ test( 'getHexFromColorString converts Tailwind colors to hex', function () {
 } );
 
 test( 'getHexFromColorString handles hex colors correctly', function () {
-	$generator  = new AccessibleColorGenerator();
+	$generator  = app(AccessibleColorGenerator::class);
 	$reflection = new ReflectionClass( $generator );
 	$method     = $reflection->getMethod( 'getHexFromColorString' );
 	$method->setAccessible( true );
@@ -41,7 +44,7 @@ test( 'getHexFromColorString handles hex colors correctly', function () {
 } );
 
 test( 'getHexFromColorString returns null for invalid colors', function () {
-	$generator  = new AccessibleColorGenerator();
+	$generator  = app(AccessibleColorGenerator::class);
 	$reflection = new ReflectionClass( $generator );
 	$method     = $reflection->getMethod( 'getHexFromColorString' );
 	$method->setAccessible( true );
@@ -54,12 +57,12 @@ test( 'getHexFromColorString returns null for invalid colors', function () {
 } );
 
 test( 'findClosestAccessibleShade returns a color with sufficient contrast', function () {
-	$generator  = new AccessibleColorGenerator();
+	$generator  = app(AccessibleColorGenerator::class);
 	$reflection = new ReflectionClass( $generator );
 	$method     = $reflection->getMethod( 'findClosestAccessibleShade' );
 	$method->setAccessible( true );
 
-	$a11y = new ArtisanPackUI\Accessibility\A11y();
+	$a11y = app(A11y::class);
 
 	$testColors = [
 		'#3b82f6', // blue-500
@@ -76,7 +79,7 @@ test( 'findClosestAccessibleShade returns a color with sufficient contrast', fun
 } );
 
 test( 'adjustBrightness correctly lightens colors', function () {
-	$generator  = new AccessibleColorGenerator();
+	$generator  = app(AccessibleColorGenerator::class);
 	$reflection = new ReflectionClass( $generator );
 	$method     = $reflection->getMethod( 'adjustBrightness' );
 	$method->setAccessible( true );
@@ -90,7 +93,7 @@ test( 'adjustBrightness correctly lightens colors', function () {
 } );
 
 test( 'adjustBrightness correctly darkens colors', function () {
-	$generator  = new AccessibleColorGenerator();
+	$generator  = app(AccessibleColorGenerator::class);
 	$reflection = new ReflectionClass( $generator );
 	$method     = $reflection->getMethod( 'adjustBrightness' );
 	$method->setAccessible( true );
@@ -104,7 +107,7 @@ test( 'adjustBrightness correctly darkens colors', function () {
 } );
 
 test( 'adjustBrightness handles 3-digit hex colors', function () {
-	$generator  = new AccessibleColorGenerator();
+	$generator  = app(AccessibleColorGenerator::class);
 	$reflection = new ReflectionClass( $generator );
 	$method     = $reflection->getMethod( 'adjustBrightness' );
 	$method->setAccessible( true );
@@ -118,7 +121,7 @@ test( 'adjustBrightness handles 3-digit hex colors', function () {
 } );
 
 test( 'adjustBrightness clamps values between 0 and 255', function () {
-	$generator  = new AccessibleColorGenerator();
+	$generator  = app(AccessibleColorGenerator::class);
 	$reflection = new ReflectionClass( $generator );
 	$method     = $reflection->getMethod( 'adjustBrightness' );
 	$method->setAccessible( true );

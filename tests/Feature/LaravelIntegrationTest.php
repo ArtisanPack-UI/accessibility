@@ -1,0 +1,107 @@
+<?php
+
+use ArtisanPackUI\Accessibility\A11y;
+use ArtisanPackUI\Accessibility\Facades\A11y as A11yFacade;
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Auth\User;
+use Tests\TestCase;
+
+uses( TestCase::class );
+
+it( 'service provider is registered', function () {
+	$this->assertTrue( app()->bound( 'a11y' ) );
+} );
+
+it( 'can resolve a11y from container', function () {
+	$a11y = app( 'a11y' );
+	$this->assertInstanceOf( A11y::class, $a11y );
+} );
+
+it( 'facade returns correct instance', function () {
+	$this->assertInstanceOf( A11y::class, A11yFacade::getFacadeRoot() );
+} );
+
+it( 'a11yCSSVarBlackOrWhite facade works', function () {
+	$this->assertEquals( 'black', A11yFacade::a11yCSSVarBlackOrWhite( '#ffffff' ) );
+	$this->assertEquals( 'white', A11yFacade::a11yCSSVarBlackOrWhite( '#000000' ) );
+} );
+
+it( 'a11yGetContrastColor facade works', function () {
+	$this->assertEquals( '#000000', A11yFacade::a11yGetContrastColor( '#ffffff' ) );
+	$this->assertEquals( '#FFFFFF', A11yFacade::a11yGetContrastColor( '#000000' ) );
+} );
+
+it( 'a11yCheckContrastColor facade works', function () {
+	$this->assertTrue( A11yFacade::a11yCheckContrastColor( '#ffffff', '#000000' ) );
+	$this->assertFalse( A11yFacade::a11yCheckContrastColor( '#ffffff', '#fefefe' ) );
+} );
+
+it( 'calculateContrastRatio facade works', function () {
+	$this->assertEquals( 21, A11yFacade::calculateContrastRatio( '#ffffff', '#000000' ) );
+} );
+
+it( 'getToastDuration facade works with authenticated user', function () {
+	$user = new class extends User {
+		public function getSetting( $key, $default )
+		{
+			return 5;
+		}
+	};
+	$this->actingAs( $user );
+
+	$this->assertEquals( 5000, A11yFacade::getToastDuration() );
+} );
+
+it( 'a11y helper returns instance', function () {
+	$this->assertInstanceOf( A11y::class, a11y() );
+} );
+
+it( 'a11yCSSVarBlackOrWhite helper works', function () {
+	$this->assertEquals( 'black', a11yCSSVarBlackOrWhite( '#ffffff' ) );
+	$this->assertEquals( 'white', a11yCSSVarBlackOrWhite( '#000000' ) );
+} );
+
+it( 'a11yGetContrastColor helper works', function () {
+	$this->assertEquals( '#000000', a11yGetContrastColor( '#ffffff' ) );
+	$this->assertEquals( '#FFFFFF', a11yGetContrastColor( '#000000' ) );
+} );
+
+it( 'a11yCheckContrastColor helper works', function () {
+	$this->assertTrue( a11yCheckContrastColor( '#ffffff', '#000000' ) );
+	$this->assertFalse( a11yCheckContrastColor( '#ffffff', '#fefefe' ) );
+} );
+
+it( 'generateAccessibleTextColor helper works', function () {
+	$this->assertEquals( '#000000', generateAccessibleTextColor( '#ffffff' ) );
+} );
+
+it( 'loads default configuration', function () {
+	$this->assertEquals( 4.5, config( 'accessibility.wcag_thresholds.aa' ) );
+	$this->assertEquals( 7.0, config( 'accessibility.wcag_thresholds.aaa' ) );
+	$this->assertEquals( 1000, config( 'accessibility.cache_size' ) );
+} );
+
+it( 'can override configuration', function () {
+	config()->set( 'accessibility.wcag_thresholds.aa', 5.0 );
+	config()->set( 'accessibility.cache_size', 500 );
+
+	$this->assertEquals( 5.0, config( 'accessibility.wcag_thresholds.aa' ) );
+	$this->assertEquals( 500, config( 'accessibility.cache_size' ) );
+} );
+
+it( 'getToastDuration helper requires authenticated user', function () {
+	$this->expectException( Error::class );
+	getToastDuration();
+} );
+
+it( 'getToastDuration helper works with authenticated user', function () {
+	$user = new class extends User {
+		public function getSetting( $key, $default )
+		{
+			return 5;
+		}
+	};
+	$this->actingAs( $user );
+
+	$this->assertEquals( 5000, getToastDuration() );
+} );
