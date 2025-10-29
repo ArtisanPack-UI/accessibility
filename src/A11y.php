@@ -11,7 +11,6 @@
 
 namespace ArtisanPackUI\Accessibility;
 
-use ArtisanPackUI\Accessibility\Constants;
 use InvalidArgumentException;
 
 /**
@@ -25,6 +24,12 @@ use InvalidArgumentException;
  */
 class A11y
 {
+    private const LUMINANCE_RED_COEFFICIENT = 0.2126;
+    private const LUMINANCE_GREEN_COEFFICIENT = 0.7152;
+    private const LUMINANCE_BLUE_COEFFICIENT = 0.0722;
+    private const RGB_MAX = 255;
+    private const RGB_MIN = 0;
+
     private static array $contrastCache = [];
     public static int $cacheHits = 0;
     public static int $cacheMisses = 0;
@@ -85,8 +90,9 @@ class A11y
             return '#FFFFFF';
         }
         $blackContrastRatio = $this->calculateContrastRatio($hexColor, '#000000');
+        $whiteContrastRatio = $this->calculateContrastRatio($hexColor, '#FFFFFF');
 
-        if ($blackContrastRatio > Constants::WCAG_CONTRAST_AA) {
+        if ($blackContrastRatio > $whiteContrastRatio) {
             return '#000000';
         } else {
             return '#FFFFFF';
@@ -118,11 +124,13 @@ class A11y
      *
      * @since 1.0.0
      *
-     * @param string $firstHexColor  The first color to check (hex format).
+     * @param string $firstHexColor The first color to check (hex format).
      * @param string $secondHexColor The second color to check (hex format).
-     * @return bool                  True if contrast is sufficient (≥4.5:1), false otherwise.
+     * @param string $level The WCAG level to check against (aa or aaa).
+     * @param bool $isLargeText Whether the text is large or not.
+     * @return bool True if contrast is sufficient, false otherwise.
      */
-    public function a11yCheckContrastColor(string $firstHexColor, string $secondHexColor): bool
+    public function a11yCheckContrastColor(string $firstHexColor, string $secondHexColor, string $level = 'aa', bool $isLargeText = false): bool
     {
         try {
             $this->validateHexColor($firstHexColor);
@@ -138,7 +146,12 @@ class A11y
         }
         $contrastRatio = $this->calculateContrastRatio($firstHexColor, $secondHexColor);
 
-        return $contrastRatio >= Constants::WCAG_CONTRAST_AA;
+        $threshold = config("accessibility.wcag_thresholds.{$level}");
+        if ($isLargeText) {
+            $threshold = $level === 'aaa' ? 4.5 : 3.0; // WCAG thresholds for large text
+        }
+
+        return $contrastRatio >= $threshold;
     }
 
     /**
@@ -188,9 +201,9 @@ class A11y
      */
     private function calculateRelativeLuminance(array $rgb): float
     {
-        return Constants::LUMINANCE_RED_COEFFICIENT * pow($rgb['r'] / Constants::RGB_MAX, 2.2) +
-            Constants::LUMINANCE_GREEN_COEFFICIENT * pow($rgb['g'] / Constants::RGB_MAX, 2.2) +
-            Constants::LUMINANCE_BLUE_COEFFICIENT * pow($rgb['b'] / Constants::RGB_MAX, 2.2);
+        return self::LUMINANCE_RED_COEFFICIENT * pow($rgb['r'] / self::RGB_MAX, 2.2) +
+            self::LUMINANCE_GREEN_COEFFICIENT * pow($rgb['g'] / self::RGB_MAX, 2.2) +
+            self::LUMINANCE_BLUE_COEFFICIENT * pow($rgb['b'] / self::RGB_MAX, 2.2);
     }
 
     /**
@@ -202,7 +215,7 @@ class A11y
      * @param string $color2 The second color to compare (hex format).
      * @return float The contrast ratio between the two colors (1-21).
      */
-    private function calculateContrastRatio(string $color1, string $color2): float
+    public function calculateContrastRatio(string $color1, string $color2): float
     {
         $colors = [$color1, $color2];
         sort($colors);
@@ -215,7 +228,7 @@ class A11y
 
         self::$cacheMisses++;
 
-        if (count(self::$contrastCache) >= Constants::CACHE_SIZE_LIMIT) {
+        if (count(self::$contrastCache) >= config('accessibility.cache_size')) {
             array_shift(self::$contrastCache);
         }
 

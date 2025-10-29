@@ -11,7 +11,6 @@
 namespace ArtisanPackUI\Accessibility;
 
 use ArtisanPackUI\Accessibility\A11y;
-use ArtisanPackUI\Accessibility\Constants;
 
 /**
  * Generates accessible text colors.
@@ -24,6 +23,8 @@ use ArtisanPackUI\Accessibility\Constants;
  */
 class AccessibleColorGenerator
 {
+    private const RGB_MAX = 255;
+    private const RGB_MIN = 0;
 
 	private static array $shadeCache = [];
     public static int $cacheHits = 0;
@@ -497,7 +498,7 @@ class AccessibleColorGenerator
 	
 	        self::$cacheMisses++;
 	
-	        if (count(self::$shadeCache) >= Constants::CACHE_SIZE_LIMIT) {
+	        if (count(self::$shadeCache) >= config('accessibility.cache_size')) {
 	            array_shift(self::$shadeCache);
 	        }
 	
@@ -544,9 +545,9 @@ class AccessibleColorGenerator
 		$g = hexdec( substr( $hex, 2, 2 ) );
 		$b = hexdec( substr( $hex, 4, 2 ) );
 
-		$r = round( max( Constants::RGB_MIN, min( Constants::RGB_MAX, $r + ( Constants::RGB_MAX * $factor ) ) ) );
-		$g = round( max( Constants::RGB_MIN, min( Constants::RGB_MAX, $g + ( Constants::RGB_MAX * $factor ) ) ) );
-		$b = round( max( Constants::RGB_MIN, min( Constants::RGB_MAX, $b + ( Constants::RGB_MAX * $factor ) ) ) );
+		$r = round( max( self::RGB_MIN, min( self::RGB_MAX, $r + ( self::RGB_MAX * $factor ) ) ) );
+		$g = round( max( self::RGB_MIN, min( self::RGB_MAX, $g + ( self::RGB_MAX * $factor ) ) ) );
+		$b = round( max( self::RGB_MIN, min( self::RGB_MAX, $b + ( self::RGB_MAX * $factor ) ) ) );
 
 		return '#' . str_pad( dechex( $r ), 2, '0', STR_PAD_LEFT )
 			. str_pad( dechex( $g ), 2, '0', STR_PAD_LEFT )
