@@ -148,7 +148,7 @@ class A11y
 
         $threshold = config("accessibility.wcag_thresholds.{$level}");
         if ($isLargeText) {
-            $threshold = $level === 'aaa' ? 4.5 : 3.0; // WCAG thresholds for large text
+            $threshold = $level === 'aaa' ? config('accessibility.wcag_thresholds.aa') : 3.0;
         }
 
         return $contrastRatio >= $threshold;

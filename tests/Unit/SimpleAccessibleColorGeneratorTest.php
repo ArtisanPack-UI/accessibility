@@ -60,12 +60,12 @@ test('generated colors have sufficient contrast', function () {
     foreach ($backgrounds as $background) {
         // Test non-tint mode
         $textColor = $generator->generateAccessibleTextColor($background);
-        expect($a11y->a11yCheckContrastColor($background, $textColor))->toBeTrue();
+        expect($a11y->a11yCheckContrastColor($background, $textColor, 'aa', true))->toBeTrue();
 
         // Test tint mode
         $tintedColor = $generator->generateAccessibleTextColor($background, true);
         if ($tintedColor !== '#000000' && $tintedColor !== '#FFFFFF') {
-            expect($a11y->a11yCheckContrastColor($background, $tintedColor))->toBeTrue();
+            expect($a11y->a11yCheckContrastColor($background, $tintedColor, 'aa', true))->toBeTrue();
         }
     }
 });
