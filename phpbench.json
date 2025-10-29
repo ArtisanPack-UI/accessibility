@@ -1,0 +1,8 @@
+{
+    "runner.bootstrap": "tests/bootstrap.php",
+    "runner.path": "tests/Performance",
+    "runner.php_disable_ini": false,
+    "runner.php_config": {
+        "xdebug.mode": "off"
+    }
+}

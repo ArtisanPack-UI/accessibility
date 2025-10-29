@@ -1,4 +1,4 @@
-# Performance and Caching
+# Performance, Caching, and Benchmarking
 
 To improve performance, the ArtisanPack UI Accessibility package includes a simple in-memory caching mechanism for computationally intensive color calculations.
 
@@ -28,3 +28,30 @@ For debugging and monitoring purposes, the following static properties are avail
 -   `AccessibleColorGenerator::$cacheMisses`
 
 These properties can be accessed to get insights into the cache performance.
+
+## Performance Benchmarking
+
+This package includes performance benchmarks to monitor the efficiency of the color generation algorithms. These benchmarks are built using [PHPBench](https://phpbench.github.io/).
+
+### Available Benchmarks
+
+-   **`benchCalculateContrastRatio`**: Measures the performance of the core `A11y::calculateContrastRatio()` method.
+-   **`benchFindClosestAccessibleShade`**: Measures the performance of the `AccessibleColorGenerator::findClosestAccessibleShade()` method.
+-   **`benchBulkColorProcessing`**: Simulates bulk processing by calling `AccessibleColorGenerator::generateAccessibleTextColor()` for a set of colors.
+-   **`benchBulkColorProcessingWithTint`**: Simulates bulk processing with tinting enabled.
+
+### Running Benchmarks Locally
+
+To run the benchmarks locally, use the following command:
+
+```bash
+composer benchmark
+```
+
+### Baseline Performance
+
+A baseline performance report is available at [docs/benchmarks/baseline.md](./benchmarks/baseline.md). This report serves as a reference point for future performance comparisons.
+
+### CI Integration
+
+The benchmarks are run as part of the CI/CD pipeline in the `benchmark` stage. The results are available in the job artifacts. This helps to monitor the performance of the package over time and identify any regressions.
