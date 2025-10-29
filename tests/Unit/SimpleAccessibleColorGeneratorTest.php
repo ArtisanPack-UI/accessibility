@@ -2,20 +2,19 @@
 
 use ArtisanPackUI\Accessibility\AccessibleColorGenerator;
 use ArtisanPackUI\Accessibility\A11y;
+use Tests\TestCase;
 
-beforeEach(function () {
-    config(['accessibility' => require __DIR__ . '/../../config/accessibility.php']);
-});
+uses(TestCase::class);
 
 // Simple test for AccessibleColorGenerator class
 test('AccessibleColorGenerator can be instantiated', function () {
-    $generator = new AccessibleColorGenerator();
+    $generator = app(AccessibleColorGenerator::class);
     expect($generator)->toBeInstanceOf(AccessibleColorGenerator::class);
 });
 
 // Test public methods
 test('generateAccessibleTextColor returns expected colors', function () {
-    $generator = new AccessibleColorGenerator();
+    $generator = app(AccessibleColorGenerator::class);
 
     // Test with hex colors (non-tint mode)
     expect($generator->generateAccessibleTextColor('#FFFFFF'))->toBe('#000000');
@@ -46,8 +45,8 @@ test('helper function generateAccessibleTextColor works', function () {
 
 // Test that generated colors have sufficient contrast
 test('generated colors have sufficient contrast', function () {
-    $generator = new AccessibleColorGenerator();
-    $a11y = new A11y();
+    $generator = app(AccessibleColorGenerator::class);
+    $a11y = app(A11y::class);
 
     $backgrounds = [
         '#3b82f6', // blue-500

@@ -2,13 +2,17 @@
 
 use ArtisanPackUI\Accessibility\AccessibleColorGenerator;
 use ArtisanPackUI\Accessibility\A11y;
+use Tests\TestCase;
+
+uses(TestCase::class);
+
 it('can be instantiated', function () {
-    $generator = new AccessibleColorGenerator();
+    $generator = app(AccessibleColorGenerator::class);
     expect($generator)->toBeInstanceOf(AccessibleColorGenerator::class);
 });
 
 test('generateAccessibleTextColor returns black or white for non-tint mode', function () {
-    $generator = new AccessibleColorGenerator();
+    $generator = app(AccessibleColorGenerator::class);
 
     // Test with hex colors
     expect($generator->generateAccessibleTextColor('#FFFFFF'))->toBe('#000000')
@@ -23,7 +27,7 @@ test('generateAccessibleTextColor returns black or white for non-tint mode', fun
 });
 
 test('generateAccessibleTextColor returns tinted colors when tint is true', function () {
-    $generator = new AccessibleColorGenerator();
+    $generator = app(AccessibleColorGenerator::class);
 
     // Test with hex colors - we're checking that the result is not just black or white
     $tintedColor1 = $generator->generateAccessibleTextColor('#3b82f6', true);
@@ -45,7 +49,7 @@ test('generateAccessibleTextColor returns tinted colors when tint is true', func
 });
 
 test('generateAccessibleTextColor handles invalid color strings', function () {
-    $generator = new AccessibleColorGenerator();
+    $generator = app(AccessibleColorGenerator::class);
 
     // Test with invalid hex
     expect($generator->generateAccessibleTextColor('#XYZ'))->toBe('#000000');
@@ -58,8 +62,8 @@ test('generateAccessibleTextColor handles invalid color strings', function () {
 });
 
 test('generateAccessibleTextColor produces colors with sufficient contrast', function () {
-    $generator = new AccessibleColorGenerator();
-    $a11y = new ArtisanPackUI\Accessibility\A11y();
+    $generator = app(AccessibleColorGenerator::class);
+    $a11y = app(A11y::class);
 
     $backgrounds = [
         '#3b82f6', // blue-500
@@ -103,7 +107,7 @@ test('helper function generateAccessibleTextColor works correctly', function () 
 });
 
 test('handles 3-digit hex codes', function () {
-    $generator = new AccessibleColorGenerator();
+    $generator = app(AccessibleColorGenerator::class);
     // #fff (white) should result in black text
     expect($generator->generateAccessibleTextColor('#fff'))->toBe('#000000');
     // #000 (black) should result in white text
@@ -113,8 +117,8 @@ test('handles 3-digit hex codes', function () {
 });
 
 test('adjustBrightness handles extreme factors', function () {
-    $generator = new AccessibleColorGenerator();
-    $a11y = new A11y();
+    $generator = app(AccessibleColorGenerator::class);
+    $a11y = app(A11y::class);
 
     // A color that is right on the edge of contrast
     $color = '#777777';
@@ -131,3 +135,4 @@ test('adjustBrightness handles extreme factors', function () {
     $accessibleColorNegative = $generator->generateAccessibleTextColor($color, true);
     expect($a11y->a11yCheckContrastColor($color, $accessibleColorNegative))->toBeTrue();
 });
+

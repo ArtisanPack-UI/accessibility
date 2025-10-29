@@ -95,3 +95,15 @@ $hexColor = A11y::a11yGetContrastColor('#3b82f6');
 - Check out the [Usage Guide](usage) for more detailed examples
 - See the [API Reference](api-reference) for a complete list of available methods
 - Learn about [Tailwind Color Support](tailwind-colors) for using Tailwind CSS color names
+
+## Testing
+
+This package uses Pest for its testing suite. You can run the tests by executing the following command from the root of the package:
+
+```bash
+composer test
+```
+
+### Testing Against Multiple Laravel Versions
+
+To ensure compatibility with different versions of Laravel, you can test the package against multiple Laravel versions by using a CI matrix in your continuous integration pipeline. Tools like `spatie/laravel-test-runner` can help automate this process. You can also manually adjust the Laravel version in your `composer.json` file to test specific versions.

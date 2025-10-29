@@ -146,9 +146,9 @@ class A11y
         }
         $contrastRatio = $this->calculateContrastRatio($firstHexColor, $secondHexColor);
 
-        $threshold = config("accessibility.wcag_thresholds.{$level}");
+        $threshold = $this->getWcagThreshold($level);
         if ($isLargeText) {
-            $threshold = $level === 'aaa' ? config('accessibility.wcag_thresholds.aa') : 3.0;
+            $threshold = $level === 'aaa' ? $this->getWcagThreshold('aa') : 3.0;
         }
 
         return $contrastRatio >= $threshold;
@@ -228,7 +228,7 @@ class A11y
 
         self::$cacheMisses++;
 
-        if (count(self::$contrastCache) >= config('accessibility.cache_size')) {
+        if (count(self::$contrastCache) >= $this->getCacheSize()) {
             array_shift(self::$contrastCache);
         }
 
@@ -245,5 +245,57 @@ class A11y
         }
 
         return self::$contrastCache[$cacheKey] = $ratio;
+    }
+
+    /**
+     * Get WCAG threshold by level with safe defaults when config is unavailable.
+     */
+    private function getWcagThreshold(string $level): float
+    {
+        $level = strtolower($level);
+        $default = $level === 'aaa' ? 7.0 : 4.5;
+
+        $value = $this->getFromConfig("accessibility.wcag_thresholds.{$level}", $default);
+        return is_numeric($value) ? (float) $value : (float) $default;
+    }
+
+    /**
+     * Get cache size with a safe default when config is unavailable.
+     */
+    private function getCacheSize(): int
+    {
+        $value = $this->getFromConfig('accessibility.cache_size', 1000);
+        return is_numeric($value) ? (int) $value : 1000;
+    }
+
+    /**
+     * Safely retrieve a configuration value if Laravel's config is available, otherwise return default.
+     *
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    private function getFromConfig(string $key, mixed $default): mixed
+    {
+        // Prefer using the container directly if available and bound
+        try {
+            if (function_exists('app')) {
+                $app = app();
+                if (is_object($app) && method_exists($app, 'bound') && $app->bound('config')) {
+                    // Use helper if available to respect any custom behavior
+                    if (function_exists('config')) {
+                        return config($key, $default);
+                    }
+                    // Fallback to repository directly
+                    if (isset($app['config'])) {
+                        return $app['config']->get($key, $default);
+                    }
+                }
+            }
+        } catch (\Throwable) {
+            // Ignore and fall back to default
+        }
+
+        return $default;
     }
 }

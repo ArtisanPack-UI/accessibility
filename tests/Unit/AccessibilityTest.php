@@ -2,10 +2,10 @@
 
 use ArtisanPackUI\Accessibility\A11y;
 
-uses();
+uses(Tests\TestCase::class);
 
 test( 'returns correct text color for background color', function () {
-	$a11y = new A11y();
+	$a11y = app(A11y::class);
 	expect( $a11y->a11yCSSVarBlackOrWhite( '#63FF1A' ) )->toEqual( 'black' )
 														->and( $a11y->a11yCSSVarBlackOrWhite( '#0003BD' ) )->toEqual( 'white' )
 														->and( $a11y->a11yCSSVarBlackOrWhite( '#DB95D4' ) )->toEqual( 'black' )
@@ -16,7 +16,7 @@ test( 'returns correct text color for background color', function () {
 } );
 
 test( 'correctly checks the contrast between two colors', function () {
-	$a11y = new A11y();
+	$a11y = app(A11y::class);
 	expect( $a11y->a11yCheckContrastColor( '#D6444E', '#000000' ) )->toBeTrue()
 																   ->and( $a11y->a11yCheckContrastColor( '#C94049', '#000000' ) )->toBeFalse()
 																   ->and( $a11y->a11yCheckContrastColor( '#2B37C9', '#000000' ) )->toBeFalse()
@@ -26,7 +26,7 @@ test( 'correctly checks the contrast between two colors', function () {
 } );
 
 test( 'converts hex color to RGB array correctly', function () {
-	$a11y = new A11y();
+	$a11y = app(A11y::class);
 	$reflection = new ReflectionClass( $a11y );
 	$method = $reflection->getMethod( 'hexToRgb' );
 	$method->setAccessible( true );
@@ -44,7 +44,7 @@ test( 'converts hex color to RGB array correctly', function () {
 } );
 
 test( 'calculates relative luminance according to WCAG 2.0', function () {
-	$a11y = new A11y();
+	$a11y = app(A11y::class);
 	$reflection = new ReflectionClass( $a11y );
 	$method = $reflection->getMethod( 'calculateRelativeLuminance' );
 	$method->setAccessible( true );
@@ -74,7 +74,7 @@ test( 'calculates relative luminance according to WCAG 2.0', function () {
 } );
 
 test( 'calculates contrast ratio according to WCAG 2.0', function () {
-	$a11y = new A11y();
+	$a11y = app(A11y::class);
 	$reflection = new ReflectionClass( $a11y );
 	$method = $reflection->getMethod( 'calculateContrastRatio' );
 	$method->setAccessible( true );
@@ -105,7 +105,7 @@ test( 'calculates contrast ratio according to WCAG 2.0', function () {
 } );
 
 test('handles malformed hex codes in a11yGetContrastColor', function ($malformedHex) {
-    $a11y = new A11y();
+    $a11y = app(A11y::class);
     // It should return white as it will treat the malformed hex as black
     expect($a11y->a11yGetContrastColor($malformedHex))->toBe('#FFFFFF');
 })->with([
@@ -116,7 +116,7 @@ test('handles malformed hex codes in a11yGetContrastColor', function ($malformed
 ]);
 
 test('handles malformed hex codes in a11yCheckContrastColor', function ($malformedHex) {
-    $a11y = new A11y();
+    $a11y = app(A11y::class);
     // It will treat the malformed hex as black, so contrast with white is high
     expect($a11y->a11yCheckContrastColor($malformedHex, '#FFFFFF'))->toBeTrue();
     // It will treat the malformed hex as black, so contrast with black is low, so it should be false
