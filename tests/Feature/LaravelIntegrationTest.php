@@ -36,9 +36,17 @@ it( 'a11yCheckContrastColor facade works', function () {
 	$this->assertFalse( A11yFacade::a11yCheckContrastColor( '#ffffff', '#fefefe' ) );
 } );
 
-it( 'calculateContrastRatio facade works', function () {
-	$this->assertEquals( 21, A11yFacade::calculateContrastRatio( '#ffffff', '#000000' ) );
-} );
+    test('it a11yCheckContrastColor facade works again', function () {
+    $this->assertTrue(A11yFacade::a11yCheckContrastColor('#000000', '#FFFFFF'));
+});
+
+test('it a11yGetContrastColor facade works again', function () {
+    $this->assertEquals('#FFFFFF', A11yFacade::a11yGetContrastColor('#000000'));
+});
+
+test('it a11yCSSVarBlackOrWhite facade works again', function () {
+    $this->assertEquals('white', A11yFacade::a11yCSSVarBlackOrWhite('#000000'));
+});
 
 it( 'getToastDuration facade works with authenticated user', function () {
 	$user = new class extends User {

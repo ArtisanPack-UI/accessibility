@@ -24,31 +24,11 @@ use InvalidArgumentException;
  */
 class A11y
 {
-    private const LUMINANCE_RED_COEFFICIENT = 0.2126;
-    private const LUMINANCE_GREEN_COEFFICIENT = 0.7152;
-    private const LUMINANCE_BLUE_COEFFICIENT = 0.0722;
-    private const RGB_MAX = 255;
-    private const RGB_MIN = 0;
+    private WcagValidator $wcagValidator;
 
-    private static array $contrastCache = [];
-    public static int $cacheHits = 0;
-    public static int $cacheMisses = 0;
-
-    public static function getCacheHits(): int
+    public function __construct(WcagValidator $wcagValidator = null)
     {
-        return self::$cacheHits;
-    }
-
-    public static function getCacheMisses(): int
-    {
-        return self::$cacheMisses;
-    }
-
-    public static function clearCache(): void
-    {
-        self::$contrastCache = [];
-        self::$cacheHits = 0;
-        self::$cacheMisses = 0;
+        $this->wcagValidator = $wcagValidator ?? new WcagValidator();
     }
 
     /**
@@ -64,11 +44,7 @@ class A11y
      */
     public function a11yCSSVarBlackOrWhite(string $hexColor): string
     {
-        if ('#000000' === $this->a11yGetContrastColor($hexColor)) {
-            return 'black';
-        } else {
-            return 'white';
-        }
+        return '#000000' === $this->a11yGetContrastColor($hexColor) ? 'black' : 'white';
     }
 
     /**
@@ -84,19 +60,10 @@ class A11y
      */
     public function a11yGetContrastColor(string $hexColor): string
     {
-        try {
-            $this->validateHexColor($hexColor);
-        } catch (InvalidArgumentException $e) {
-            return '#FFFFFF';
-        }
-        $blackContrastRatio = $this->calculateContrastRatio($hexColor, '#000000');
-        $whiteContrastRatio = $this->calculateContrastRatio($hexColor, '#FFFFFF');
+        $blackContrast = $this->wcagValidator->calculateContrastRatio($hexColor, '#000000');
+        $whiteContrast = $this->wcagValidator->calculateContrastRatio($hexColor, '#FFFFFF');
 
-        if ($blackContrastRatio > $whiteContrastRatio) {
-            return '#000000';
-        } else {
-            return '#FFFFFF';
-        }
+        return $blackContrast > $whiteContrast ? '#000000' : '#FFFFFF';
     }
 
     /**
@@ -118,133 +85,21 @@ class A11y
     /**
      * Checks if two colors have sufficient contrast for accessibility.
      *
-     * Calculates the contrast ratio between two colors according to WCAG 2.0 guidelines.
-     * Returns true if the contrast ratio is at least 4.5:1, which is the minimum
-     * recommended for normal text to be considered accessible.
-     *
      * @since 1.0.0
      *
      * @param string $firstHexColor The first color to check (hex format).
      * @param string $secondHexColor The second color to check (hex format).
-     * @param string $level The WCAG level to check against (aa or aaa).
+     * @param string $level The WCAG level to check against (e.g., 'AA', 'AAA', 'non-text').
      * @param bool $isLargeText Whether the text is large or not.
      * @return bool True if contrast is sufficient, false otherwise.
      */
     public function a11yCheckContrastColor(string $firstHexColor, string $secondHexColor, string $level = 'aa', bool $isLargeText = false): bool
     {
         try {
-            $this->validateHexColor($firstHexColor);
-            $this->validateHexColor($secondHexColor);
-        } catch (InvalidArgumentException $e) {
-            // If one color is invalid, treat it as black for contrast checking.
-            // The tests expect this behavior.
-            if ($firstHexColor === '#000000' || $secondHexColor === '#000000') {
-                return false;
-            }
-
-            return true;
+            return $this->wcagValidator->checkContrast($firstHexColor, $secondHexColor, $level, $isLargeText);
+        } catch (InvalidArgumentException) {
+            return false;
         }
-        $contrastRatio = $this->calculateContrastRatio($firstHexColor, $secondHexColor);
-
-        $threshold = $this->getWcagThreshold($level);
-        if ($isLargeText) {
-            $threshold = $level === 'aaa' ? $this->getWcagThreshold('aa') : 3.0;
-        }
-
-        return $contrastRatio >= $threshold;
-    }
-
-    /**
-     * Validates a hex color string.
-     *
-     * @since 1.1.0
-     *
-     * @param string $hexColor The hex color to validate.
-     * @throws InvalidArgumentException If the hex color is malformed.
-     */
-    private function validateHexColor(string $hexColor): void
-    {
-        if (!preg_match('/^#([a-f0-9]{6}|[a-f0-9]{3})$/i', $hexColor)) {
-            throw new InvalidArgumentException("Malformed hex color: {$hexColor}");
-        }
-    }
-
-    /**
-     * Converts a hex color string to an RGB array.
-     *
-     * @since 1.1.0
-     *
-     * @param string $hexColor The hex color code to convert.
-     * @return array{r: int, g: int, b: int} Associative array with 'r', 'g', and 'b' keys.
-     */
-    private function hexToRgb(string $hexColor): array
-    {
-        $hex = ltrim($hexColor, '#');
-        if (strlen($hex) === 3) {
-            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
-        }
-
-        return [
-            'r' => hexdec(substr($hex, 0, 2)),
-            'g' => hexdec(substr($hex, 2, 2)),
-            'b' => hexdec(substr($hex, 4, 2)),
-        ];
-    }
-
-    /**
-     * Calculates the relative luminance of a color according to WCAG 2.0.
-     *
-     * @since 1.1.0
-     *
-     * @param array{r: int, g: int, b: int} $rgb RGB color array with values 0-255.
-     * @return float The relative luminance value (0-1).
-     */
-    private function calculateRelativeLuminance(array $rgb): float
-    {
-        return self::LUMINANCE_RED_COEFFICIENT * pow($rgb['r'] / self::RGB_MAX, 2.2) +
-            self::LUMINANCE_GREEN_COEFFICIENT * pow($rgb['g'] / self::RGB_MAX, 2.2) +
-            self::LUMINANCE_BLUE_COEFFICIENT * pow($rgb['b'] / self::RGB_MAX, 2.2);
-    }
-
-    /**
-     * Calculates the contrast ratio between two colors according to WCAG 2.0.
-     *
-     * @since 1.1.0
-     *
-     * @param string $color1 The first color to compare (hex format).
-     * @param string $color2 The second color to compare (hex format).
-     * @return float The contrast ratio between the two colors (1-21).
-     */
-    public function calculateContrastRatio(string $color1, string $color2): float
-    {
-        $colors = [$color1, $color2];
-        sort($colors);
-        $cacheKey = implode('-', $colors);
-
-        if (isset(self::$contrastCache[$cacheKey])) {
-            self::$cacheHits++;
-            return self::$contrastCache[$cacheKey];
-        }
-
-        self::$cacheMisses++;
-
-        if (count(self::$contrastCache) >= $this->getCacheSize()) {
-            array_shift(self::$contrastCache);
-        }
-
-        $rgb1 = $this->hexToRgb($color1);
-        $rgb2 = $this->hexToRgb($color2);
-
-        $L1 = $this->calculateRelativeLuminance($rgb1);
-        $L2 = $this->calculateRelativeLuminance($rgb2);
-
-        if ($L1 > $L2) {
-            $ratio = (float) (($L1 + 0.05) / ($L2 + 0.05));
-        } else {
-            $ratio = (float) (($L2 + 0.05) / ($L1 + 0.05));
-        }
-
-        return self::$contrastCache[$cacheKey] = $ratio;
     }
 
     /**
