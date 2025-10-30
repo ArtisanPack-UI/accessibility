@@ -2,12 +2,12 @@
 
 namespace Tests\Performance;
 
-use ArtisanPackUI\Accessibility\A11y;
 use ArtisanPackUI\Accessibility\AccessibleColorGenerator;
+use ArtisanPackUI\Accessibility\WcagValidator;
 
 class BenchmarkTest
 {
-    private $a11y;
+    private $wcagValidator;
     private $colorGenerator;
     private $colors = [
         '#ff0000',
@@ -24,8 +24,8 @@ class BenchmarkTest
 
     public function __construct()
     {
-        $this->a11y = new A11y();
-        $this->colorGenerator = new AccessibleColorGenerator();
+        $this->wcagValidator = new WcagValidator();
+        $this->colorGenerator = new AccessibleColorGenerator($this->wcagValidator);
     }
 
     /**
@@ -34,7 +34,7 @@ class BenchmarkTest
      */
     public function benchCalculateContrastRatio()
     {
-        $this->a11y->calculateContrastRatio('#ff0000', '#000000');
+        $this->wcagValidator->calculateContrastRatio('#ff0000', '#000000');
     }
 
     /**
