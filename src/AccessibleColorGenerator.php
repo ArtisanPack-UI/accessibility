@@ -26,9 +26,16 @@ class AccessibleColorGenerator
     private const RGB_MAX = 255;
     private const RGB_MIN = 0;
 
-	private static array $shadeCache = [];
+    private static array $shadeCache = [];
     public static int $cacheHits = 0;
     public static int $cacheMisses = 0;
+
+    protected WcagValidator $wcagValidator;
+
+    public function __construct(WcagValidator $wcagValidator = null)
+    {
+        $this->wcagValidator = $wcagValidator ?? new WcagValidator();
+    }
 
     public static function getCacheHits(): int
     {
@@ -46,15 +53,6 @@ class AccessibleColorGenerator
         self::$cacheHits = 0;
         self::$cacheMisses = 0;
     }
-
-
-	/**
-	 * The A11y utility class instance.
-	 *
-	 * @since 1.0.0
-	 * @var   A11y
-	 */
-	protected A11y $a11y;
 
 	/**
 	 * A map of Tailwind CSS colors to their hex values.
@@ -358,18 +356,6 @@ class AccessibleColorGenerator
 	];
 
 	/**
-	 * Constructor.
-	 *
-	 * Initializes the AccessibleColorGenerator with an instance of the A11y class.
-	 *
-	 * @since 1.0.0
-	 */
-	public function __construct()
-	{
-		$this->a11y = new A11y();
-	}
-
-	/**
 	 * Generates an accessible text color for a given background color.
 	 *
 	 * This method determines the best-contrasting text color. It can return
@@ -384,19 +370,23 @@ class AccessibleColorGenerator
 	 *                                If false, returns black or white. Default false.
 	 * @return string                 The generated accessible hex color string.
 	 */
-	public function generateAccessibleTextColor( string $backgroundColor, bool $tint = false ): string
-	{
-		$hexColor = $this->getHexFromColorString( $backgroundColor );
+    public function generateAccessibleTextColor(string $backgroundColor, bool $tint = false, string $level = 'AA', bool $isLargeText = false): string
+    {
+        $hexColor = $this->getHexFromColorString($backgroundColor);
 
-		if ( ! $hexColor ) {
-			// Return black as a safe fallback if the color string is invalid.
-			return '#000000';
-		}
+        if (!$hexColor) {
+            return '#000000';
+        }
 
-		return $tint
-			? $this->findClosestAccessibleShade( $hexColor )
-			: $this->a11y->a11yGetContrastColor( $hexColor );
-	}
+        if ($tint) {
+            return $this->findClosestAccessibleShade($hexColor, $level, $isLargeText);
+        }
+
+        $blackContrast = $this->wcagValidator->calculateContrastRatio($hexColor, '#000000');
+        $whiteContrast = $this->wcagValidator->calculateContrastRatio($hexColor, '#FFFFFF');
+
+        return $blackContrast > $whiteContrast ? '#000000' : '#FFFFFF';
+    }
 
 	/**
 	 * Converts a color string (Tailwind or hex) to a hex code.
@@ -486,43 +476,41 @@ class AccessibleColorGenerator
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $baseHex The hex color to find a variant for.
+     * @param string $baseHex The hex color to find a variant for.
+     * @param string $level The WCAG level to check against.
+     * @param bool $isLargeText Whether the text is large or not.
 	 * @return string          The accessible hex color variant.
 	 */
-	    protected function findClosestAccessibleShade( string $baseHex ): string
-	    {
-	        if (isset(self::$shadeCache[$baseHex])) {
-	            self::$cacheHits++;
-	            return self::$shadeCache[$baseHex];
-	        }
-	
-	        self::$cacheMisses++;
-	
-	        if (count(self::$shadeCache) >= config('accessibility.cache_size')) {
-	            array_shift(self::$shadeCache);
-	        }
-	
-	        // Iterate from 10% to 100% in steps of 5%.
-	        for ( $i = 1; $i <= 20; $i++ ) {
-	            $step = $i / 20.0; // 0.05, 0.10, ... 1.0
-	
-	            $lighter = $this->adjustBrightness( $baseHex, $step );
-	            $darker  = $this->adjustBrightness( $baseHex, -$step );
-	
-	            // Check the lighter color's contrast against the original background.
-	            if ( $this->a11y->a11yCheckContrastColor( $baseHex, $lighter ) ) {
-	                return self::$shadeCache[$baseHex] = $lighter;
-	            }
-	
-	            // Check the darker color's contrast against the original background.
-	            if ( $this->a11y->a11yCheckContrastColor( $baseHex, $darker ) ) {
-	                return self::$shadeCache[$baseHex] = $darker;
-	            }
-	        }
-	
-	        // If no accessible tint/shade is found, fallback to black or white.
-	        return self::$shadeCache[$baseHex] = $this->a11y->a11yGetContrastColor( $baseHex );
-	    }
+    protected function findClosestAccessibleShade(string $baseHex, string $level = 'AA', bool $isLargeText = false): string
+    {
+        $cacheKey = "{$baseHex}-{$level}-" . ($isLargeText ? 'large' : 'normal');
+
+        if (isset(self::$shadeCache[$cacheKey])) {
+            self::$cacheHits++;
+            return self::$shadeCache[$cacheKey];
+        }
+
+        self::$cacheMisses++;
+
+        for ($i = 1; $i <= 20; $i++) {
+            $step = $i / 20.0;
+
+            $lighter = $this->adjustBrightness($baseHex, $step);
+            if ($this->wcagValidator->checkContrast($baseHex, $lighter, $level, $isLargeText)) {
+                return self::$shadeCache[$cacheKey] = $lighter;
+            }
+
+            $darker = $this->adjustBrightness($baseHex, -$step);
+            if ($this->wcagValidator->checkContrast($baseHex, $darker, $level, $isLargeText)) {
+                return self::$shadeCache[$cacheKey] = $darker;
+            }
+        }
+
+        $blackContrast = $this->wcagValidator->calculateContrastRatio($baseHex, '#000000');
+        $whiteContrast = $this->wcagValidator->calculateContrastRatio($baseHex, '#FFFFFF');
+
+        return self::$shadeCache[$cacheKey] = $blackContrast > $whiteContrast ? '#000000' : '#FFFFFF';
+    }
 	/**
 	 * Increases or decreases the brightness of a hex color.
 	 *
