@@ -1,8 +1,8 @@
 <?php
 
-namespace ArtisanPackUI\Accessibility\Tests\Unit\Analysis;
+namespace ArtisanPack\Accessibility\Tests\Unit\Analysis;
 
-use ArtisanPackUI\Accessibility\Analysis\ReportGenerator;
+use ArtisanPack\Accessibility\Core\Analysis\ReportGenerator;
 
 it('generates a comprehensive analysis report', function () {
     $generator = new ReportGenerator();

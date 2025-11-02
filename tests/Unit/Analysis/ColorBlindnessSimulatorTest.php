@@ -1,8 +1,8 @@
 <?php
 
-namespace ArtisanPackUI\Accessibility\Tests\Unit\Analysis;
+namespace ArtisanPack\Accessibility\Tests\Unit\Analysis;
 
-use ArtisanPackUI\Accessibility\Analysis\ColorBlindnessSimulator;
+use ArtisanPack\Accessibility\Core\Analysis\ColorBlindnessSimulator;
 
 it('simulates protanopia', function () {
     $simulator = new ColorBlindnessSimulator();

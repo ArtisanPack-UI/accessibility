@@ -1,12 +1,11 @@
 <?php
 
-use ArtisanPackUI\Accessibility\A11y;
-use ArtisanPackUI\Accessibility\Facades\A11y as A11yFacade;
+uses(Tests\TestCase::class);
+
+use ArtisanPack\Accessibility\Core\A11y;
+use ArtisanPack\Accessibility\Laravel\Facades\A11y as A11yFacade;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Auth\User;
-use Tests\TestCase;
-
-uses( TestCase::class );
 
 it( 'service provider is registered', function () {
 	$this->assertTrue( app()->bound( 'a11y' ) );
@@ -48,17 +47,6 @@ test('it a11yCSSVarBlackOrWhite facade works again', function () {
     $this->assertEquals('white', A11yFacade::a11yCSSVarBlackOrWhite('#000000'));
 });
 
-it( 'getToastDuration facade works with authenticated user', function () {
-	$user = new class extends User {
-		public function getSetting( $key, $default )
-		{
-			return 5;
-		}
-	};
-	$this->actingAs( $user );
-
-	$this->assertEquals( 5000, A11yFacade::getToastDuration() );
-} );
 
 it( 'a11y helper returns instance', function () {
 	$this->assertInstanceOf( A11y::class, a11y() );
@@ -97,19 +85,3 @@ it( 'can override configuration', function () {
 	$this->assertEquals( 500, config( 'accessibility.cache_size' ) );
 } );
 
-it( 'getToastDuration helper requires authenticated user', function () {
-	$this->expectException( Error::class );
-	getToastDuration();
-} );
-
-it( 'getToastDuration helper works with authenticated user', function () {
-	$user = new class extends User {
-		public function getSetting( $key, $default )
-		{
-			return 5;
-		}
-	};
-	$this->actingAs( $user );
-
-	$this->assertEquals( 5000, getToastDuration() );
-} );

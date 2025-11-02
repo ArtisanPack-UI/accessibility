@@ -6,10 +6,10 @@
  * throughout a Laravel application.
  *
  * @since      1.0.0
- * @package    ArtisanPackUI\Accessibility\Facades
+ * @package    ArtisanPack\Accessibility\Facades
  */
 
-namespace ArtisanPackUI\Accessibility\Facades;
+namespace ArtisanPack\Accessibility\Laravel\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Facade;
  * for easy access to accessibility methods throughout the application.
  *
  * @since 1.0.0
- * @see   \ArtisanPackUI\Accessibility\A11y
+ * @see   \ArtisanPack\Accessibility\Core\A11y
  */
 class A11y extends Facade
 {

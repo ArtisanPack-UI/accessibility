@@ -5,12 +5,12 @@
  * Provides methods for generating accessible text colors based on a background color.
  *
  * @since      1.0.0
- * @package    ArtisanPackUI\Accessibility
+ * @package    ArtisanPack\Accessibility
  */
 
-namespace ArtisanPackUI\Accessibility;
+namespace ArtisanPack\Accessibility\Core;
 
-use ArtisanPackUI\Accessibility\A11y;
+use ArtisanPack\Accessibility\Core\A11y;
 
 /**
  * Generates accessible text colors.

@@ -2,8 +2,8 @@
 
 namespace Tests\Performance;
 
-use ArtisanPackUI\Accessibility\AccessibleColorGenerator;
-use ArtisanPackUI\Accessibility\WcagValidator;
+use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
+use ArtisanPack\Accessibility\Core\WcagValidator;
 
 class BenchmarkTest
 {

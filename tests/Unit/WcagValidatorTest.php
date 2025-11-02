@@ -1,8 +1,8 @@
 <?php
 
-namespace ArtisanPackUI\Accessibility\Tests\Unit;
+namespace ArtisanPack\Accessibility\Tests\Unit;
 
-use ArtisanPackUI\Accessibility\WcagValidator;
+use ArtisanPack\Accessibility\Core\WcagValidator;
 use PHPUnit\Framework\TestCase;
 
 class WcagValidatorTest extends TestCase

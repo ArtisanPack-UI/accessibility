@@ -6,10 +6,10 @@
  * including color contrast checking and text color determination.
  *
  * @since      1.0.0
- * @package    ArtisanPackUI\Accessibility
+ * @package    ArtisanPack\Accessibility
  */
 
-namespace ArtisanPackUI\Accessibility;
+namespace ArtisanPack\Accessibility\Core;
 
 use InvalidArgumentException;
 
@@ -25,9 +25,11 @@ use InvalidArgumentException;
 class A11y
 {
     private WcagValidator $wcagValidator;
+    private Config $config;
 
-    public function __construct(WcagValidator $wcagValidator = null)
+    public function __construct(Config $config, WcagValidator $wcagValidator = null)
     {
+        $this->config = $config;
         $this->wcagValidator = $wcagValidator ?? new WcagValidator();
     }
 
@@ -67,22 +69,6 @@ class A11y
     }
 
     /**
-     * Gets the user's setting for how long the toast element should stay on the screen.
-     *
-     * Retrieves the user's preference for toast notification duration from their settings.
-     * If no setting is found, defaults to 5 seconds. The value is returned in milliseconds.
-     *
-     * @since 1.0.0
-     *
-     * @return float|int The toast duration in milliseconds.
-     */
-    public function getToastDuration(): float|int
-    {
-        $user = auth()->user();
-        return $user->getSetting('a11y-toast-duration', 5) * 1000;
-    }
-
-    /**
      * Checks if two colors have sufficient contrast for accessibility.
      *
      * @since 1.0.0
@@ -110,7 +96,7 @@ class A11y
         $level = strtolower($level);
         $default = $level === 'aaa' ? 7.0 : 4.5;
 
-        $value = $this->getFromConfig("accessibility.wcag_thresholds.{$level}", $default);
+        $value = $this->config->get("accessibility.wcag_thresholds.{$level}", $default);
         return is_numeric($value) ? (float) $value : (float) $default;
     }
 
@@ -119,38 +105,7 @@ class A11y
      */
     private function getCacheSize(): int
     {
-        $value = $this->getFromConfig('accessibility.cache_size', 1000);
+        $value = $this->config->get('accessibility.cache_size', 1000);
         return is_numeric($value) ? (int) $value : 1000;
-    }
-
-    /**
-     * Safely retrieve a configuration value if Laravel's config is available, otherwise return default.
-     *
-     * @param string $key
-     * @param mixed $default
-     * @return mixed
-     */
-    private function getFromConfig(string $key, mixed $default): mixed
-    {
-        // Prefer using the container directly if available and bound
-        try {
-            if (function_exists('app')) {
-                $app = app();
-                if (is_object($app) && method_exists($app, 'bound') && $app->bound('config')) {
-                    // Use helper if available to respect any custom behavior
-                    if (function_exists('config')) {
-                        return config($key, $default);
-                    }
-                    // Fallback to repository directly
-                    if (isset($app['config'])) {
-                        return $app['config']->get($key, $default);
-                    }
-                }
-            }
-        } catch (\Throwable) {
-            // Ignore and fall back to default
-        }
-
-        return $default;
     }
 }

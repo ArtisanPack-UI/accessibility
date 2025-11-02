@@ -6,11 +6,11 @@
  * These functions serve as convenient wrappers around the A11y class methods.
  *
  * @since      1.0.0
- * @package    ArtisanPackUI\Accessibility
+ * @package    ArtisanPack\Accessibility
  */
 
-use ArtisanPackUI\Accessibility\A11y;
-use ArtisanPackUI\Accessibility\AccessibleColorGenerator;
+use ArtisanPack\Accessibility\Core\A11y;
+use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
 
 if ( ! function_exists( 'a11y' ) ) {
 	/**
@@ -67,23 +67,7 @@ if ( ! function_exists( 'a11yGetContrastColor' ) ) {
 	}
 }
 
-if ( ! function_exists( 'getToastDuration' ) ) {
-	/**
-	 * Gets the user's setting for how long the toast element should stay on the screen.
-	 *
-	 * Retrieves the user's preference for toast notification duration from their settings.
-	 * If no setting is found, defaults to 5 seconds. The value is returned in milliseconds.
-	 * This is a helper function that calls the corresponding method on the A11y class.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return float|int The toast duration in milliseconds.
-	 */
-	function getToastDuration(): float|int
-	{
-		return a11y()->getToastDuration();
-	}
-}
+
 
 if ( ! function_exists( 'a11yCheckContrastColor' ) ) {
 	/**

@@ -1,7 +1,7 @@
 <?php
 
-use ArtisanPackUI\Accessibility\AccessibleColorGenerator;
-use ArtisanPackUI\Accessibility\A11y;
+use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
+use ArtisanPack\Accessibility\Core\A11y;
 use Tests\TestCase;
 
 uses(TestCase::class);

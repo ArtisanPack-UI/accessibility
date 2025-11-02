@@ -5,11 +5,13 @@
  * Registers the accessibility services with the Laravel application.
  *
  * @since      1.0.0
- * @package    ArtisanPackUI\Accessibility
+ * @package    ArtisanPack\Accessibility
  */
 
-namespace ArtisanPackUI\Accessibility;
+namespace ArtisanPack\Accessibility\Laravel;
 
+use ArtisanPack\Accessibility\Core\A11y;
+use ArtisanPack\Accessibility\Core\Config;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
@@ -36,12 +38,14 @@ class A11yServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->singleton(Config::class, LaravelConfig::class);
+
         $this->app->singleton('a11y', function ($app) {
-            return new A11y();
+            return $app->make(A11y::class);
         });
 
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/accessibility.php', 'accessibility'
+            __DIR__ . '/../../config/accessibility.php', 'accessibility'
         );
     }
 
@@ -55,7 +59,7 @@ class A11yServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/accessibility.php' => config_path('accessibility.php'),
+                __DIR__ . '/../../config/accessibility.php' => config_path('accessibility.php'),
             ], 'config');
         }
 

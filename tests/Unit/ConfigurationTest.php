@@ -1,8 +1,8 @@
 <?php
 
-namespace ArtisanPackUI\Accessibility\Tests\Unit;
+namespace ArtisanPack\Accessibility\Tests\Unit;
 
-use ArtisanPackUI\Accessibility\A11yServiceProvider;
+use ArtisanPack\Accessibility\Laravel\A11yServiceProvider;
 use Illuminate\Support\Facades\Config;
 use InvalidArgumentException;
 use Orchestra\Testbench\TestCase;

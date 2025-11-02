@@ -1,6 +1,6 @@
 <?php
 
-namespace ArtisanPackUI\Accessibility;
+namespace ArtisanPack\Accessibility\Core;
 
 use InvalidArgumentException;
 

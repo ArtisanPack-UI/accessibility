@@ -1,6 +1,8 @@
 <?php
 
-use ArtisanPackUI\Accessibility\AccessibleColorGenerator;
+uses(Tests\TestCase::class);
+
+use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
 
 test('handles malformed hex codes', function ($malformedHex) {
     $generator = new AccessibleColorGenerator();

@@ -1,8 +1,8 @@
 <?php
 
-namespace ArtisanPackUI\Accessibility\Tests\Unit\Analysis;
+namespace ArtisanPack\Accessibility\Tests\Unit\Analysis;
 
-use ArtisanPackUI\Accessibility\Analysis\PerceptualAnalyzer;
+use ArtisanPack\Accessibility\Core\Analysis\PerceptualAnalyzer;
 
 it('gets the complementary color', function () {
     $analyzer = new PerceptualAnalyzer();

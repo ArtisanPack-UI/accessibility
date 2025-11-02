@@ -1,8 +1,8 @@
 <?php
 
-namespace ArtisanPackUI\Accessibility\Tests\Unit\Analysis;
+namespace ArtisanPack\Accessibility\Tests\Unit\Analysis;
 
-use ArtisanPackUI\Accessibility\Analysis\AccessibilityScorer;
+use ArtisanPack\Accessibility\Core\Analysis\AccessibilityScorer;
 
 it('gets accessibility recommendations', function () {
     $scorer = new AccessibilityScorer();

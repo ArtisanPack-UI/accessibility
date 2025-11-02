@@ -6,10 +6,11 @@
   "version": "1.1.1",
   "autoload": {
     "psr-4": {
-      "ArtisanPackUI\\Accessibility\\": "src/"
+      "ArtisanPack\\Accessibility\\Core\\": "src/Core/",
+      "ArtisanPack\\Accessibility\\Laravel\\": "src/Laravel/"
     },
     "files": [
-      "src/helpers.php"
+      "src/Core/helpers.php"
     ]
   },
   "autoload-dev": {
@@ -25,8 +26,10 @@
   ],
   "require": {
     "php": "^8.2",
-    "illuminate/support": ">=5.3",
     "artisanpack-ui/core": "^1.0"
+  },
+  "suggest": {
+    "illuminate/support": "Required for Laravel integration."
   },
   "require-dev": {
     "pestphp/pest": "^3.8",
@@ -46,10 +49,10 @@
   "extra": {
     "laravel": {
       "providers": [
-        "ArtisanPackUI\\Accessibility\\A11yServiceProvider"
+        "ArtisanPack\\Accessibility\\Laravel\\A11yServiceProvider"
       ],
       "aliases": {
-        "A11y": "ArtisanPackUI\\Accessibility\\Facades\\A11y"
+        "A11y": "ArtisanPack\\Accessibility\\Laravel\\Facades\\A11y"
       }
     }
   },

@@ -1,6 +1,6 @@
 <?php
 
-use ArtisanPackUI\Accessibility\A11y;
+use ArtisanPack\Accessibility\Core\A11y;
 
 uses(Tests\TestCase::class);
 

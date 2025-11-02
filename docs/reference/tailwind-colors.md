@@ -11,7 +11,7 @@ The ArtisanPack UI Accessibility package supports all standard Tailwind CSS colo
 Instead of using hex color codes, you can use Tailwind color names:
 
 ```php
-use ArtisanPackUI\Accessibility\AccessibleColorGenerator;
+use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
 
 $generator = new AccessibleColorGenerator();
 

@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use ArtisanPackUI\Accessibility\AccessibleColorGenerator;
+use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
 use Tests\TestCase;
 
 class ColorFormatTest extends TestCase

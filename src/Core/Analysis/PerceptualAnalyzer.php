@@ -1,6 +1,6 @@
 <?php
 
-namespace ArtisanPackUI\Accessibility\Analysis;
+namespace ArtisanPack\Accessibility\Core\Analysis;
 
 class PerceptualAnalyzer
 {
