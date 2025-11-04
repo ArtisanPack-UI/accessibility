@@ -130,6 +130,20 @@ test(
     }
 );
 
+it(
+    'generates from theme', function () {
+        $generator = app(AccessibleColorGenerator::class);
+        $theme = [
+        'light' => ['--color-primary' => '#ffffff'],
+        'dark' => ['--color-primary' => '#000000'],
+        ];
+
+        expect($generator->fromTheme('var(--color-primary)', $theme, 'light'))->toBe('#000000');
+        expect(strtoupper($generator->fromTheme('var(--color-primary)', $theme, 'dark')))->toBe('#FFFFFF');
+        expect($generator->fromTheme('#ff0000', $theme, 'light'))->toBe('#000000');
+    }
+);
+
 test(
     'adjustBrightness handles extreme factors', function () {
         $generator = app(AccessibleColorGenerator::class);

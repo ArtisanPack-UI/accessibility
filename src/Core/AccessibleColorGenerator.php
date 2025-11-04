@@ -11,6 +11,7 @@
 namespace ArtisanPack\Accessibility\Core;
 
 use ArtisanPack\Accessibility\Core\A11y;
+use ArtisanPack\Accessibility\Core\Theming\CssVariableParser;
 
 /**
  * Generates accessible text colors.
@@ -31,10 +32,12 @@ class AccessibleColorGenerator
     public static int $cacheMisses = 0;
 
     protected WcagValidator $wcagValidator;
+    protected CssVariableParser $parser;
 
-    public function __construct(WcagValidator $wcagValidator = null)
+    public function __construct(WcagValidator $wcagValidator = null, CssVariableParser $parser = null)
     {
         $this->wcagValidator = $wcagValidator ?? new WcagValidator();
+        $this->parser = $parser ?? new CssVariableParser();
     }
 
     public static function getCacheHits(): int
@@ -386,6 +389,19 @@ class AccessibleColorGenerator
         $whiteContrast = $this->wcagValidator->calculateContrastRatio($hexColor, '#FFFFFF');
 
         return $blackContrast > $whiteContrast ? '#000000' : '#FFFFFF';
+    }
+
+    public function fromTheme(string $cssValue, array $theme, string $mode = 'light'): string
+    {
+        $variableName = $this->parser->parse($cssValue);
+
+        if ($variableName) {
+            $color = $this->parser->resolve($variableName, $theme[$mode]);
+        } else {
+            $color = $cssValue;
+        }
+
+        return $this->generateAccessibleTextColor($color);
     }
 
     /**

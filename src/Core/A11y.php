@@ -7,12 +7,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * @since     1.0.0
- * @category  Accessibility
- * @package   ArtisanPack\Accessibility
- * @author    Jacob Martella <me@jacobmartella.com>
- * @license   https://www.gnu.org/licenses/gpl-3.0.html GPL-3.0-or-later
- * @link      https://artisanpack.com
+ * @since    1.0.0
+ * @category Accessibility
+ * @package  ArtisanPack\Accessibility
+ * @author   Jacob Martella <me@jacobmartella.com>
+ * @license  https://www.gnu.org/licenses/gpl-3.0.html GPL-3.0-or-later
+ * @link     https://artisanpack.com
  */
 
 namespace ArtisanPack\Accessibility\Core;
@@ -27,12 +27,12 @@ use InvalidArgumentException;
  * based on background colors, checking contrast ratios, and managing
  * accessibility-related user settings.
  *
- * @since     1.0.0
- * @category  Accessibility
- * @package   ArtisanPack\Accessibility
- * @author    Jacob Martella <me@jacobmartella.com>
- * @license   https://www.gnu.org/licenses/gpl-3.0.html GPL-3.0-or-later
- * @link      https://artisanpack.com
+ * @since    1.0.0
+ * @category Accessibility
+ * @package  ArtisanPack\Accessibility
+ * @author   Jacob Martella <me@jacobmartella.com>
+ * @license  https://www.gnu.org/licenses/gpl-3.0.html GPL-3.0-or-later
+ * @link     https://artisanpack.com
  */
 class A11y
 {
@@ -53,7 +53,7 @@ class A11y
     /**
      * A11y constructor.
      *
-     * @param \ArtisanPack\Accessibility\Core\Contracts\Config $config        The config.
+     * @param \ArtisanPack\Accessibility\Core\Contracts\Config   $config        The config.
      * @param \ArtisanPack\Accessibility\Core\WcagValidator|null $wcagValidator The WCAG validator.
      */
     public function __construct(Config $config, ?WcagValidator $wcagValidator = null)
