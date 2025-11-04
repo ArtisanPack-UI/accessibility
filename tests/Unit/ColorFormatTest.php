@@ -3,6 +3,8 @@
 namespace Tests\Unit;
 
 use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ColorFormatTest extends TestCase
@@ -15,10 +17,8 @@ class ColorFormatTest extends TestCase
         $this->colorGenerator = new AccessibleColorGenerator();
     }
 
-    /**
-     * @test
-     * @dataProvider rgbProvider
-     */
+    #[Test]
+    #[DataProvider('rgbProvider')]
     public function it_converts_rgb_to_hex($rgb, $expectedHex)
     {
         $method = new \ReflectionMethod(AccessibleColorGenerator::class, 'rgbToHex');
@@ -26,10 +26,8 @@ class ColorFormatTest extends TestCase
         $this->assertEquals($expectedHex, $method->invoke($this->colorGenerator, ...$rgb));
     }
 
-    /**
-     * @test
-     * @dataProvider hslProvider
-     */
+    #[Test]
+    #[DataProvider('hslProvider')]
     public function it_converts_hsl_to_hex($hsl, $expectedHex)
     {
         $method = new \ReflectionMethod(AccessibleColorGenerator::class, 'hslToHex');
@@ -37,10 +35,8 @@ class ColorFormatTest extends TestCase
         $this->assertEquals($expectedHex, $method->invoke($this->colorGenerator, ...$hsl));
     }
 
-    /**
-     * @test
-     * @dataProvider colorStringProvider
-     */
+    #[Test]
+    #[DataProvider('colorStringProvider')]
     public function it_gets_hex_from_color_string($colorString, $expectedHex)
     {
         $method = new \ReflectionMethod(AccessibleColorGenerator::class, 'getHexFromColorString');

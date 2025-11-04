@@ -5,8 +5,8 @@
  * Provides a facade for the A11y class to make it easily accessible
  * throughout a Laravel application.
  *
- * @since      1.0.0
- * @package    ArtisanPack\Accessibility\Facades
+ * @since   1.0.0
+ * @package ArtisanPack\Accessibility\Facades
  */
 
 namespace ArtisanPack\Accessibility\Laravel\Facades;
@@ -24,17 +24,17 @@ use Illuminate\Support\Facades\Facade;
  */
 class A11y extends Facade
 {
-	/**
-	 * Get the registered name of the component.
-	 *
-	 * Returns the service container binding key for the A11y service.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string The name of the component in the container.
-	 */
-	protected static function getFacadeAccessor()
-	{
-		return 'a11y';
-	}
+    /**
+     * Get the registered name of the component.
+     *
+     * Returns the service container binding key for the A11y service.
+     *
+     * @since 1.0.0
+     *
+     * @return string The name of the component in the container.
+     */
+    protected static function getFacadeAccessor()
+    {
+        return 'a11y';
+    }
 }

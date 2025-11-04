@@ -8,7 +8,7 @@ class AccessibilityScorer
 {
     private WcagValidator $wcagValidator;
 
-    public function __construct(WcagValidator $wcagValidator = null)
+    public function __construct(?WcagValidator $wcagValidator = null)
     {
         $this->wcagValidator = $wcagValidator ?? new WcagValidator();
     }
