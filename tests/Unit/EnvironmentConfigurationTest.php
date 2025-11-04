@@ -1,10 +1,11 @@
 <?php
 
-namespace ArtisanPackUI\Accessibility\Tests\Unit;
+namespace ArtisanPack\Accessibility\Tests\Unit;
 
-use ArtisanPackUI\Accessibility\A11yServiceProvider;
+use ArtisanPack\Accessibility\Laravel\A11yServiceProvider;
 use Illuminate\Support\Facades\Config;
 use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class EnvironmentConfigurationTest extends TestCase
 {
@@ -20,7 +21,7 @@ class EnvironmentConfigurationTest extends TestCase
         $_ENV['ACCESSIBILITY_WCAG_THRESHOLDS_AA'] = '6.0';
         $_SERVER['ACCESSIBILITY_WCAG_THRESHOLDS_AA'] = '6.0';
 
-        $config = require __DIR__ . '/../../config/accessibility.php';
+        $config = include __DIR__ . '/../../config/accessibility.php';
         $app['config']->set('accessibility', $config);
     }
 
@@ -35,7 +36,7 @@ class EnvironmentConfigurationTest extends TestCase
         parent::tearDown();
     }
 
-    /** @test */
+    #[Test]
     public function environment_variables_can_override_configuration()
     {
         $this->assertEquals(6.0, Config::get('accessibility.wcag_thresholds.aa'));

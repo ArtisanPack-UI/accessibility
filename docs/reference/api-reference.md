@@ -24,7 +24,7 @@ Analyzes the provided hex color and determines if black or white text would prov
 
 **Example:**
 ```php
-$a11y = new ArtisanPackUI\Accessibility\A11y();
+$a11y = new ArtisanPack\Accessibility\Core\A11y();
 $textColor = $a11y->a11yCSSVarBlackOrWhite('#3b82f6'); // Returns 'black' or 'white'
 ```
 

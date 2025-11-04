@@ -1,8 +1,10 @@
 <?php
 
-namespace ArtisanPackUI\Accessibility\Tests\Unit;
+namespace ArtisanPack\Accessibility\Tests\Unit;
 
-use ArtisanPackUI\Accessibility\WcagValidator;
+use ArtisanPack\Accessibility\Core\WcagValidator;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class WcagValidatorTest extends TestCase
@@ -15,7 +17,8 @@ class WcagValidatorTest extends TestCase
         $this->validator = new WcagValidator();
     }
 
-    /** @dataProvider contrastRatioDataProvider */
+    #[Test]
+    #[DataProvider('contrastRatioDataProvider')]
     public function test_calculates_contrast_ratio_correctly($color1, $color2, $expectedRatio)
     {
         $this->assertEqualsWithDelta($expectedRatio, $this->validator->calculateContrastRatio($color1, $color2), 0.01);
@@ -30,7 +33,8 @@ class WcagValidatorTest extends TestCase
         ];
     }
 
-    /** @dataProvider wcagComplianceDataProvider */
+    #[Test]
+    #[DataProvider('wcagComplianceDataProvider')]
     public function test_checks_wcag_compliance_correctly($color1, $color2, $level, $isLargeText, $expected)
     {
         $this->assertSame($expected, $this->validator->checkContrast($color1, $color2, $level, $isLargeText));

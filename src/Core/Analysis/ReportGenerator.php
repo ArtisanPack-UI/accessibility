@@ -1,6 +1,6 @@
 <?php
 
-namespace ArtisanPackUI\Accessibility\Analysis;
+namespace ArtisanPack\Accessibility\Core\Analysis;
 
 class ReportGenerator
 {
@@ -9,9 +9,9 @@ class ReportGenerator
     private AccessibilityScorer $accessibilityScorer;
 
     public function __construct(
-        ColorBlindnessSimulator $colorBlindnessSimulator = null,
-        PerceptualAnalyzer $perceptualAnalyzer = null,
-        AccessibilityScorer $accessibilityScorer = null
+        ?ColorBlindnessSimulator $colorBlindnessSimulator = null,
+        ?PerceptualAnalyzer $perceptualAnalyzer = null,
+        ?AccessibilityScorer $accessibilityScorer = null
     ) {
         $this->colorBlindnessSimulator = $colorBlindnessSimulator ?? new ColorBlindnessSimulator();
         $this->perceptualAnalyzer = $perceptualAnalyzer ?? new PerceptualAnalyzer();

@@ -1,14 +1,14 @@
 <?php
 
-namespace ArtisanPackUI\Accessibility\Analysis;
+namespace ArtisanPack\Accessibility\Core\Analysis;
 
-use ArtisanPackUI\Accessibility\WcagValidator;
+use ArtisanPack\Accessibility\Core\WcagValidator;
 
 class AccessibilityScorer
 {
     private WcagValidator $wcagValidator;
 
-    public function __construct(WcagValidator $wcagValidator = null)
+    public function __construct(?WcagValidator $wcagValidator = null)
     {
         $this->wcagValidator = $wcagValidator ?? new WcagValidator();
     }
@@ -56,7 +56,7 @@ class AccessibilityScorer
 
     private function getSuggestion(string $foregroundColor, string $backgroundColor, string $level, bool $isLargeText = false): array
     {
-        $generator = new \ArtisanPackUI\Accessibility\AccessibleColorGenerator($this->wcagValidator);
+        $generator = new \ArtisanPack\Accessibility\Core\AccessibleColorGenerator($this->wcagValidator);
 
         $suggestedForeground = $generator->generateAccessibleTextColor($backgroundColor, true, $level, $isLargeText);
         $suggestedBackground = $generator->generateAccessibleTextColor($foregroundColor, true, $level, $isLargeText);

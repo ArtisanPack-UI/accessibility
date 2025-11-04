@@ -1,8 +1,8 @@
 <?php
 
-use ArtisanPackUI\Accessibility\A11y;
-use ArtisanPackUI\Accessibility\AccessibleColorGenerator;
-use ArtisanPackUI\Accessibility\Constants;
+use ArtisanPack\Accessibility\Core\A11y;
+use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
+use ArtisanPack\Accessibility\Core\Constants;
 use Tests\TestCase;
 
 class CachingTest extends TestCase

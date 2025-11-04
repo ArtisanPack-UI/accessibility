@@ -1,70 +1,78 @@
 <?php
 
-use ArtisanPackUI\Accessibility\AccessibleColorGenerator;
-use ArtisanPackUI\Accessibility\A11y;
+use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
+use ArtisanPack\Accessibility\Core\A11y;
 use Tests\TestCase;
 
 uses(TestCase::class);
 
 // Simple test for AccessibleColorGenerator class
-test('AccessibleColorGenerator can be instantiated', function () {
-    $generator = app(AccessibleColorGenerator::class);
-    expect($generator)->toBeInstanceOf(AccessibleColorGenerator::class);
-});
+test(
+    'AccessibleColorGenerator can be instantiated', function () {
+        $generator = app(AccessibleColorGenerator::class);
+        expect($generator)->toBeInstanceOf(AccessibleColorGenerator::class);
+    }
+);
 
 // Test public methods
-test('generateAccessibleTextColor returns expected colors', function () {
-    $generator = app(AccessibleColorGenerator::class);
+test(
+    'generateAccessibleTextColor returns expected colors', function () {
+        $generator = app(AccessibleColorGenerator::class);
 
-    // Test with hex colors (non-tint mode)
-    expect($generator->generateAccessibleTextColor('#FFFFFF'))->toBe('#000000');
-    expect($generator->generateAccessibleTextColor('#000000'))->toBe('#FFFFFF');
+        // Test with hex colors (non-tint mode)
+        expect($generator->generateAccessibleTextColor('#FFFFFF'))->toBe('#000000');
+        expect($generator->generateAccessibleTextColor('#000000'))->toBe('#FFFFFF');
 
-    // Test with Tailwind colors (non-tint mode)
-    expect($generator->generateAccessibleTextColor('blue-500'))->toBe('#000000');
-    expect($generator->generateAccessibleTextColor('yellow-300'))->toBe('#000000');
+        // Test with Tailwind colors (non-tint mode)
+        expect($generator->generateAccessibleTextColor('blue-500'))->toBe('#000000');
+        expect($generator->generateAccessibleTextColor('yellow-300'))->toBe('#000000');
 
-    // Test with tint mode
-    $tintedColor = $generator->generateAccessibleTextColor('#3b82f6', true);
-    // The tinted color may be black or white if no accessible tint is found.
+        // Test with tint mode
+        $tintedColor = $generator->generateAccessibleTextColor('#3b82f6', true);
+        // The tinted color may be black or white if no accessible tint is found.
 
-    // Test invalid colors
-    expect($generator->generateAccessibleTextColor('#XYZ'))->toBe('#000000');
-    expect($generator->generateAccessibleTextColor('nonexistent-color'))->toBe('#000000');
-});
+        // Test invalid colors
+        expect($generator->generateAccessibleTextColor('#XYZ'))->toBe('#000000');
+        expect($generator->generateAccessibleTextColor('nonexistent-color'))->toBe('#000000');
+    }
+);
 
 // Test helper function
-test('helper function generateAccessibleTextColor works', function () {
-    if (!function_exists('generateAccessibleTextColor')) {
-        $this->markTestSkipped('Helper function not available in test environment');
-    }
+test(
+    'helper function generateAccessibleTextColor works', function () {
+        if (!function_exists('generateAccessibleTextColor')) {
+            $this->markTestSkipped('Helper function not available in test environment');
+        }
 
-    // Basic test with hex color
-    expect(generateAccessibleTextColor('#FFFFFF'))->toBe('#000000');
-});
+        // Basic test with hex color
+        expect(generateAccessibleTextColor('#FFFFFF'))->toBe('#000000');
+    }
+);
 
 // Test that generated colors have sufficient contrast
-test('generated colors have sufficient contrast', function () {
-    $generator = app(AccessibleColorGenerator::class);
-    $a11y = app(A11y::class);
+test(
+    'generated colors have sufficient contrast', function () {
+        $generator = app(AccessibleColorGenerator::class);
+        $a11y = app(A11y::class);
 
-    $backgrounds = [
+        $backgrounds = [
         '#3b82f6', // blue-500
         '#ef4444', // red-500
         '#22c55e', // green-500
         '#000000', // black
         '#FFFFFF', // white
-    ];
+        ];
 
-    foreach ($backgrounds as $background) {
-        // Test non-tint mode
-        $textColor = $generator->generateAccessibleTextColor($background);
-        expect($a11y->a11yCheckContrastColor($background, $textColor, 'aa', true))->toBeTrue();
+        foreach ($backgrounds as $background) {
+            // Test non-tint mode
+            $textColor = $generator->generateAccessibleTextColor($background);
+            expect($a11y->a11yCheckContrastColor($background, $textColor, 'aa', true))->toBeTrue();
 
-        // Test tint mode
-        $tintedColor = $generator->generateAccessibleTextColor($background, true);
-        if ($tintedColor !== '#000000' && $tintedColor !== '#FFFFFF') {
-            expect($a11y->a11yCheckContrastColor($background, $tintedColor, 'aa', true))->toBeTrue();
+            // Test tint mode
+            $tintedColor = $generator->generateAccessibleTextColor($background, true);
+            if ($tintedColor !== '#000000' && $tintedColor !== '#FFFFFF') {
+                expect($a11y->a11yCheckContrastColor($background, $tintedColor, 'aa', true))->toBeTrue();
+            }
         }
     }
-});
+);

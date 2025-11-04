@@ -1,11 +1,12 @@
 <?php
 
-namespace ArtisanPackUI\Accessibility\Tests\Unit;
+namespace Tests\Unit;
 
-use ArtisanPackUI\Accessibility\A11yServiceProvider;
+use ArtisanPack\Accessibility\Laravel\A11yServiceProvider;
 use Illuminate\Support\Facades\Config;
 use InvalidArgumentException;
 use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class ConfigurationTest extends TestCase
 {
@@ -14,7 +15,7 @@ class ConfigurationTest extends TestCase
         return [A11yServiceProvider::class];
     }
 
-    /** @test */
+    #[Test]
     public function default_configuration_is_loaded()
     {
         $this->assertEquals(4.5, Config::get('accessibility.wcag_thresholds.aa'));
@@ -24,14 +25,14 @@ class ConfigurationTest extends TestCase
         $this->assertEquals(1000, Config::get('accessibility.cache_size'));
     }
 
-    /** @test */
+    #[Test]
     public function configuration_can_be_overridden()
     {
         Config::set('accessibility.wcag_thresholds.aa', 5.0);
         $this->assertEquals(5.0, Config::get('accessibility.wcag_thresholds.aa'));
     }
 
-    /** @test */
+    #[Test]
     public function invalid_configuration_throws_exception()
     {
         $this->expectException(InvalidArgumentException::class);
