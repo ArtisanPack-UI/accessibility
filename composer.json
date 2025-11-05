@@ -6,6 +6,7 @@
   "version": "1.1.1",
   "autoload": {
     "psr-4": {
+      "ArtisanPack\\Accessibility\\Http\\": "src/Http/",
       "ArtisanPack\\Accessibility\\Core\\": "src/Core/",
       "ArtisanPack\\Accessibility\\Core\\Theming\\": "src/Theming/",
       "ArtisanPack\\Accessibility\\Laravel\\": "src/Laravel/"
@@ -39,7 +40,8 @@
     "squizlabs/php_codesniffer": "^3.13",
     "artisanpack-ui/code-style": "^1.0",
     "dealerdirect/phpcodesniffer-composer-installer": "^1.1",
-    "phpbench/phpbench": "^1.2"
+    "phpbench/phpbench": "^1.2",
+    "laravel/sanctum": "^4.0"
   },
   "config": {
     "allow-plugins": {
