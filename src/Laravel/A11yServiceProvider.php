@@ -10,6 +10,9 @@
 
 namespace ArtisanPack\Accessibility\Laravel;
 
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use ArtisanPack\Accessibility\Core\A11y;
 use ArtisanPack\Accessibility\Core\Contracts\Config;
 use Illuminate\Support\Facades\Validator;
@@ -59,6 +62,12 @@ class A11yServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
+
+        $this->loadRoutesFrom(__DIR__.'/../../routes/api.php');
+
         if ($this->app->runningInConsole()) {
             $this->publishes(
                 [
