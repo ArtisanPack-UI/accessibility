@@ -9,6 +9,7 @@
       "ArtisanPack\\Accessibility\\Http\\": "src/Http/",
       "ArtisanPack\\Accessibility\\Core\\": "src/Core/",
       "ArtisanPack\\Accessibility\\Core\\Theming\\": "src/Theming/",
+      "ArtisanPack\\Accessibility\\PaletteGeneration\\": "src/PaletteGeneration/",
       "ArtisanPack\\Accessibility\\Laravel\\": "src/Laravel/"
     },
     "files": [
