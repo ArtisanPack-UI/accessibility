@@ -30,11 +30,29 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Cache Size
+    | Cache Configuration
     |--------------------------------------------------------------------------
     |
-    | The maximum number of items to store in the contrast cache.
+    | Configure the caching layer for performance optimizations.
     |
     */
-    'cache_size' => env('ACCESSIBILITY_CACHE_SIZE', 1000),
+    'cache' => [
+        'default' => env('ACCESSIBILITY_CACHE_DRIVER', 'array'),
+
+        'stores' => [
+            'array' => [
+                'driver' => 'array',
+                'limit' => env('ACCESSIBILITY_CACHE_SIZE', 1000),
+            ],
+
+            'file' => [
+                'driver' => 'file',
+                'path' => storage_path('framework/cache/data/accessibility'),
+            ],
+
+            'null' => [
+                'driver' => 'null',
+            ],
+        ],
+    ],
 ];

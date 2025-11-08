@@ -18,6 +18,7 @@
 namespace ArtisanPack\Accessibility\Core;
 
 use ArtisanPack\Accessibility\Core\Contracts\Config;
+use ArtisanPack\Accessibility\Core\Performance\BatchProcessor;
 use InvalidArgumentException;
 
 /**
@@ -42,24 +43,20 @@ class A11y
      * @var \ArtisanPack\Accessibility\Core\WcagValidator
      */
     private WcagValidator $_wcagValidator;
-
-    /**
-     * The config.
-     *
-     * @var \ArtisanPack\Accessibility\Core\Contracts\Config
-     */
     private Config $_config;
+    private AccessibleColorGenerator $colorGenerator;
+    private BatchProcessor $batchProcessor;
 
-    /**
-     * A11y constructor.
-     *
-     * @param \ArtisanPack\Accessibility\Core\Contracts\Config   $config        The config.
-     * @param \ArtisanPack\Accessibility\Core\WcagValidator|null $wcagValidator The WCAG validator.
-     */
-    public function __construct(Config $config, ?WcagValidator $wcagValidator = null)
-    {
+    public function __construct(
+        Config $config,
+        ?WcagValidator $wcagValidator = null,
+        ?AccessibleColorGenerator $colorGenerator = null,
+        ?BatchProcessor $batchProcessor = null
+    ) {
         $this->_config = $config;
         $this->_wcagValidator = $wcagValidator ?? new WcagValidator();
+        $this->colorGenerator = $colorGenerator ?? new AccessibleColorGenerator($this->_wcagValidator);
+        $this->batchProcessor = $batchProcessor ?? new BatchProcessor($this->colorGenerator, $this->colorGenerator->getCache());
     }
 
     /**
@@ -75,7 +72,7 @@ class A11y
      */
     public function a11yCSSVarBlackOrWhite(string $hexColor): string
     {
-        return '#000000' === $this->a11yGetContrastColor($hexColor) ? 'black' : 'white';
+        return '#000000' === $this->colorGenerator->generateAccessibleTextColor($hexColor) ? 'black' : 'white';
     }
 
     /**
@@ -91,10 +88,7 @@ class A11y
      */
     public function a11yGetContrastColor(string $hexColor): string
     {
-        $blackContrast = $this->_wcagValidator->calculateContrastRatio($hexColor, '#000000');
-        $whiteContrast = $this->_wcagValidator->calculateContrastRatio($hexColor, '#FFFFFF');
-
-        return $blackContrast > $whiteContrast ? '#000000' : '#FFFFFF';
+        return $this->colorGenerator->generateAccessibleTextColor($hexColor);
     }
 
     /**
@@ -115,6 +109,11 @@ class A11y
         } catch (InvalidArgumentException) {
             return false;
         }
+    }
+
+    public function batch(): BatchProcessor
+    {
+        return $this->batchProcessor;
     }
 
     /**

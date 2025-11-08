@@ -103,7 +103,8 @@ it(
         'loads default configuration', function () {
             $this->assertEquals(4.5, config('accessibility.wcag_thresholds.aa'));
             $this->assertEquals(7.0, config('accessibility.wcag_thresholds.aaa'));
-            $this->assertEquals(1000, config('accessibility.cache_size'));
+            $this->assertEquals('array', config('accessibility.cache.default'));
+            $this->assertEquals(1000, config('accessibility.cache.stores.array.limit'));
         } 
     );
 

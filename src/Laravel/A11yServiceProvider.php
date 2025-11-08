@@ -10,6 +10,9 @@
 
 namespace ArtisanPack\Accessibility\Laravel;
 
+use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
+use ArtisanPack\Accessibility\Core\Performance\BatchProcessor;
+use ArtisanPack\Accessibility\Core\Caching\CacheManager;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -43,11 +46,15 @@ class A11yServiceProvider extends ServiceProvider
     {
         $this->app->singleton(Config::class, LaravelConfig::class);
 
-        $this->app->singleton(
-            'a11y', function ($app) {
-                return $app->make(A11y::class);
-            }
-        );
+        $this->app->singleton('a11y', function ($app) {
+            $config = $app->make(Config::class);
+            $cacheConfig = $config->get('accessibility.cache');
+            $cacheManager = new CacheManager($cacheConfig);
+            $colorGenerator = new AccessibleColorGenerator(null, null, $cacheManager);
+            $batchProcessor = new BatchProcessor($colorGenerator, $colorGenerator->getCache());
+
+            return new A11y($config, null, $colorGenerator, $batchProcessor);
+        });
 
         $this->mergeConfigFrom(
             __DIR__ . '/../../config/accessibility.php', 'accessibility'
@@ -91,7 +98,9 @@ class A11yServiceProvider extends ServiceProvider
             'wcag_thresholds.aaa' => 'required|numeric|min:1|max:21',
             'large_text_thresholds.font_size' => 'required|integer|min:1',
             'large_text_thresholds.font_weight' => 'required|string',
-            'cache_size' => 'required|integer|min:0',
+            'cache.default' => 'required|string|in:array,file,null',
+            'cache.stores.array.limit' => 'required|integer|min:0',
+            'cache.stores.file.path' => 'required_if:cache.default,file|string',
             ]
         );
 

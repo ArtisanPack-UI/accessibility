@@ -3,13 +3,13 @@
 namespace Tests\Performance;
 
 use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
+use ArtisanPack\Accessibility\Core\BatchProcessor;
+use ArtisanPack\Accessibility\Core\Caching\CacheManager;
 use ArtisanPack\Accessibility\Core\WcagValidator;
 
 class BenchmarkTest
 {
-    private $wcagValidator;
-    private $colorGenerator;
-    private $colors = [
+    private array $colors = [
         '#ff0000',
         '#00ff00',
         '#0000ff',
@@ -22,49 +22,47 @@ class BenchmarkTest
         '#3b82f6',
     ];
 
-    public function __construct()
+    private function getBatchProcessor(string $cacheDriver): BatchProcessor
     {
-        $this->wcagValidator = new WcagValidator();
-        $this->colorGenerator = new AccessibleColorGenerator($this->wcagValidator);
-    }
-
-    /**
-     * @Revs(100)
-     * @Iterations(5)
-     */
-    public function benchCalculateContrastRatio()
-    {
-        $this->wcagValidator->calculateContrastRatio('#ff0000', '#000000');
-    }
-
-    /**
-     * @Revs(100)
-     * @Iterations(5)
-     */
-    public function benchFindClosestAccessibleShade()
-    {
-        $this->colorGenerator->generateAccessibleTextColor('#ff0000', true);
+        $config = [
+            'default' => $cacheDriver,
+            'stores' => [
+                'array' => ['driver' => 'array'],
+                'file' => ['driver' => 'file', 'path' => __DIR__ . '/cache'],
+                'null' => ['driver' => 'null'],
+            ],
+        ];
+        $cacheManager = new CacheManager($config);
+        $colorGenerator = new AccessibleColorGenerator(new WcagValidator(), null, $cacheManager);
+        return new BatchProcessor($colorGenerator, $cacheManager->store());
     }
 
     /**
      * @Revs(10)
      * @Iterations(5)
+     * @ParamProviders({"provideCacheDrivers"})
      */
-    public function benchBulkColorProcessing()
+    public function benchBatchProcessor(array $params): void
     {
-        foreach ($this->colors as $color) {
-            $this->colorGenerator->generateAccessibleTextColor($color, false);
-        }
+        $batchProcessor = $this->getBatchProcessor($params['driver']);
+        $batchProcessor->generateAccessibleTextColors($this->colors);
     }
 
     /**
      * @Revs(10)
      * @Iterations(5)
+     * @ParamProviders({"provideCacheDrivers"})
      */
-    public function benchBulkColorProcessingWithTint()
+    public function benchBatchProcessorWithTint(array $params): void
     {
-        foreach ($this->colors as $color) {
-            $this->colorGenerator->generateAccessibleTextColor($color, true);
-        }
+        $batchProcessor = $this->getBatchProcessor($params['driver']);
+        $batchProcessor->generateAccessibleTextColors($this->colors, true);
+    }
+
+    public function provideCacheDrivers(): \Generator
+    {
+        yield 'array' => ['driver' => 'array'];
+        yield 'file' => ['driver' => 'file'];
+        yield 'null' => ['driver' => 'null'];
     }
 }

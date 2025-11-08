@@ -1,33 +1,73 @@
 # Performance, Caching, and Benchmarking
 
-To improve performance, the ArtisanPack UI Accessibility package includes a simple in-memory caching mechanism for computationally intensive color calculations.
+To improve performance, the ArtisanPack UI Accessibility package includes a robust caching layer, a batch processor for bulk operations, and a performance monitoring system.
 
-## How it Works
+## Caching
 
-The caching is implemented as a static array within the `A11y` and `AccessibleColorGenerator` classes. This means that the cache is shared across all requests handled by a single PHP process, which can provide a significant performance boost in a typical web server environment.
+The caching layer is managed by the `CacheManager` class, which supports multiple cache drivers. The results of expensive calculations, such as finding accessible shades, are cached to avoid redundant computations.
 
-### Contrast Ratio Caching
+### Cache Drivers
 
-The results of `calculateContrastRatio` in the `A11y` class are cached. The cache key is a concatenated string of the two hex color codes being compared, sorted alphabetically to ensure that the order of the colors does not matter.
+The package supports the following cache drivers:
 
-### Accessible Shade Caching
+-   **`array`**: A simple in-memory array cache. This is the default driver and is highly performant for a single request, but the cache is not persistent.
+-   **`file`**: A file-based cache that stores results in the filesystem. This driver provides persistent caching across requests. The cache path is configurable.
+-   **`null`**: A driver that does not cache anything. This is useful for development and testing.
 
-The results of `findClosestAccessibleShade` in the `AccessibleColorGenerator` class are also cached. The base hex color string is used as the cache key.
+### Configuration
 
-## Cache Management
+The cache driver can be configured in the `config/accessibility.php` file:
 
-To prevent uncontrolled memory growth, the cache size is limited by the `CACHE_SIZE_LIMIT` constant defined in the `Constants` class. When the cache size exceeds this limit, the oldest entry is removed.
+```php
+'cache' => [
+    'default' => env('ACCESSIBILITY_CACHE_DRIVER', 'array'),
 
-## Monitoring
+    'stores' => [
+        'array' => [
+            'driver' => 'array',
+            'limit' => env('ACCESSIBILITY_CACHE_SIZE', 1000),
+        ],
 
-For debugging and monitoring purposes, the following static properties are available:
+        'file' => [
+            'driver' => 'file',
+            'path' => storage_path('framework/cache/data/accessibility'),
+        ],
 
--   `A11y::$cacheHits`
--   `A11y::$cacheMisses`
--   `AccessibleColorGenerator::$cacheHits`
--   `AccessibleColorGenerator::$cacheMisses`
+        'null' => [
+            'driver' => 'null',
+        ],
+    ],
+],
+```
 
-These properties can be accessed to get insights into the cache performance.
+## Batch Processing
+
+The `BatchProcessor` class allows you to process multiple colors in a single operation, which is much more efficient than processing them one by one, especially when using a persistent cache driver.
+
+### Usage
+
+You can get an instance of the `BatchProcessor` from the `A11y` facade:
+
+```php
+use ArtisanPack\Accessibility\Facades\A11y;
+
+$colors = ['#ff0000', '#00ff00', '#0000ff'];
+$accessibleColors = A11y::batch()->generateAccessibleTextColors($colors);
+```
+
+The `BatchProcessor` will automatically use the configured cache driver and will read and write to the cache in bulk, which can significantly reduce I/O operations.
+
+## Performance Monitoring
+
+The package dispatches Laravel events to allow developers to monitor the performance of the accessibility calculations.
+
+### Events
+
+-   `ArtisanPack\Accessibility\Events\CacheHit`: Dispatched when a value is found in the cache.
+-   `ArtisanPack\Accessibility\Events\CacheMiss`: Dispatched when a value is not found in the cache.
+-   `ArtisanPack\Accessibility\Events\BatchProcessingCompleted`: Dispatched after a batch operation is completed. This event contains the total number of colors processed, the number of cache hits, and the total duration of the operation.
+
+You can listen for these events in your application's `EventServiceProvider` to integrate with your own monitoring and logging solutions.
 
 ## Performance Benchmarking
 
@@ -35,22 +75,16 @@ This package includes performance benchmarks to monitor the efficiency of the co
 
 ### Available Benchmarks
 
--   **`benchCalculateContrastRatio`**: Measures the performance of the core `A11y::calculateContrastRatio()` method.
--   **`benchFindClosestAccessibleShade`**: Measures the performance of the `AccessibleColorGenerator::findClosestAccessibleShade()` method.
--   **`benchBulkColorProcessing`**: Simulates bulk processing by calling `AccessibleColorGenerator::generateAccessibleTextColor()` for a set of colors.
--   **`benchBulkColorProcessingWithTint`**: Simulates bulk processing with tinting enabled.
+-   **`benchBatchProcessor`**: Measures the performance of the `BatchProcessor` with different cache drivers.
+-   **`benchBatchProcessorWithTint`**: Measures the performance of the `BatchProcessor` with tinting enabled.
 
 ### Running Benchmarks Locally
 
 To run the benchmarks locally, use the following command:
 
 ```bash
-composer benchmark
+vendor/bin/phpbench run --report=default
 ```
-
-### Baseline Performance
-
-A baseline performance report is available at [docs/benchmarks/baseline.md](./benchmarks/baseline.md). This report serves as a reference point for future performance comparisons.
 
 ### CI Integration
 
