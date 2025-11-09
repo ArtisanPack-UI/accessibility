@@ -15,6 +15,7 @@ use ArtisanPack\Accessibility\Core\Caching\CacheManager;
 use ArtisanPack\Accessibility\Core\Events\CacheHit;
 use ArtisanPack\Accessibility\Core\Events\CacheMiss;
 use ArtisanPack\Accessibility\Core\Theming\CssVariableParser;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\SimpleCache\CacheInterface;
 
 /**
@@ -34,13 +35,15 @@ class AccessibleColorGenerator
     protected WcagValidator $wcagValidator;
     protected CssVariableParser $parser;
     protected CacheInterface $cache;
+    protected ?EventDispatcherInterface $dispatcher;
     private ?array $tailwindColors = null;
 
-    public function __construct(WcagValidator $wcagValidator = null, CssVariableParser $parser = null, CacheManager $cacheManager = null)
+    public function __construct(WcagValidator $wcagValidator = null, CssVariableParser $parser = null, CacheManager $cacheManager = null, EventDispatcherInterface $dispatcher = null)
     {
         $this->wcagValidator = $wcagValidator ?? new WcagValidator();
         $this->parser = $parser ?? new CssVariableParser();
         $this->cache = $cacheManager ? $cacheManager->store() : new ArrayCache();
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -68,14 +71,14 @@ class AccessibleColorGenerator
 
         $cacheKey = $this->getCacheKey($hexColor, $tint, $level, $isLargeText);
         if ($this->cache->has($cacheKey)) {
-            if (function_exists('event')) {
-                event(new CacheHit($cacheKey));
+            if ($this->dispatcher) {
+                $this->dispatcher->dispatch(new CacheHit($cacheKey));
             }
             return $this->cache->get($cacheKey);
         }
 
-        if (function_exists('event')) {
-            event(new CacheMiss($cacheKey));
+        if ($this->dispatcher) {
+            $this->dispatcher->dispatch(new CacheMiss($cacheKey));
         }
 
         if ($tint) {
@@ -234,14 +237,14 @@ class AccessibleColorGenerator
         $cacheKey = $this->getCacheKey($baseHex, true, $level, $isLargeText);
 
         if ($this->cache->has($cacheKey)) {
-            if (function_exists('event')) {
-                event(new CacheHit($cacheKey));
+            if ($this->dispatcher) {
+                $this->dispatcher->dispatch(new CacheHit($cacheKey));
             }
             return $this->cache->get($cacheKey);
         }
 
-        if (function_exists('event')) {
-            event(new CacheMiss($cacheKey));
+        if ($this->dispatcher) {
+            $this->dispatcher->dispatch(new CacheMiss($cacheKey));
         }
 
         $low = 0;

@@ -2,15 +2,18 @@
 
 namespace ArtisanPack\Accessibility\Core\Analysis;
 
+use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
 use ArtisanPack\Accessibility\Core\WcagValidator;
 
 class AccessibilityScorer
 {
     private WcagValidator $wcagValidator;
+    private AccessibleColorGenerator $colorGenerator;
 
-    public function __construct(?WcagValidator $wcagValidator = null)
+    public function __construct(?WcagValidator $wcagValidator = null, ?AccessibleColorGenerator $colorGenerator = null)
     {
         $this->wcagValidator = $wcagValidator ?? new WcagValidator();
+        $this->colorGenerator = $colorGenerator ?? new AccessibleColorGenerator($this->wcagValidator);
     }
 
     public function calculateScore(string $foregroundColor, string $backgroundColor): int
@@ -56,10 +59,8 @@ class AccessibilityScorer
 
     private function getSuggestion(string $foregroundColor, string $backgroundColor, string $level, bool $isLargeText = false): array
     {
-        $generator = new \ArtisanPack\Accessibility\Core\AccessibleColorGenerator($this->wcagValidator);
-
-        $suggestedForeground = $generator->generateAccessibleTextColor($backgroundColor, true, $level, $isLargeText);
-        $suggestedBackground = $generator->generateAccessibleTextColor($foregroundColor, true, $level, $isLargeText);
+        $suggestedForeground = $this->colorGenerator->generateAccessibleTextColor($backgroundColor, true, $level, $isLargeText);
+        $suggestedBackground = $this->colorGenerator->generateAccessibleTextColor($foregroundColor, true, $level, $isLargeText);
 
         return [
             'suggested_foreground' => $suggestedForeground,

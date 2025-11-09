@@ -20,6 +20,7 @@ namespace ArtisanPack\Accessibility\Core;
 use ArtisanPack\Accessibility\Core\Contracts\Config;
 use ArtisanPack\Accessibility\Core\Performance\BatchProcessor;
 use InvalidArgumentException;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Main accessibility utility class.
@@ -51,11 +52,12 @@ class A11y
         Config $config,
         ?WcagValidator $wcagValidator = null,
         ?AccessibleColorGenerator $colorGenerator = null,
-        ?BatchProcessor $batchProcessor = null
+        ?BatchProcessor $batchProcessor = null,
+        ?EventDispatcherInterface $dispatcher = null
     ) {
         $this->_config = $config;
         $this->_wcagValidator = $wcagValidator ?? new WcagValidator();
-        $this->colorGenerator = $colorGenerator ?? new AccessibleColorGenerator($this->_wcagValidator);
+        $this->colorGenerator = $colorGenerator ?? new AccessibleColorGenerator($this->_wcagValidator, null, null, $dispatcher);
         $this->batchProcessor = $batchProcessor ?? new BatchProcessor($this->colorGenerator, $this->colorGenerator->getCache());
     }
 
