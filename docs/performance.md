@@ -10,9 +10,9 @@ The caching layer is managed by the `CacheManager` class, which supports multipl
 
 The package supports the following cache drivers:
 
--   **`array`**: A simple in-memory array cache. This is the default driver and is highly performant for a single request, but the cache is not persistent.
--   **`file`**: A file-based cache that stores results in the filesystem. This driver provides persistent caching across requests. The cache path is configurable.
--   **`null`**: A driver that does not cache anything. This is useful for development and testing.
+- **`array`**: A simple in-memory array cache. This is the default driver and is highly performant for a single request, but the cache is not persistent.
+- **`file`**: A file-based cache that stores results in the filesystem. This driver provides persistent caching across requests. The cache path is configurable.
+- **`null`**: A driver that does not cache anything. This is useful for development and testing.
 
 ### Configuration
 
@@ -63,9 +63,9 @@ The package dispatches Laravel events to allow developers to monitor the perform
 
 ### Events
 
--   `ArtisanPack\Accessibility\Events\CacheHit`: Dispatched when a value is found in the cache.
--   `ArtisanPack\Accessibility\Events\CacheMiss`: Dispatched when a value is not found in the cache.
--   `ArtisanPack\Accessibility\Events\BatchProcessingCompleted`: Dispatched after a batch operation is completed. This event contains the total number of colors processed, the number of cache hits, and the total duration of the operation.
+- `ArtisanPack\Accessibility\Core\Events\CacheHit`: Dispatched when a value is found in the cache.
+- `ArtisanPack\Accessibility\Core\Events\CacheMiss`: Dispatched when a value is not found in the cache.
+- `ArtisanPack\Accessibility\Core\Events\BatchProcessingCompleted`: Dispatched after a batch operation is completed. This event contains the total number of colors processed, the number of cache hits, and the total duration of the operation.
 
 You can listen for these events in your application's `EventServiceProvider` to integrate with your own monitoring and logging solutions.
 
@@ -75,8 +75,8 @@ This package includes performance benchmarks to monitor the efficiency of the co
 
 ### Available Benchmarks
 
--   **`benchBatchProcessor`**: Measures the performance of the `BatchProcessor` with different cache drivers.
--   **`benchBatchProcessorWithTint`**: Measures the performance of the `BatchProcessor` with tinting enabled.
+- **`benchBatchProcessor`**: Measures the performance of the `BatchProcessor` with different cache drivers.
+- **`benchBatchProcessorWithTint`**: Measures the performance of the `BatchProcessor` with tinting enabled.
 
 ### Running Benchmarks Locally
 
