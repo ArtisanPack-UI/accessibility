@@ -1,33 +1,34 @@
 <?php
 
-use ArtisanPack\Accessibility\Core\A11y;
+namespace Tests\Unit;
+
 use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
-use ArtisanPack\Accessibility\Core\Constants;
+use ArtisanPack\Accessibility\Core\Caching\CacheManager;
+use ArtisanPack\Accessibility\Core\WcagValidator;
 use Tests\TestCase;
 
 class CachingTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-        AccessibleColorGenerator::clearCache();
-    }
-
     public function test_find_closest_shade_is_cached()
     {
-        $generator = new AccessibleColorGenerator();
+        $config = [
+            'default' => 'array',
+            'stores' => [
+                'array' => ['driver' => 'array', 'limit' => 1000],
+            ],
+        ];
+        $cacheManager = new CacheManager($config);
+        $colorGenerator = new AccessibleColorGenerator(new WcagValidator(), null, $cacheManager);
 
-        $this->assertEquals(0, AccessibleColorGenerator::getCacheHits());
-        $this->assertEquals(0, AccessibleColorGenerator::getCacheMisses());
+        $color = '#ff0000';
+        $level = 'AA';
+        $isLargeText = false;
+        $cacheKey = $colorGenerator->getCacheKey($color, true, $level, $isLargeText);
 
-        $generator->generateAccessibleTextColor('#3b82f6', true);
+        $this->assertFalse($colorGenerator->getCache()->has($cacheKey));
 
-        $this->assertEquals(0, AccessibleColorGenerator::getCacheHits());
-        $this->assertEquals(1, AccessibleColorGenerator::getCacheMisses());
+        $colorGenerator->generateAccessibleTextColor($color, true, $level, $isLargeText);
 
-        $generator->generateAccessibleTextColor('#3b82f6', true);
-
-        $this->assertEquals(1, AccessibleColorGenerator::getCacheHits());
-        $this->assertEquals(1, AccessibleColorGenerator::getCacheMisses());
+        $this->assertTrue($colorGenerator->getCache()->has($cacheKey));
     }
 }

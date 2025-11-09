@@ -22,7 +22,8 @@ class ConfigurationTest extends TestCase
         $this->assertEquals(7.0, Config::get('accessibility.wcag_thresholds.aaa'));
         $this->assertEquals(18, Config::get('accessibility.large_text_thresholds.font_size'));
         $this->assertEquals('bold', Config::get('accessibility.large_text_thresholds.font_weight'));
-        $this->assertEquals(1000, Config::get('accessibility.cache_size'));
+        $this->assertEquals(1000, Config::get('accessibility.cache.stores.array.limit'));
+        $this->assertEquals('array', Config::get('accessibility.cache.default'));
     }
 
     #[Test]

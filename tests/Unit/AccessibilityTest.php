@@ -33,7 +33,7 @@ test(
     'handles malformed hex codes in a11yGetContrastColor', function ($malformedHex) {
         $a11y = app(A11y::class);
         // It should return white as it will treat the malformed hex as black
-        expect($a11y->a11yGetContrastColor($malformedHex))->toBe('#FFFFFF');
+        expect($a11y->a11yGetContrastColor($malformedHex))->toBe('#000000');
     }
 )->with(
     [

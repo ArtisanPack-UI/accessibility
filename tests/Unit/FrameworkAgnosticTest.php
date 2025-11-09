@@ -15,7 +15,7 @@ class FrameworkAgnosticTest extends TestCase
         $config->method('get')->willReturn(null);
         $config->method('set');
         $config->method('has')->willReturn(false);
-        $a11y = new A11y($config, null);
+        $a11y = new A11y($config, null, null, null, null);
 
         $this->assertInstanceOf(A11y::class, $a11y);
     }
@@ -24,7 +24,7 @@ class FrameworkAgnosticTest extends TestCase
     {
         $config = $this->createMock(Config::class);
         $wcagValidator = new WcagValidator();
-        $a11y = new A11y($config, $wcagValidator);
+        $a11y = new A11y($config, $wcagValidator, null, null, null);
 
         $this->assertEquals('#000000', $a11y->a11yGetContrastColor('#FFFFFF'));
         $this->assertEquals('#FFFFFF', $a11y->a11yGetContrastColor('#000000'));
@@ -34,7 +34,7 @@ class FrameworkAgnosticTest extends TestCase
     {
         $config = $this->createMock(Config::class);
         $wcagValidator = new WcagValidator();
-        $a11y = new A11y($config, $wcagValidator);
+        $a11y = new A11y($config, $wcagValidator, null, null, null);
 
         $this->assertEquals('black', $a11y->a11yCSSVarBlackOrWhite('#FFFFFF'));
         $this->assertEquals('white', $a11y->a11yCSSVarBlackOrWhite('#000000'));
@@ -44,7 +44,7 @@ class FrameworkAgnosticTest extends TestCase
     {
         $config = $this->createMock(Config::class);
         $wcagValidator = new WcagValidator();
-        $a11y = new A11y($config, $wcagValidator);
+        $a11y = new A11y($config, $wcagValidator, null, null, null);
 
         $this->assertTrue($a11y->a11yCheckContrastColor('#FFFFFF', '#000000'));
         $this->assertFalse($a11y->a11yCheckContrastColor('#FFFFFF', '#FFFFFF'));
