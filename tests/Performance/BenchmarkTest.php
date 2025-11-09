@@ -3,7 +3,7 @@
 namespace Tests\Performance;
 
 use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
-use ArtisanPack\Accessibility\Core\BatchProcessor;
+use ArtisanPack\Accessibility\Core\Performance\BatchProcessor;
 use ArtisanPack\Accessibility\Core\Caching\CacheManager;
 use ArtisanPack\Accessibility\Core\WcagValidator;
 
@@ -33,8 +33,8 @@ class BenchmarkTest
             ],
         ];
         $cacheManager = new CacheManager($config);
-        $colorGenerator = new AccessibleColorGenerator(new WcagValidator(), null, $cacheManager);
-        return new BatchProcessor($colorGenerator, $cacheManager->store());
+        $colorGenerator = new AccessibleColorGenerator(new WcagValidator(), null, $cacheManager, null);
+        return new BatchProcessor($colorGenerator, $cacheManager->store(), null);
     }
 
     /**

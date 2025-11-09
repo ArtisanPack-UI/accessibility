@@ -38,7 +38,7 @@ class AccessibleColorGenerator
     protected ?EventDispatcherInterface $dispatcher;
     private ?array $tailwindColors = null;
 
-    public function __construct(WcagValidator $wcagValidator = null, CssVariableParser $parser = null, CacheManager $cacheManager = null, EventDispatcherInterface $dispatcher = null)
+    public function __construct(?WcagValidator $wcagValidator = null, ?CssVariableParser $parser = null, ?CacheManager $cacheManager = null, ?EventDispatcherInterface $dispatcher = null)
     {
         $this->wcagValidator = $wcagValidator ?? new WcagValidator();
         $this->parser = $parser ?? new CssVariableParser();

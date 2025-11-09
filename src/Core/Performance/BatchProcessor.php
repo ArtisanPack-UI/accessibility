@@ -6,17 +6,20 @@ use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
 use ArtisanPack\Accessibility\Core\Events\BatchProcessingCompleted;
 use ArtisanPack\Accessibility\Core\Events\CacheHit;
 use ArtisanPack\Accessibility\Core\Events\CacheMiss;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\SimpleCache\CacheInterface;
 
 class BatchProcessor
 {
     protected AccessibleColorGenerator $colorGenerator;
     protected CacheInterface $cache;
+    protected ?EventDispatcherInterface $dispatcher;
 
-    public function __construct(AccessibleColorGenerator $colorGenerator, CacheInterface $cache)
+    public function __construct(AccessibleColorGenerator $colorGenerator, CacheInterface $cache, ?EventDispatcherInterface $dispatcher = null)
     {
         $this->colorGenerator = $colorGenerator;
         $this->cache = $cache;
+        $this->dispatcher = $dispatcher;
     }
 
     public function generateAccessibleTextColors(
@@ -51,13 +54,13 @@ class BatchProcessor
             if ($value !== null) {
                 $results[$originalKey] = $value;
                 $cacheHits++;
-                if (function_exists('event')) {
-                    event(new CacheHit($cacheKey));
+                if ($this->dispatcher) {
+                    $this->dispatcher->dispatch(new CacheHit($cacheKey));
                 }
             } else {
                 $missedKeys[] = $originalKey;
-                if (function_exists('event')) {
-                    event(new CacheMiss($cacheKey));
+                if ($this->dispatcher) {
+                    $this->dispatcher->dispatch(new CacheMiss($cacheKey));
                 }
             }
         }
@@ -90,9 +93,9 @@ class BatchProcessor
             $finalResults[$key] = $results[$key] ?? '#000000'; // Fallback for invalid colors
         }
 
-        if (function_exists('event')) {
+        if ($this->dispatcher) {
             $duration = microtime(true) - $startTime;
-            event(new BatchProcessingCompleted(count($backgroundColors), $cacheHits, $duration));
+            $this->dispatcher->dispatch(new BatchProcessingCompleted(count($backgroundColors), $cacheHits, $duration));
         }
 
         return $finalResults;
