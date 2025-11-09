@@ -6,13 +6,18 @@
   "version": "1.1.1",
   "autoload": {
     "psr-4": {
+      "ArtisanPack\\Accessibility\\": "src/",
       "ArtisanPack\\Accessibility\\Http\\": "src/Http/",
       "ArtisanPack\\Accessibility\\Core\\": "src/Core/",
       "ArtisanPack\\Accessibility\\Core\\Caching\\": "src/Core/Caching/",
       "ArtisanPack\\Accessibility\\Performance\\": "src/Core/Performance/",
       "ArtisanPack\\Accessibility\\Core\\Theming\\": "src/Theming/",
       "ArtisanPack\\Accessibility\\PaletteGeneration\\": "src/PaletteGeneration/",
-      "ArtisanPack\\Accessibility\\Laravel\\": "src/Laravel/"
+      "ArtisanPack\\Accessibility\\Laravel\\": "src/Laravel/",
+      "ArtisanPack\\Accessibility\\Reporting\\": "src/Reporting/",
+      "ArtisanPack\\Accessibility\\Models\\": "src/Models/",
+      "ArtisanPack\\Accessibility\\Events\\": "src/Events/",
+      "ArtisanPack\\Accessibility\\Listeners\\": "src/Listeners/"
     },
     "files": [
       "src/Core/helpers.php"
@@ -20,7 +25,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Tests\\": "tests/"
+      "Tests\\": "tests/",
+      "ArtisanPack\\Accessibility\\Database\\Factories\\": "database/factories/"
     }
   },
   "authors": [

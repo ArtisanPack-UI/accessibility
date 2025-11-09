@@ -63,12 +63,16 @@ class WcagValidator
             };
         }
 
-        return match (strtoupper($level)) {
+        $result = match (strtoupper($level)) {
             'AA' => $ratio >= 4.5,
             'AAA' => $ratio >= 7,
             'NON-TEXT' => $ratio >= 3,
             default => false,
         };
+
+        event(new \ArtisanPack\Accessibility\Events\ColorContrastChecked($color1, $color2, $level, $isLargeText, $result));
+
+        return $result;
     }
 
     /**
