@@ -1,4 +1,13 @@
 <?php
+/**
+ * Manages discovery, registration, and lifecycle of Accessibility plugins.
+ *
+ * Discovers plugins from conventional directories and Composer-installed packages,
+ * registers them, and handles initialization and lifecycle events.
+ *
+ * @package ArtisanPack\Accessibility
+ * @since 2.0.0
+ */
 
 namespace ArtisanPack\Accessibility\Plugins;
 
@@ -16,22 +25,63 @@ use Psr\Log\NullLogger;
 use RuntimeException;
 use Throwable;
 
+/**
+ * Plugin Manager.
+ *
+ * Responsible for discovering, registering, and managing the lifecycle of
+ * Accessibility plugins from conventional directories and Composer packages.
+ *
+ * @since 2.0.0
+ */
 class PluginManager
 {
-	/** @var array<string,PluginInterface> */
+	/**
+	 * Registered plugins keyed by their unique id.
+	 *
+	 * @since 2.0.0
+	 * @var array<string,PluginInterface>
+	 */
 	private array $plugins = [];
 
-	/** @var ColorFormatPluginInterface[] */
+	/**
+	 * Registered color format plugins.
+	 *
+	 * @since 2.0.0
+	 * @var ColorFormatPluginInterface[]
+	 */
 	private array $colorFormatPlugins = [];
 
-	/** @var AccessibilityRulePluginInterface[] */
+	/**
+	 * Registered accessibility rule plugins.
+	 *
+	 * @since 2.0.0
+	 * @var AccessibilityRulePluginInterface[]
+	 */
 	private array $rulePlugins = [];
 
-	/** @var AnalysisToolPluginInterface[] */
+	/**
+	 * Registered analysis tool plugins.
+	 *
+	 * @since 2.0.0
+	 * @var AnalysisToolPluginInterface[]
+	 */
 	private array $analysisPlugins = [];
 
+	/**
+	 * Logger instance.
+	 *
+	 * @since 2.0.0
+	 * @var LoggerInterface
+	 */
 	private LoggerInterface $logger;
 
+	/**
+	 * Constructor.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param Context $context Plugin execution context providing configuration and services.
+	 */
 	public function __construct( private Context $context )
 	{
 		$this->logger = $this->context->getLogger() ?? new NullLogger();
@@ -39,6 +89,13 @@ class PluginManager
 
 	/**
 	 * Discover plugins using configured mechanisms and register them.
+	 *
+	 * Searches conventional directories and Composer-installed packages, applies
+	 * allow/deny lists, and optionally initializes and starts plugins based on
+	 * configuration (safe_mode).
+	 *
+	 * @since 2.0.0
+	 * @return void
 	 */
 	public function discoverAndRegister(): void
 	{
@@ -65,6 +122,16 @@ class PluginManager
 		}
 	}
 
+	/**
+	 * Discover plugins from a directory containing plugin subfolders.
+	 *
+	 * Each subdirectory is expected to contain a plugin.json manifest.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $baseDir Base directory path to scan.
+	 * @return void
+	 */
 	private function discoverFromDirectory( string $baseDir ): void
 	{
 		if ( ! is_dir( $baseDir ) ) {
@@ -88,6 +155,19 @@ class PluginManager
 		}
 	}
 
+	/**
+	 * Load and register a plugin defined by a plugin.json manifest.
+	 *
+	 * Validates required fields, applies allow/deny checks, includes any
+	 * autoload files, resolves the entry class, builds metadata, and registers
+	 * the plugin.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $manifestPath Absolute path to the plugin.json file.
+	 * @param string $pluginDir    Base directory of the plugin.
+	 * @return void
+	 */
 	private function loadPluginFromManifest( string $manifestPath, string $pluginDir ): void
 	{
 		try {
@@ -181,6 +261,18 @@ class PluginManager
 		}
 	}
 
+	/**
+	 * Register a plugin and index it by capabilities.
+	 *
+	 * Adds the plugin to the registry and sorts it into capability-specific
+	 * collections for efficient lookup.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param PluginInterface $plugin   The plugin instance to register.
+	 * @param PluginMetadata  $metadata The plugin metadata declared by the manifest or plugin.
+	 * @return void
+	 */
 	private function registerPlugin( PluginInterface $plugin, PluginMetadata $metadata ): void
 	{
 		$this->plugins[ $metadata->id ] = $plugin;
@@ -212,6 +304,15 @@ class PluginManager
 		}
 	}
 
+	/**
+	 * Discover plugins declared by Composer packages.
+	 *
+	 * Scans the vendor directory for packages of type `artisanpack-ui-plugin` and
+	 * registers any plugin entry classes declared in their `extra.accessibility.plugins`.
+	 *
+	 * @since 2.0.0
+	 * @return void
+	 */
 	private function discoverFromComposer(): void
 	{
 		// Best-effort discovery by scanning vendor packages' composer.json
@@ -291,6 +392,15 @@ class PluginManager
 		}
 	}
 
+	/**
+	 * Initialize and start all registered plugins.
+	 *
+	 * Iterates through the registry and calls initialize and start, logging any
+	 * failures without interrupting other plugins.
+	 *
+	 * @since 2.0.0
+	 * @return void
+	 */
 	public function initializeAndStartAll(): void
 	{
 		foreach ( $this->plugins as $plugin ) {
@@ -303,6 +413,15 @@ class PluginManager
 		}
 	}
 
+	/**
+	 * Stop and destroy all registered plugins.
+	 *
+	 * Calls stop and destroy on each plugin, logging failures without halting
+	 * the process for other plugins.
+	 *
+	 * @since 2.0.0
+	 * @return void
+	 */
 	public function stopAndDestroyAll(): void
 	{
 		foreach ( $this->plugins as $plugin ) {
@@ -316,7 +435,11 @@ class PluginManager
 	}
 
 	/**
-	 * @return array<string,PluginInterface>
+	 * Get all registered plugins keyed by id.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array<string,PluginInterface> Map of plugin id to plugin instance.
 	 */
 	public function getPlugins(): array
 	{
@@ -324,7 +447,12 @@ class PluginManager
 	}
 
 	/**
-	 * Returns the first ColorFormatPlugin that supports the given format name.
+	 * Get the first ColorFormat plugin that supports a given format.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $format Format name to look for.
+	 * @return ColorFormatPluginInterface|null Matching plugin or null if none found.
 	 */
 	public function getColorFormatPluginFor( string $format ): ?ColorFormatPluginInterface
 	{
@@ -337,7 +465,11 @@ class PluginManager
 	}
 
 	/**
-	 * @return ColorFormatPluginInterface[]
+	 * Get all registered ColorFormat plugins.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return ColorFormatPluginInterface[] List of color format plugins.
 	 */
 	public function getColorFormatPlugins(): array
 	{
@@ -345,7 +477,11 @@ class PluginManager
 	}
 
 	/**
-	 * @return AccessibilityRulePluginInterface[]
+	 * Get all registered Accessibility Rule plugins.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return AccessibilityRulePluginInterface[] List of rule plugins.
 	 */
 	public function getRulePlugins(): array
 	{
@@ -353,7 +489,11 @@ class PluginManager
 	}
 
 	/**
-	 * @return AnalysisToolPluginInterface[]
+	 * Get all registered Analysis Tool plugins.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return AnalysisToolPluginInterface[] List of analysis tool plugins.
 	 */
 	public function getAnalysisPlugins(): array
 	{

@@ -1,5 +1,43 @@
 # Digital Shopfront CMS Accessibility Changelog
 
+## [2.0.0] - 2025-11-10
+
+This is a major release with a redesigned core, an expanded plugin system, first‑class reporting, theming and palette generation features, and a new HTTP/Laravel integration layer. It includes breaking changes for plugin authors and anyone consuming internal classes that were reorganized.
+
+### Breaking changes
+- Plugin API overhauled: new contracts introduced under `src/Plugins/Contracts` (e.g., `PluginInterface`, `PluginMetadata`, `Capability`, `Context`, `Report`, `ResultSet`, `AccessibilityRulePluginInterface`, `AnalysisToolPluginInterface`, `ColorFormatPluginInterface`). Existing plugins must be updated to the new interfaces and the new `ResultSet` shape.
+- PluginManager refactored. Registration/lookup behavior has been unified and example plugins have been updated accordingly.
+- Core namespaces reorganized. Core functionality now lives under `src/Core`; Laravel-specific integration under `src/Laravel`. Update any imports that referenced moved classes.
+- Configuration structure updated. New config files `config/accessibility.php` and `config/plugins.php` were added; review and publish them if you use Laravel.
+
+### Added
+- Core analysis modules: `AccessibilityScorer`, `PerceptualAnalyzer`, `ColorBlindnessSimulator`, `ReportGenerator`, `WcagValidator`, constants and helpers.
+- Caching subsystem: `ArrayCache`, `FileCache`, `NullCache`, and `CacheManager`.
+- Palette generation suite: `PaletteGenerator`, `ColorHarmony`, and export formats (`CssExporter`, `JsonExporter`, `ScssExporter`, `TailwindExporter`) plus `resources/tailwind-colors.php`.
+- Theming utilities: `ThemeGenerator`, `ThemeValidator`, `CssVariableParser`.
+- Reporting platform: A11y report writers (`HtmlWriter`, `JsonWriter`, `MarkdownWriter`), `ComplianceReporter`, `ComplianceMonitor`, `TrendAnalyzer`, `AccessManager`, `Dashboard`, `TeamManager`, `CertificateGenerator`, `AuditTrail` model and services.
+- HTTP API and Laravel integration: routes (`routes/api.php`), controller (`A11yApiController`), form requests, Laravel service provider/facade, and a Blade view for certificates.
+- Events and listeners for auditing and cache instrumentation.
+- CLI commands: `audit:colors` and `palette:generate` (see docs/commands.md).
+- Plugin examples: `ContrastRulePlugin`, updated `ColorFormatHexPlugin`, and `LinksAnalysisTool` with `plugin.json` manifests.
+- Database: new enterprise tables migration (2025_11_09_000000_create_enterprise_tables.php) and model factories.
+- Documentation: extensive guides and reference under `docs/` (API, plugins, palette generation, theming, performance, WCAG compliance, framework‑agnostic usage, etc.).
+- Tests: large expansion of unit/feature/performance tests to cover the new surface area.
+
+### Changed
+- Composer configuration updated; autoloading and package metadata refined.
+- CI configuration updated (`.gitlab-ci.yml`).
+- Example plugins and reporting components refined and stabilized.
+
+### Fixed
+- Minor fixes and refinements across example plugins and reporting (e.g., Dashboard/Team management flows).
+
+### Migration notes
+- Update custom plugins to implement the new contracts and return the new `ResultSet` structure.
+- If you referenced classes that moved into `src/Core` or `src/Laravel`, update imports accordingly.
+- For Laravel users: publish the new config files, register the package service provider if necessary, and run the new database migration.
+- Review the updated docs under `docs/` for details and examples.
+
 ## 1.1.1 - July 1, 2025
 
 - Added in a method to set the correct text color based on background for color contrast.
