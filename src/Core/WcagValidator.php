@@ -70,7 +70,14 @@ class WcagValidator
             default => false,
         };
 
-        event(new \ArtisanPack\Accessibility\Events\ColorContrastChecked($color1, $color2, $level, $isLargeText, $result));
+        // Only dispatch the event if the Laravel event helper is available
+        if (function_exists('event')) {
+            try {
+                event(new \ArtisanPack\Accessibility\Events\ColorContrastChecked($color1, $color2, $level, $isLargeText, $result));
+            } catch (\Throwable $e) {
+                // Silently ignore when the event dispatcher isn't available (framework-agnostic usage)
+            }
+        }
 
         return $result;
     }

@@ -23,7 +23,7 @@ class ComplianceReporter
         $report = ComplianceReport::create([
             'organization_id' => $organizationId,
             'score' => $score,
-            'issues' => json_encode($recommendations),
+            'issues' => $recommendations,
         ]);
 
         return $report;
