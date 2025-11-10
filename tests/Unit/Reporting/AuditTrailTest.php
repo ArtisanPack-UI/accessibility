@@ -13,39 +13,36 @@ use Illuminate\Support\Facades\Event;
 
 class AuditTrailTest extends TestCase
 {
-    use RefreshDatabase;
+	use RefreshDatabase;
 
-    /** @test */
-    public function it_logs_an_event()
-    {
-        $user = User::factory()->create();
-        $this->actingAs($user);
+	/** @test */
+	public function it_logs_an_event()
+	{
+		$user = User::factory()->create();
+		$this->actingAs( $user );
 
-        $auditTrail = new AuditTrailService();
-        $auditTrail->log('test_action', ['foo' => 'bar']);
+		$auditTrail = new AuditTrailService();
+		$auditTrail->log( 'test_action', [ 'foo' => 'bar' ] );
 
-        $this->assertDatabaseHas('audit_trails', [
-            'user_id' => $user->id,
-            'action' => 'test_action',
-            'details' => json_encode(['foo' => 'bar']),
-        ]);
-    }
+		$this->assertDatabaseHas( 'audit_trails', [
+			'user_id' => $user->id,
+			'action'  => 'test_action',
+			'details' => json_encode( [ 'foo' => 'bar' ] ),
+		] );
+	}
 
-    /** @test */
-    public function it_listens_for_the_color_contrast_checked_event()
-    {
-        $user = User::factory()->create();
-        $this->actingAs($user);
+	/** @test */
+	public function it_listens_for_the_color_contrast_checked_event()
+	{
+		$user = User::factory()->create();
+		$this->actingAs( $user );
 
-        Event::fake();
+		$event = new ColorContrastChecked( '#ffffff', '#000000', 'AA', false, true );
+		event( $event );
 
-        $listener = new LogColorContrastCheck(new AuditTrailService());
-        $event = new ColorContrastChecked('#ffffff', '#000000', 'AA', false, true);
-        $listener->handle($event);
-
-        $this->assertDatabaseHas('audit_trails', [
-            'user_id' => $user->id,
-            'action' => 'color_contrast_checked',
-        ]);
-    }
+		$this->assertDatabaseHas( 'audit_trails', [
+			'user_id' => $user->id,
+			'action'  => 'color_contrast_checked',
+		] );
+	}
 }

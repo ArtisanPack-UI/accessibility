@@ -2,27 +2,27 @@
 
 namespace ArtisanPack\Accessibility\Reporting;
 
-use Tests\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use ArtisanPack\Accessibility\Models\Organization;
 
 class AccessManager
 {
-    public function can(User $user, string $permission, Organization $organization): bool
-    {
-        $team = $organization->teams()->where('user_id', $user->id)->first();
+	public function can( Authenticatable $user, string $permission, Organization $organization ): bool
+	{
+		$team = $organization->teams()->where( 'user_id', $user->id )->first();
 
-        if (!$team) {
-            return false;
-        }
+		if ( ! $team ) {
+			return false;
+		}
 
-        $role = $team->role;
+		$role = $team->role;
 
-        $permissions = config('accessibility.roles.' . $role);
+		$permissions = config( 'accessibility.roles.' . $role );
 
-        if (!$permissions) {
-            return false;
-        }
+		if ( ! $permissions ) {
+			return false;
+		}
 
-        return in_array($permission, $permissions);
-    }
+		return in_array( $permission, $permissions );
+	}
 }

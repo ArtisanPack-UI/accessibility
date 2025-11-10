@@ -7,16 +7,15 @@ use Illuminate\Support\Facades\DB;
 
 class Dashboard
 {
-    public function getData(int $organizationId): array
-    {
-        $reports = ComplianceReport::where('organization_id', $organizationId)->get();
+	public function getData( int $organizationId ): array
+	{
 
-        $totalReports = $reports->count();
-        $averageScore = $reports->avg('score');
+		$totalReports = ComplianceReport::where( 'organization_id', $organizationId )->count();
+		$averageScore = ComplianceReport::where( 'organization_id', $organizationId )->avg( 'score' );
 
-        return [
-            'total_reports' => $totalReports,
-            'average_score' => $averageScore,
-        ];
-    }
+		return [
+			'total_reports' => $totalReports,
+			'average_score' => $averageScore,
+		];
+	}
 }
