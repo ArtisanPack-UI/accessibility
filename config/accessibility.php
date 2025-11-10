@@ -81,4 +81,30 @@ return [
             'view_dashboard',
         ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Audit and Reporting (CLI)
+    |--------------------------------------------------------------------------
+    */
+    'audit' => [
+        'paths' => [
+            base_path('resources/views'),
+            base_path('resources/css'),
+            base_path('public/css'),
+        ],
+        'include_extensions' => ['css', 'blade.php'],
+        'exclude' => ['vendor', 'storage', 'node_modules'],
+        'strictness' => 'AA',
+    ],
+
+    'report' => [
+        'formats' => ['md'],
+        'output_path' => storage_path('app/a11y'),
+    ],
+
+    'progress' => [
+        'enabled' => true,
+        'min_items_for_bar' => 50,
+    ],
 ];

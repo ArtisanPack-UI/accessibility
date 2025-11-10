@@ -1,0 +1,5 @@
+# .coderabbit.yaml
+reviews:
+  auto_review:
+    # This is the key: set it to true to review draft MRs
+    drafts: true

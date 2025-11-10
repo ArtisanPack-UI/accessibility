@@ -100,6 +100,12 @@ class A11yServiceProvider extends ServiceProvider
                 __DIR__ . '/../../config/accessibility.php' => config_path('accessibility.php'),
                 ], 'config'
             );
+
+            // Register CLI commands
+            $this->commands([
+                \ArtisanPack\Accessibility\Console\AuditColorsCommand::class,
+                \ArtisanPack\Accessibility\Console\GeneratePaletteCommand::class,
+            ]);
         }
 
         $this->validateConfig(config('accessibility'));
