@@ -1,0 +1,12 @@
+{
+  "id": "example.contrast_rule",
+  "name": "Contrast Rule Plugin",
+  "version": "0.1.0",
+  "description": "Provides a basic contrast accessibility rule.",
+  "author": "Example",
+  "entry": "Plugins\\Examples\\ContrastRulePlugin\\ContrastRulePlugin",
+  "capabilities": ["accessibility_rule"],
+  "autoload": {
+    "files": ["src/ContrastRulePlugin.php"]
+  }
+}
