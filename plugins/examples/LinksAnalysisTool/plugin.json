@@ -1,0 +1,12 @@
+{
+  "id": "example.links_analysis",
+  "name": "Links Analysis Tool",
+  "version": "0.1.0",
+  "description": "Analyzes a document's links for counts and potential issues.",
+  "author": "Example",
+  "entry": "Plugins\\Examples\\LinksAnalysisTool\\LinksAnalysisTool",
+  "capabilities": ["analysis_tool"],
+  "autoload": {
+    "files": ["src/LinksAnalysisTool.php"]
+  }
+}
