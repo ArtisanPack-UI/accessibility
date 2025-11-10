@@ -21,6 +21,8 @@ use ArtisanPack\Accessibility\Core\Contracts\Config;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
+use ArtisanPack\Accessibility\Events\ColorContrastChecked;
+use ArtisanPack\Accessibility\Listeners\LogColorContrastCheck;
 
 /**
  * Service provider for the Accessibility package.
@@ -32,6 +34,17 @@ use InvalidArgumentException;
  */
 class A11yServiceProvider extends ServiceProvider
 {
+    /**
+     * The event listener mappings for the application.
+     *
+     * @var array
+     */
+    protected $listen = [
+        ColorContrastChecked::class => [
+            LogColorContrastCheck::class,
+        ],
+    ];
+
     /**
      * Register the accessibility services.
      *
@@ -59,6 +72,10 @@ class A11yServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             __DIR__ . '/../../config/accessibility.php', 'accessibility'
         );
+
+        $this->app->afterResolving('eloquent.factory', function ($factory) {
+            $factory->load(__DIR__ . '/../../database/factories');
+        });
     }
 
     /**
@@ -73,6 +90,8 @@ class A11yServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'accessibility');
+
         $this->loadRoutesFrom(__DIR__.'/../../routes/api.php');
 
         if ($this->app->runningInConsole()) {
@@ -84,6 +103,12 @@ class A11yServiceProvider extends ServiceProvider
         }
 
         $this->validateConfig(config('accessibility'));
+
+        foreach ($this->listen as $event => $listeners) {
+            foreach ($listeners as $listener) {
+                $this->app['events']->listen($event, $listener);
+            }
+        }
     }
 
     /**

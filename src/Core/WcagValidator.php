@@ -63,12 +63,23 @@ class WcagValidator
             };
         }
 
-        return match (strtoupper($level)) {
+        $result = match (strtoupper($level)) {
             'AA' => $ratio >= 4.5,
             'AAA' => $ratio >= 7,
             'NON-TEXT' => $ratio >= 3,
             default => false,
         };
+
+        // Only dispatch the event if the Laravel event helper is available
+        if (function_exists('event')) {
+            try {
+                event(new \ArtisanPack\Accessibility\Events\ColorContrastChecked($color1, $color2, $level, $isLargeText, $result));
+            } catch (\Throwable $e) {
+                // Silently ignore when the event dispatcher isn't available (framework-agnostic usage)
+            }
+        }
+
+        return $result;
     }
 
     /**

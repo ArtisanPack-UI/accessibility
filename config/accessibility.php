@@ -55,4 +55,30 @@ return [
             ],
         ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Roles and Permissions
+    |--------------------------------------------------------------------------
+    |
+    | Define the roles and permissions for the reporting features.
+    |
+    */
+    'roles' => [
+        'admin' => [
+            'view_reports',
+            'manage_reports',
+            'view_dashboard',
+            'manage_teams',
+        ],
+        'editor' => [
+            'view_reports',
+            'manage_reports',
+            'view_dashboard',
+        ],
+        'viewer' => [
+            'view_reports',
+            'view_dashboard',
+        ],
+    ],
 ];
