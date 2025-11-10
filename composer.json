@@ -3,18 +3,30 @@
   "description": "A package for all accessibility functions for ArtisanPack UI.",
   "type": "library",
   "license": "GPL-3.0-or-later",
-  "version": "1.1.1",
+  "version": "2.0.0",
   "autoload": {
     "psr-4": {
-      "ArtisanPackUI\\Accessibility\\": "src/"
+      "ArtisanPack\\Accessibility\\": "src/",
+      "ArtisanPack\\Accessibility\\Http\\": "src/Http/",
+      "ArtisanPack\\Accessibility\\Core\\": "src/Core/",
+      "ArtisanPack\\Accessibility\\Core\\Caching\\": "src/Core/Caching/",
+      "ArtisanPack\\Accessibility\\Core\\Performance\\": "src/Core/Performance/",
+      "ArtisanPack\\Accessibility\\Core\\Theming\\": "src/Theming/",
+      "ArtisanPack\\Accessibility\\PaletteGeneration\\": "src/PaletteGeneration/",
+      "ArtisanPack\\Accessibility\\Laravel\\": "src/Laravel/",
+      "ArtisanPack\\Accessibility\\Reporting\\": "src/Reporting/",
+      "ArtisanPack\\Accessibility\\Models\\": "src/Models/",
+      "ArtisanPack\\Accessibility\\Events\\": "src/Events/",
+      "ArtisanPack\\Accessibility\\Listeners\\": "src/Listeners/"
     },
     "files": [
-      "src/helpers.php"
+      "src/Core/helpers.php"
     ]
   },
   "autoload-dev": {
     "psr-4": {
-      "Tests\\": "tests/"
+      "Tests\\": "tests/",
+      "ArtisanPack\\Accessibility\\Database\\Factories\\": "database/factories/"
     }
   },
   "authors": [
@@ -25,26 +37,39 @@
   ],
   "require": {
     "php": "^8.2",
-    "illuminate/support": ">=5.3"
+    "artisanpack-ui/core": "^1.0"
+  },
+  "suggest": {
+    "illuminate/support": "Required for Laravel integration."
   },
   "require-dev": {
     "pestphp/pest": "^3.8",
     "pestphp/pest-plugin-laravel": "^3.1",
-    "orchestra/testbench": "^10.2"
+    "orchestra/testbench": "^10.2",
+    "squizlabs/php_codesniffer": "^3.13",
+    "artisanpack-ui/code-style": "^1.0",
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.1",
+    "phpbench/phpbench": "^1.2",
+    "laravel/sanctum": "^4.0"
   },
   "config": {
     "allow-plugins": {
-      "pestphp/pest-plugin": true
+      "pestphp/pest-plugin": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
     }
   },
   "extra": {
     "laravel": {
       "providers": [
-        "ArtisanPackUI\\Accessibility\\A11yServiceProvider"
+        "ArtisanPack\\Accessibility\\Laravel\\A11yServiceProvider"
       ],
       "aliases": {
-        "A11y": "ArtisanPackUI\\Accessibility\\Facades\\A11y"
+        "A11y": "ArtisanPack\\Accessibility\\Laravel\\Facades\\A11y"
       }
     }
+  },
+  "scripts": {
+    "test": "vendor/bin/pest",
+    "benchmark": "vendor/bin/phpbench run --report=default"
   }
 }

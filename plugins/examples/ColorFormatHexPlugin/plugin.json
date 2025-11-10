@@ -1,0 +1,12 @@
+{
+  "id": "example.hex",
+  "name": "Hex Color Format Plugin",
+  "version": "0.1.0",
+  "description": "Provides hex color format parsing/serialization.",
+  "author": "Example",
+  "entry": "Plugins\\Examples\\ColorFormatHexPlugin\\HexColorFormatPlugin",
+  "capabilities": ["color_format"],
+  "autoload": {
+    "files": ["src/HexColorFormatPlugin.php"]
+  }
+}

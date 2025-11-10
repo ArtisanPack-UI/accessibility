@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(vendor/bin/pest:*)",
+      "Bash(git rm:*)",
+      "Bash(git archive:*)",
+      "Bash(tar:*)",
+      "Bash(php -r:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

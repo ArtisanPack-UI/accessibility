@@ -1,0 +1,1 @@
+{"version":2,"defects":[],"times":{"ArtisanPack\\Accessibility\\Tests\\Unit\\Reporting\\AuditTrailTest::it_logs_an_event":0.048,"ArtisanPack\\Accessibility\\Tests\\Unit\\Reporting\\AuditTrailTest::it_listens_for_the_color_contrast_checked_event":0.004}}

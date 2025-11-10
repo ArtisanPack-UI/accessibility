@@ -1,11 +1,47 @@
-# Ignore all test and documentation with "export-ignore".
+# Exclude development and testing files from releases with "export-ignore".
 
+# Version control and CI/CD
 /.gitlab export-ignore
-/.gitignore         export-ignore
-/tests              export-ignore
-/.idea export-ignore
-/src/**/Tests       export-ignore
-/src/**/*Test.php   export-ignore
-/src/**/Test.php    export-ignore
-/phpunit.xml   export-ignore
 /.gitlab-ci.yml export-ignore
+/.gitignore export-ignore
+/.gitattributes export-ignore
+
+# IDE and editor config
+/.idea export-ignore
+/.vscode export-ignore
+/.editorconfig export-ignore
+
+# Testing files
+/tests export-ignore
+/phpunit.xml export-ignore
+/phpunit.xml.dist export-ignore
+/.phpunit.result.cache export-ignore
+/src/**/Tests export-ignore
+/src/**/*Test.php export-ignore
+/src/**/Test.php export-ignore
+
+# Database files
+/database export-ignore
+
+# Documentation
+/docs export-ignore
+/README.md export-ignore
+/CHANGELOG.md export-ignore
+
+# Example plugins
+/plugins export-ignore
+
+# Code quality and analysis
+/.coderabbit.yaml export-ignore
+/.php-cs-fixer.php export-ignore
+/.php-cs-fixer.dist.php export-ignore
+/phpcs.xml export-ignore
+/phpcs.xml.dist export-ignore
+/phpstan.neon export-ignore
+/phpstan.neon.dist export-ignore
+
+# System files
+.DS_Store export-ignore
+
+# Claude Code settings
+/.claude export-ignore

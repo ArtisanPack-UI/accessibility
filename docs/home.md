@@ -12,6 +12,7 @@ Welcome to the documentation for the ArtisanPack UI Accessibility package. This 
 Complete guides to help you get started and effectively use the package:
 - [Getting Started](guides/getting-started): Installation and basic setup instructions
 - [Usage Guide](guides/usage): Detailed examples of how to use the package's features
+- [Artisan Commands](commands): Using CLI to audit colors and generate palettes
 
 ### [Reference](reference)
 Comprehensive technical documentation and references:
