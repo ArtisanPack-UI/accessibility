@@ -5,8 +5,8 @@
  * Discovers plugins from conventional directories and Composer-installed packages,
  * registers them, and handles initialization and lifecycle events.
  *
+ * @since   2.0.0
  * @package ArtisanPack\Accessibility
- * @since 2.0.0
  */
 
 namespace ArtisanPack\Accessibility\Plugins;
@@ -316,7 +316,7 @@ class PluginManager
 	private function discoverFromComposer(): void
 	{
 		// Best-effort discovery by scanning vendor packages' composer.json
-		$vendorDir = dirname( __DIR__, 3 ) . DIRECTORY_SEPARATOR . 'vendor';
+		$vendorDir = dirname( __DIR__, 2 ) . DIRECTORY_SEPARATOR . 'vendor';
 		if ( ! is_dir( $vendorDir ) ) {
 			return;
 		}

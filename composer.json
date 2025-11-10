@@ -10,7 +10,7 @@
       "ArtisanPack\\Accessibility\\Http\\": "src/Http/",
       "ArtisanPack\\Accessibility\\Core\\": "src/Core/",
       "ArtisanPack\\Accessibility\\Core\\Caching\\": "src/Core/Caching/",
-      "ArtisanPack\\Accessibility\\Performance\\": "src/Core/Performance/",
+      "ArtisanPack\\Accessibility\\Core\\Performance\\": "src/Core/Performance/",
       "ArtisanPack\\Accessibility\\Core\\Theming\\": "src/Theming/",
       "ArtisanPack\\Accessibility\\PaletteGeneration\\": "src/PaletteGeneration/",
       "ArtisanPack\\Accessibility\\Laravel\\": "src/Laravel/",

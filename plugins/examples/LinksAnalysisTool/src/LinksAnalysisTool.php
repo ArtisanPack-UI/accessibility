@@ -4,8 +4,8 @@
  *
  * Counts total links and those missing text to demonstrate analysis tooling.
  *
+ * @since   2.0.0
  * @package ArtisanPack\Accessibility
- * @since 2.0.0
  */
 
 namespace Plugins\Examples\LinksAnalysisTool;
@@ -112,7 +112,13 @@ class LinksAnalysisTool implements PluginInterface, AnalysisToolPluginInterface
 		$total       = count( $links );
 		$missingText = 0;
 		foreach ( $links as $link ) {
-			$text = $link['text'] ?? '';
+			$text = '';
+			if ( is_array( $link ) ) {
+				$text = $link['text'] ?? '';
+			} else if ( is_object( $link ) ) {
+				$text = $link->text ?? '';
+			}
+
 			if ( trim( (string) $text ) === '' ) {
 				$missingText++;
 			}

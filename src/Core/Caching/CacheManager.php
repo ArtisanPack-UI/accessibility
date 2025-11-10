@@ -64,7 +64,7 @@ class CacheManager
 		return new FileCache( $config['path'] );
 	}
 
-	protected function createNullDriver(): CacheInterface
+	protected function createNullDriver( array $config = [] ): CacheInterface
 	{
 		return new NullCache();
 	}

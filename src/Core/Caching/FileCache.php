@@ -7,6 +7,7 @@ use DateTime;
 use Psr\SimpleCache\CacheInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use stdClass;
 
 class FileCache implements CacheInterface
 {
@@ -107,14 +108,19 @@ class FileCache implements CacheInterface
 		}
 
 		$data = [ 'value' => $value ];
-		if ( $ttl ) {
+		if ( $ttl !== null ) {
 			if ( $ttl instanceof DateInterval ) {
 				$ttl = ( new DateTime() )->add( $ttl )->getTimestamp() - time();
+			}
+			$ttl = (int) $ttl;
+			if ( $ttl <= 0 ) {
+				return $this->delete( $key );
 			}
 			$data['expires'] = time() + $ttl;
 		}
 
-		return file_put_contents( $path, serialize( $data ) ) !== false;
+
+		return file_put_contents( $path, serialize( $data ), LOCK_EX ) !== false;
 	}
 
 	public function deleteMultiple( iterable $keys ): bool
@@ -130,6 +136,7 @@ class FileCache implements CacheInterface
 
 	public function has( string $key ): bool
 	{
-		return $this->get( $key ) !== null;
+		$sentinel = new stdClass();
+		return $this->get( $key, $sentinel ) !== $sentinel;
 	}
 }

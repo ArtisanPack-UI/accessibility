@@ -34,7 +34,7 @@ class ArrayCache implements CacheInterface
 
 	public function get( string $key, mixed $default = null ): mixed
 	{
-		return $this->storage[ $key ] ?? $default;
+		return array_key_exists( $key, $this->storage ) ? $this->storage[ $key ] : $default;
 	}
 
 	public function setMultiple( iterable $values, DateInterval|int|null $ttl = null ): bool
@@ -80,6 +80,6 @@ class ArrayCache implements CacheInterface
 
 	public function has( string $key ): bool
 	{
-		return isset( $this->storage[ $key ] );
+		return array_key_exists( $key, $this->storage );
 	}
 }
