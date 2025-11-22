@@ -4,32 +4,30 @@ title: AI Guidelines
 
 # AI Guidelines
 
-You can add these guidelines to the rest of your guidelines for your editor/AI model of your choice so that your AI knows how to use this package.
+This package provides AI guidelines for use with AI-powered development tools.
 
-## Accessibility (artisanpack-ui-accessibility)
+## Laravel Boost Integration
 
-**Primary Goal**: To ensure that all generated UI components and interfaces are fully accessible and adhere to modern web accessibility standards.
+If you're using [Laravel Boost](https://github.com/laravel/boost), this package automatically provides AI guidelines for working with accessibility features.
 
-### Core Principles for the AI:
+### Automatic Setup
 
-**WCAG Compliance**: All generated components must strive for compliance with Web Content Accessibility Guidelines (WCAG) 2.1 AA standards.
+When you install this package and run:
 
-**Semantic HTML**: Use HTML elements for their intended purpose. For example, use `<button>` for actions and `<a>` for navigation.
+```bash
+php artisan boost:install
+```
 
-**Keyboard Navigability**: All interactive elements must be fully operable with a keyboard. This includes visible focus states for all focusable elements.
+Laravel Boost will automatically load the AI guidelines from this package, giving your AI assistant complete knowledge of:
 
-**Color Contrast**: Ensure that all text has sufficient color contrast against its background to be readable by users with low vision.
+- Color contrast checking functions
+- Accessible text color generation
+- Tailwind CSS color support
+- Helper functions and facade usage
+- WCAG 2.0 compliance best practices
 
-**Text Alternatives**: All non-text content (e.g., images, icons) must have a text alternative.
+No manual configuration needed - the guidelines are loaded automatically!
 
-### Specific Instructions for the AI:
+### Manual Setup (Without Laravel Boost)
 
-When generating UI components, automatically include appropriate ARIA (Accessible Rich Internet Applications) attributes, such as `role`, `aria-label`, and `aria-hidden`, where necessary.
-
-For all form inputs, generate a corresponding `<label>` element and associate it with the input using the `for` attribute.
-
-When suggesting color combinations, use the `a11yCheckContrastColor` function from the accessibility package to validate that the contrast ratio meets WCAG AA standards.
-
-For any interactive elements, such as dropdowns or modals, ensure that focus is properly managed. When a modal is opened, focus should be trapped within it, and when closed, focus should return to the element that triggered it.
-
-When generating `<img>` tags, always include a descriptive `alt` attribute. If the image is purely decorative, use an empty `alt` attribute (`alt=""`).
+If you're not using Laravel Boost, you can still provide these guidelines to your AI assistant by copying the contents of `resources/boost/guidelines/core.blade.php` into your AI's context or configuration.
