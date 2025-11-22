@@ -44,10 +44,3 @@ A11y::clearCache();
 
 -   **Symptom**: You get a Composer error when trying to install or update the package.
 -   **Solution**: This package requires PHP 8.2+ and Laravel 5.3+. Ensure your environment meets these requirements. If you have a conflict with another package, you may need to investigate which dependency is causing the issue and see if it can be updated.
-
-## The `getToastDuration()` function
-
-You may have noticed the `getToastDuration()` function in the `A11y` class. This function seems a bit out of place in a package focused on color accessibility.
-
--   **What it is**: This function is a helper that was created for a specific project that used this package. It retrieves a user's preferred duration for toast notifications from their settings.
--   **Should you use it?**: Probably not. This function is coupled to a specific application's user model and settings. It is likely to be deprecated or moved to a more appropriate package in a future version. We recommend creating your own system for managing user preferences for UI components.

@@ -29,7 +29,7 @@ This package provides accessibility utilities for web applications, with a focus
 
 @verbatim
 	<code-snippet name="Generate accessible text colors" lang="php">
-		use ArtisanPackUI\Accessibility\AccessibleColorGenerator;
+		use ArtisanPack\Accessibility\AccessibleColorGenerator;
 
 		$generator = new AccessibleColorGenerator();
 
@@ -63,21 +63,11 @@ This package provides accessibility utilities for web applications, with a focus
 
 @verbatim
 	<code-snippet name="Use the A11y facade" lang="php">
-		use ArtisanPackUI\Accessibility\Facades\A11y;
+		use ArtisanPack\Accessibility\Facades\A11y;
 
 		$textColor = A11y::a11yCSSVarBlackOrWhite('#3b82f6');
 		$hexColor = A11y::a11yGetContrastColor('#3b82f6');
 		$hasContrast = A11y::a11yCheckContrastColor('#3b82f6', '#ffffff');
-	</code-snippet>
-@endverbatim
-
-- **User Accessibility Settings**: Retrieve user preferences for accessibility features.
-
-@verbatim
-	<code-snippet name="Get user accessibility settings" lang="php">
-		// Get toast notification duration based on user settings
-		// Returns duration in milliseconds (default: 5000)
-		$duration = getToastDuration();
 	</code-snippet>
 @endverbatim
 
