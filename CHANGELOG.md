@@ -10,13 +10,12 @@ This release focuses on developer experience improvements, including code style 
 - Added Laravel Boost guidelines file (`resources/boost/guidelines/core.blade.php`) for AI-assisted development
 
 ### Changed
-- Updated GitLab CI configuration to use Composer 2.8 with PHP 8.4 for better stability
-- Added platform requirement ignoring in CI to handle minor PHP version differences
+- Updated GitLab CI build job to use php:8.2-cli image for consistency with test and benchmark jobs
 - Updated AI guidelines documentation for improved clarity
 
 ### Fixed
 - Fixed GitLab CI pipeline build failures caused by PHP 8.5 compatibility issues
-- Resolved Symfony HTTP Foundation security advisory by adding it to audit ignore list (dev dependencies only)
+- Resolved Symfony HTTP Foundation security vulnerability (PKSA-365x-2zjk-pt47) by requiring symfony/http-foundation ^7.3.7
 
 ### Removed
 - Removed all documentation references to the `getToastDuration()` function which was not implemented in the codebase

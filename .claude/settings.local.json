@@ -7,7 +7,8 @@
       "Bash(tar:*)",
       "Bash(php -r:*)",
       "Bash(composer update:*)",
-      "Bash(composer require:*)"
+      "Bash(composer require:*)",
+      "Bash(composer audit:*)"
     ],
     "deny": [],
     "ask": []

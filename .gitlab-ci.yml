@@ -28,12 +28,13 @@ build:vendors:
       files:
         - composer.lock
     policy: pull-push
-  image: composer:2.8
+  image: php:8.2-cli
   before_script:
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     - composer --version
     - php -v
   script:
-    - composer install --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-req=php
+    - composer install --no-interaction --prefer-dist --optimize-autoloader
 
 tests:
   stage: test
