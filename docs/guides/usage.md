@@ -142,26 +142,6 @@ $textColor = generateAccessibleTextColor('rgb(59, 130, 246)');
 $textColor = generateAccessibleTextColor('hsl(217, 91%, 60%)');
 ```
 
-## User Accessibility Settings
-
-### Toast Duration
-
-The package provides a method to get the user's preferred toast notification duration:
-
-```php
-// Using helper function
-$durationInMs = getToastDuration(); // Returns duration in milliseconds
-
-// Using A11y class
-$a11y = new ArtisanPackUI\Accessibility\A11y();
-$durationInMs = $a11y->getToastDuration();
-
-// Using Laravel facade
-$durationInMs = A11y::getToastDuration();
-```
-
-This retrieves the user's setting or falls back to a default of 5 seconds (5000ms).
-
 ## Practical Examples
 
 ### Dynamic Button Styling

@@ -3,7 +3,7 @@
   "description": "A package for all accessibility functions for ArtisanPack UI.",
   "type": "library",
   "license": "GPL-3.0-or-later",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "autoload": {
     "psr-4": {
       "ArtisanPack\\Accessibility\\": "src/",
@@ -50,7 +50,10 @@
     "artisanpack-ui/code-style": "^1.0",
     "dealerdirect/phpcodesniffer-composer-installer": "^1.1",
     "phpbench/phpbench": "^1.2",
-    "laravel/sanctum": "^4.0"
+    "laravel/sanctum": "^4.0",
+    "laravel/pint": "^1.25",
+    "artisanpack-ui/code-style-pint": "^1.0",
+    "symfony/http-foundation": "^7.3.7"
   },
   "config": {
     "allow-plugins": {

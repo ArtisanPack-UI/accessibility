@@ -5,7 +5,10 @@
       "Bash(git rm:*)",
       "Bash(git archive:*)",
       "Bash(tar:*)",
-      "Bash(php -r:*)"
+      "Bash(php -r:*)",
+      "Bash(composer update:*)",
+      "Bash(composer require:*)",
+      "Bash(composer audit:*)"
     ],
     "deny": [],
     "ask": []

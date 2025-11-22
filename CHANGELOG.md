@@ -1,5 +1,25 @@
 # Digital Shopfront CMS Accessibility Changelog
 
+## [2.1.0] - 2025-11-22
+
+This release focuses on developer experience improvements, including code style tooling, CI/CD enhancements, and documentation cleanup.
+
+### Added
+- Added Laravel Pint (v1.25+) as a dev dependency for code style checking
+- Added `artisanpack-ui/code-style-pint` (v1.0+) for standardized code style rules
+- Added Laravel Boost guidelines file (`resources/boost/guidelines/core.blade.php`) for AI-assisted development
+
+### Changed
+- Updated GitLab CI build job to use php:8.2-cli image for consistency with test and benchmark jobs
+- Updated AI guidelines documentation for improved clarity
+
+### Fixed
+- Fixed GitLab CI pipeline build failures caused by PHP 8.5 compatibility issues
+- Resolved Symfony HTTP Foundation security vulnerability (PKSA-365x-2zjk-pt47) by requiring symfony/http-foundation ^7.3.7
+
+### Removed
+- Removed all documentation references to the `getToastDuration()` function which was not implemented in the codebase
+
 ## [2.0.0] - 2025-11-10
 
 This is a major release with a redesigned core, an expanded plugin system, first‑class reporting, theming and palette generation features, and a new HTTP/Laravel integration layer. It includes breaking changes for plugin authors and anyone consuming internal classes that were reorganized.
