@@ -44,19 +44,6 @@ $a11y = new ArtisanPackUI\Accessibility\A11y();
 $hexColor = $a11y->a11yGetContrastColor('#3b82f6'); // Returns '#000000' or '#FFFFFF'
 ```
 
-#### `getToastDuration(): float|int`
-
-Retrieves the user's preference for toast notification duration from their settings. If no setting is found, defaults to 5 seconds. The value is returned in milliseconds.
-
-**Returns:**
-- (float|int): The toast duration in milliseconds.
-
-**Example:**
-```php
-$a11y = new ArtisanPackUI\Accessibility\A11y();
-$durationInMs = $a11y->getToastDuration(); // Returns duration in milliseconds
-```
-
 #### `a11yCheckContrastColor(string $firstHexColor, string $secondHexColor): bool`
 
 Calculates the contrast ratio between two colors according to WCAG 2.0 guidelines. Returns true if the contrast ratio is at least 4.5:1, which is the minimum recommended for normal text to be considered accessible.
@@ -176,18 +163,6 @@ Calculates the contrast ratio between the background color and both black and wh
 **Example:**
 ```php
 $hexColor = a11yGetContrastColor('#3b82f6'); // Returns '#000000' or '#FFFFFF'
-```
-
-### `getToastDuration(): float|int`
-
-Retrieves the user's preference for toast notification duration from their settings. If no setting is found, defaults to 5 seconds. The value is returned in milliseconds.
-
-**Returns:**
-- (float|int): The toast duration in milliseconds.
-
-**Example:**
-```php
-$durationInMs = getToastDuration(); // Returns duration in milliseconds
 ```
 
 ### `a11yCheckContrastColor(string $firstHexColor, string $secondHexColor): bool`
