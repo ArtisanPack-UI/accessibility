@@ -10,7 +10,7 @@ To publish the configuration file, run the following command:
 php artisan vendor:publish --provider="ArtisanPackUI\Accessibility\A11yServiceProvider" --tag="config"
 ```
 
-This will create a `config/accessibility.php` file in your application.
+This will create a `config/artisanpack/accessibility.php` file in your application.
 
 ## Configuration Options
 

@@ -63,7 +63,7 @@ class A11yServiceProvider extends ServiceProvider
 
 		$this->app->singleton( 'a11y', function ( $app ) {
 			$config         = $app->make( Config::class );
-			$cacheConfig    = $config->get( 'accessibility.cache' );
+			$cacheConfig    = $config->get( 'artisanpack.accessibility.cache' );
 			$cacheManager   = new CacheManager( $cacheConfig );
 			$colorGenerator = new AccessibleColorGenerator( null, null, $cacheManager );
 			$batchProcessor = new BatchProcessor( $colorGenerator, $colorGenerator->getCache() );
@@ -72,7 +72,7 @@ class A11yServiceProvider extends ServiceProvider
 		} );
 
 		$this->mergeConfigFrom(
-			__DIR__ . '/../../config/accessibility.php', 'accessibility'
+			__DIR__ . '/../../config/accessibility.php', 'artisanpack-accessibility-temp'
 		);
 
 		$this->app->afterResolving( 'eloquent.factory', function ( $factory ) {
@@ -88,6 +88,8 @@ class A11yServiceProvider extends ServiceProvider
 	 */
 	public function boot(): void
 	{
+		$this->mergeConfiguration();
+
 		RateLimiter::for( 'api', function ( Request $request ) {
 			return Limit::perMinute( 60 )->by( $request->user()?->id ?: $request->ip() );
 		} );
@@ -99,8 +101,8 @@ class A11yServiceProvider extends ServiceProvider
 		if ( $this->app->runningInConsole() ) {
 			$this->publishes(
 				[
-					__DIR__ . '/../../config/accessibility.php' => config_path( 'accessibility.php' ),
-				], 'config'
+					__DIR__ . '/../../config/accessibility.php' => config_path( 'artisanpack/accessibility.php' ),
+				], 'artisanpack-package-config'
 			);
 
 			// Register CLI commands
@@ -110,13 +112,31 @@ class A11yServiceProvider extends ServiceProvider
 							 ] );
 		}
 
-		$this->validateConfig( config( 'accessibility' ) );
+		$this->validateConfig( config( 'artisanpack.accessibility' ) );
 
 		foreach ( $this->listen as $event => $listeners ) {
 			foreach ( $listeners as $listener ) {
 				$this->app['events']->listen( $event, $listener );
 			}
 		}
+	}
+
+	/**
+	 * Merges the package's default configuration with the user's customizations.
+	 *
+	 * This method ensures that the user's settings in `config/artisanpack.php`
+	 * take precedence over the package's default values.
+	 *
+	 * @since 2.1.1
+	 *
+	 * @return void
+	 */
+	protected function mergeConfiguration(): void
+	{
+		$packageDefaults = config( 'artisanpack-accessibility-temp', [] );
+		$userConfig      = config( 'artisanpack.accessibility', [] );
+		$mergedConfig    = array_replace_recursive( $packageDefaults, $userConfig );
+		config( ['artisanpack.accessibility' => $mergedConfig] );
 	}
 
 	/**
