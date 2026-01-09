@@ -3,7 +3,7 @@
   "description": "A package for all accessibility functions for ArtisanPack UI.",
   "type": "library",
   "license": "GPL-3.0-or-later",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "autoload": {
     "psr-4": {
       "ArtisanPack\\Accessibility\\": "src/",

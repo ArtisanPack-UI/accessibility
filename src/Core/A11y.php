@@ -130,7 +130,7 @@ class A11y
         $level = strtolower($level);
         $default = $level === 'aaa' ? 7.0 : 4.5;
 
-        $value = $this->_config->get("accessibility.wcag_thresholds.{$level}", $default);
+        $value = $this->_config->get("artisanpack.accessibility.wcag_thresholds.{$level}", $default);
         return is_numeric($value) ? (float) $value : (float) $default;
     }
 
@@ -141,7 +141,7 @@ class A11y
      */
     private function _getCacheSize(): int
     {
-        $value = $this->_config->get('accessibility.cache_size', 1000);
+        $value = $this->_config->get('artisanpack.accessibility.cache_size', 1000);
         return is_numeric($value) ? (int) $value : 1000;
     }
 }
