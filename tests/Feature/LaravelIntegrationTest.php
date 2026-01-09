@@ -101,20 +101,20 @@ it(
 
     it(
         'loads default configuration', function () {
-            $this->assertEquals(4.5, config('accessibility.wcag_thresholds.aa'));
-            $this->assertEquals(7.0, config('accessibility.wcag_thresholds.aaa'));
-            $this->assertEquals('array', config('accessibility.cache.default'));
-            $this->assertEquals(1000, config('accessibility.cache.stores.array.limit'));
-        } 
+            $this->assertEquals(4.5, config('artisanpack.accessibility.wcag_thresholds.aa'));
+            $this->assertEquals(7.0, config('artisanpack.accessibility.wcag_thresholds.aaa'));
+            $this->assertEquals('array', config('artisanpack.accessibility.cache.default'));
+            $this->assertEquals(1000, config('artisanpack.accessibility.cache.stores.array.limit'));
+        }
     );
 
     it(
         'can override configuration', function () {
-            config()->set('accessibility.wcag_thresholds.aa', 5.0);
-            config()->set('accessibility.cache_size', 500);
+            config()->set('artisanpack.accessibility.wcag_thresholds.aa', 5.0);
+            config()->set('artisanpack.accessibility.cache.stores.array.limit', 500);
 
-            $this->assertEquals(5.0, config('accessibility.wcag_thresholds.aa'));
-            $this->assertEquals(500, config('accessibility.cache_size'));
-        } 
+            $this->assertEquals(5.0, config('artisanpack.accessibility.wcag_thresholds.aa'));
+            $this->assertEquals(500, config('artisanpack.accessibility.cache.stores.array.limit'));
+        }
     );
 
