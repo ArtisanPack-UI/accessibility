@@ -17,7 +17,7 @@ class AccessManager
 
 		$role = $team->role;
 
-		$permissions = config( 'accessibility.roles.' . $role );
+		$permissions = config( 'artisanpack.accessibility.roles.' . $role );
 
 		if ( ! $permissions ) {
 			return false;

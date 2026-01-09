@@ -1,5 +1,21 @@
 # Digital Shopfront CMS Accessibility Changelog
 
+## [2.1.1] - 2026-01-09
+
+This release integrates the package with the core ArtisanPack UI package for a unified configuration structure.
+
+### Changed
+- Updated configuration namespace from `accessibility.*` to `artisanpack.accessibility.*` to align with the ArtisanPack UI ecosystem
+- Published config file path changed from `config/accessibility.php` to `config/artisanpack/accessibility.php`
+- Changed config publish tag from `config` to `artisanpack-package-config`
+
+### Added
+- Added `mergeConfiguration()` method in service provider to properly merge package defaults with user customizations
+
+### Migration notes
+- Update any references to `config('accessibility.*')` to use `config('artisanpack.accessibility.*')` instead
+- If you have a published config file at `config/accessibility.php`, move it to `config/artisanpack/accessibility.php`
+
 ## [2.1.0] - 2025-11-22
 
 This release focuses on developer experience improvements, including code style tooling, CI/CD enhancements, and documentation cleanup.
