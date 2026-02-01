@@ -119,7 +119,7 @@ $textColor = $generator->generateAccessibleTextColor('rgb(59, 130, 246)');
 $textColor = $generator->generateAccessibleTextColor('hsl(217, 91%, 60%)');
 ```
 
-See the [Tailwind Colors Reference](tailwind-colors) for a complete list of supported color names.
+See the [Tailwind Colors Reference](Tailwind-Colors) for a complete list of supported color names.
 
 ### Helper Function
 

@@ -7,7 +7,7 @@ This guide explains how to use the package's Artisan commands to audit color acc
 
 See also:
 - Configuration reference: config/accessibility.php
-- Related docs: [Advanced Color Palette Generation](./palette-generation.md)
+- Related docs: [Advanced Color Palette Generation](Palette-Generation)
 
 ## Prerequisites
 

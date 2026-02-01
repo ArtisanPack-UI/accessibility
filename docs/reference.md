@@ -8,7 +8,7 @@ This section contains comprehensive reference documentation for the ArtisanPack 
 
 ## Available Reference Materials
 
-### [API Reference](reference/api-reference)
+### [API Reference](Reference-Api-Reference)
 Complete technical documentation for all classes, methods, and functions in the package. This reference includes:
 - **A11y Class**: Core accessibility utility methods for color contrast analysis
 - **AccessibleColorGenerator Class**: Advanced color generation with Tailwind CSS support
@@ -17,7 +17,7 @@ Complete technical documentation for all classes, methods, and functions in the 
 - **Helper Functions**: Global helper functions for easy integration
 - Detailed parameter descriptions, return values, and code examples for all methods
 
-### [Tailwind Colors Reference](reference/tailwind-colors)
+### [Tailwind Colors Reference](Reference-Tailwind-Colors)
 Comprehensive reference for all supported Tailwind CSS color names and their corresponding hex values. This reference includes:
 - Complete color palette with hex values for all Tailwind CSS colors
 - Usage examples with the AccessibleColorGenerator
@@ -27,6 +27,6 @@ Comprehensive reference for all supported Tailwind CSS color names and their cor
 ## Getting Help
 
 For implementation guidance and examples, please refer to:
-- [Guides](guides) for getting started and usage examples
-- [AI Guidelines](guidelines) for AI-assisted development best practices
-- [Home](home) for a complete overview of the package
+- [Guides](Guides) for getting started and usage examples
+- [AI Guidelines](Guidelines) for AI-assisted development best practices
+- [Home](Home) for a complete overview of the package

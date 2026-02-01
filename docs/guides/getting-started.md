@@ -92,9 +92,9 @@ $hexColor = A11y::a11yGetContrastColor('#3b82f6');
 
 ## Next Steps
 
-- Check out the [Usage Guide](usage) for more detailed examples
-- See the [API Reference](api-reference) for a complete list of available methods
-- Learn about [Tailwind Color Support](tailwind-colors) for using Tailwind CSS color names
+- Check out the [Usage Guide](Usage) for more detailed examples
+- See the [API Reference](Api-Reference) for a complete list of available methods
+- Learn about [Tailwind Color Support](Tailwind-Colors) for using Tailwind CSS color names
 
 ## Testing
 
