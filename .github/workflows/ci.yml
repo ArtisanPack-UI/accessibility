@@ -8,11 +8,6 @@ on:
   pull_request:
     branches: [main]
 
-# Prevent concurrent runs on the same branch (but don't cancel in-progress runs)
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -74,8 +69,17 @@ jobs:
       - name: Fix vendor permissions
         run: chmod -R +x vendor/bin/
 
+      - name: Verify test setup
+        run: |
+          echo "PHP Version:"
+          php -v
+          echo "Pest Version:"
+          php vendor/bin/pest --version
+          echo "Available test files:"
+          find tests -name "*.php" | head -20
+
       - name: Run tests
-        run: chmod +x ./vendor/bin/pest && ./vendor/bin/pest --ci
+        run: php vendor/bin/pest --colors=never
 
   benchmark:
     needs: build
