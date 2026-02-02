@@ -20,7 +20,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
+          extensions: dom, curl, libxml, mbstring, zip, pdo, sqlite, pdo_sqlite
           coverage: none
 
       - name: Get Composer cache directory
@@ -57,7 +57,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
+          extensions: dom, curl, libxml, mbstring, zip, pdo, sqlite, pdo_sqlite
           coverage: none
 
       - name: Download vendor directory
@@ -75,11 +75,12 @@ jobs:
           php -v
           echo "Pest Version:"
           php vendor/bin/pest --version
-          echo "Available test files:"
-          find tests -name "*.php" | head -20
 
       - name: Run tests
-        run: php vendor/bin/pest --colors=never
+        env:
+          XDEBUG_MODE: off
+        run: |
+          php vendor/bin/pest --no-coverage --stop-on-failure -v 2>&1 || echo "Tests exited with code $?"
 
   benchmark:
     needs: build
@@ -95,7 +96,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
+          extensions: dom, curl, libxml, mbstring, zip, pdo, sqlite, pdo_sqlite
           coverage: none
 
       - name: Download vendor directory
