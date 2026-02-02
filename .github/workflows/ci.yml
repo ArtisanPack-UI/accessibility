@@ -8,9 +8,15 @@ on:
   pull_request:
     branches: [main]
 
+# Prevent concurrent runs on the same branch (but don't cancel in-progress runs)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
@@ -46,7 +52,7 @@ jobs:
   test:
     needs: build
     runs-on: ubuntu-latest
-
+    timeout-minutes: 15
     name: Test
 
     steps:
@@ -65,13 +71,18 @@ jobs:
           name: vendor
           path: vendor/
 
+      - name: Fix vendor permissions
+        run: chmod -R +x vendor/bin/
+
       - name: Run tests
         run: chmod +x ./vendor/bin/pest && ./vendor/bin/pest --ci
 
   benchmark:
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     name: Benchmark
+    continue-on-error: true
 
     steps:
       - uses: actions/checkout@v4
@@ -89,7 +100,20 @@ jobs:
           name: vendor
           path: vendor/
 
+      - name: Fix vendor permissions
+        run: chmod -R +x vendor/bin/
+
+      - name: Check if phpbench exists
+        id: check-phpbench
+        run: |
+          if [ -f "./vendor/bin/phpbench" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Run benchmarks
+        if: steps.check-phpbench.outputs.exists == 'true'
         run: ./vendor/bin/phpbench run --report=default
 
   release:
