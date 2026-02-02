@@ -73,15 +73,28 @@ jobs:
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist
 
-      - name: Run single test file first
+      - name: Run Unit/Reporting tests (isolated)
         env:
           XDEBUG_MODE: off
-        run: php vendor/bin/pest tests/Unit/ColorFormatTest.php --no-coverage -v
+        run: php vendor/bin/pest tests/Unit/Reporting --no-coverage -v
 
-      - name: Run all tests
+      - name: Run other Unit tests
         env:
           XDEBUG_MODE: off
-        run: php vendor/bin/pest --no-coverage -v
+        run: |
+          php vendor/bin/pest tests/Unit/ColorFormatTest.php --no-coverage -v
+          php vendor/bin/pest tests/Unit/AccessibilityTest.php --no-coverage -v
+          php vendor/bin/pest tests/Unit/CachingTest.php --no-coverage -v
+          php vendor/bin/pest tests/Unit/WcagValidatorTest.php --no-coverage -v
+          php vendor/bin/pest tests/Unit/FrameworkAgnosticTest.php --no-coverage -v
+          php vendor/bin/pest tests/Unit/EnvironmentConfigurationTest.php --no-coverage -v
+          php vendor/bin/pest tests/Unit/Theming --no-coverage -v
+          php vendor/bin/pest tests/Unit/Plugins --no-coverage -v
+
+      - name: Run Feature tests
+        env:
+          XDEBUG_MODE: off
+        run: php vendor/bin/pest tests/Feature --no-coverage -v
 
   benchmark:
     needs: build
