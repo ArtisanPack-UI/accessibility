@@ -10,11 +10,9 @@ class GeneratePaletteCommand extends Command
 {
     protected $signature = 'a11y:generate-palette
         {--primary= : Primary color (hex)}
-        {--secondary= : Secondary color (hex)}
         {--accent=* : Additional accent colors}
         {--background= : Background color to test}
         {--foreground= : Foreground color to test}
-        {--strictness=AA : A|AA|AAA}
         {--size=9 : Number of tints/shades per palette}
         {--format=md : Output format json|md|html}
         {--output= : Output file path (writes to file). If not set, prints to stdout}
@@ -26,11 +24,9 @@ class GeneratePaletteCommand extends Command
     public function handle(): int
     {
         $primary = $this->option('primary');
-        $secondary = $this->option('secondary');
         $size = (int) ($this->option('size') ?: 9);
         $format = $this->option('json') ? 'json' : strtolower((string) ($this->option('format') ?: 'md'));
         $output = $this->option('output');
-        $strictness = strtoupper($this->option('strictness') ?: 'AA');
 
         if (! $primary) {
             $this->error('You must provide --primary color (hex, e.g., #3366FF).');

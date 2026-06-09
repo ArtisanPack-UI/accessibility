@@ -7,7 +7,7 @@
 This release adds Laravel 13 support alongside the existing Laravel 11 and 12 compatibility, and modernizes the release pipeline so tagged versions publish to Packagist automatically.
 
 ### Added
-- Added Laravel 13 support. The `illuminate/support` framework constraint now resolves against `^11.0|^12.0|^13.0`. Existing users on Laravel 11 or 12 are unaffected, and Laravel 13 is only selectable on PHP 8.3+ via Laravel's own constraint — no PHP-floor bump is required.
+- Added Laravel 13 support. The `illuminate/support` framework constraint now resolves against `^11.44.1|^12.0|^13.0`. The Laravel 11 lower bound is `11.44.1` to exclude versions covered by published security advisories on the framework; users staying on Laravel 11 should already be on `11.44.1` or later. Laravel 13 is only selectable on PHP 8.3+ via Laravel's own constraint — no PHP-floor bump is required.
 - Added a CI matrix that runs the test suite against Laravel 11, 12, and 13 on every supported PHP version (8.2 for L11/12, 8.3+ for L13).
 - Added a dedicated `.github/workflows/release.yml` that triggers on `v*` tag pushes, runs the pre-release test suite, creates the GitHub Release with notes extracted from this changelog, and notifies the Packagist update-package API so the new version publishes without manual intervention.
 
