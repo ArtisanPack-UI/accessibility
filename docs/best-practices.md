@@ -13,7 +13,7 @@ The package includes a simple in-memory caching mechanism for contrast ratio cal
 -   **How it works**: The cache is a static array that persists for the duration of a single PHP request. It stores the results of contrast calculations.
 -   **Limitations**: The cache is not shared between different requests or servers. It is cleared at the end of each request.
 
-For more details, see the [Performance and Caching](performance.md) documentation.
+For more details, see the [Performance and Caching](Performance) documentation.
 
 ### Server-Side vs. Client-Side
 

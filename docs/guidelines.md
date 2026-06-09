@@ -8,7 +8,7 @@ This section contains guidelines and best practices for using the ArtisanPack UI
 
 ## Available Guidelines
 
-### [AI Guidelines](guidelines/ai-guidelines)
+### [AI Guidelines](Guidelines-Ai-Guidelines)
 Comprehensive guidelines for AI systems and developers working with AI-assisted tools to generate accessible UI components. These guidelines include:
 
 **Core Accessibility Principles:**
@@ -39,6 +39,6 @@ When implementing these guidelines in your development workflow:
 ## Getting Help
 
 For technical implementation details, please refer to:
-- [API Reference](reference) for detailed method documentation
-- [Guides](guides) for practical usage examples
-- [Home](home) for a complete overview of the package
+- [API Reference](Reference) for detailed method documentation
+- [Guides](Guides) for practical usage examples
+- [Home](Home) for a complete overview of the package
