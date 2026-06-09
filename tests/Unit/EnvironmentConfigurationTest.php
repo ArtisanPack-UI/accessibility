@@ -52,7 +52,7 @@ class EnvironmentConfigurationTest extends TestCase
         $_ENV['ACCESSIBILITY_WCAG_THRESHOLDS_AA'] = '6.0';
         $_SERVER['ACCESSIBILITY_WCAG_THRESHOLDS_AA'] = '6.0';
 
-        $config = include __DIR__ . '/../../config/accessibility.php';
+        $config = include __DIR__.'/../../config/accessibility.php';
         $app['config']->set('artisanpack.accessibility', $config);
     }
 

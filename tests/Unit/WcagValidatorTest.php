@@ -14,7 +14,7 @@ class WcagValidatorTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->validator = new WcagValidator();
+        $this->validator = new WcagValidator;
     }
 
     #[Test]

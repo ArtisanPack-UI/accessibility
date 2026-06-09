@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Accessibility Facade
  *
@@ -6,7 +7,6 @@
  * throughout a Laravel application.
  *
  * @since   1.0.0
- * @package ArtisanPack\Accessibility\Facades
  */
 
 namespace ArtisanPack\Accessibility\Laravel\Facades;

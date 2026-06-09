@@ -1,7 +1,7 @@
 <?php
 
-use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
 use ArtisanPack\Accessibility\Core\A11y;
+use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
 use Tests\TestCase;
 
 uses(TestCase::class);
@@ -19,14 +19,14 @@ test(
 
         // Test with hex colors
         expect($generator->generateAccessibleTextColor('#FFFFFF'))->toBe('#000000')
-        ->and($generator->generateAccessibleTextColor('#000000'))->toBe('#FFFFFF')
-        ->and($generator->generateAccessibleTextColor('#FF0000'))->toBe('#000000')
-        ->and($generator->generateAccessibleTextColor('#0000FF'))->toBe('#FFFFFF');
+            ->and($generator->generateAccessibleTextColor('#000000'))->toBe('#FFFFFF')
+            ->and($generator->generateAccessibleTextColor('#FF0000'))->toBe('#000000')
+            ->and($generator->generateAccessibleTextColor('#0000FF'))->toBe('#FFFFFF');
 
         // Test with Tailwind colors
         expect(strtoupper($generator->generateAccessibleTextColor('blue-500')))->toBe('#000000')
-        ->and(strtoupper($generator->generateAccessibleTextColor('yellow-300')))->toBe('#000000')
-        ->and(strtoupper($generator->generateAccessibleTextColor('red-700')))->toBe('#FFFFFF');
+            ->and(strtoupper($generator->generateAccessibleTextColor('yellow-300')))->toBe('#000000')
+            ->and(strtoupper($generator->generateAccessibleTextColor('red-700')))->toBe('#FFFFFF');
     }
 );
 
@@ -75,13 +75,13 @@ test(
         $a11y = app(A11y::class);
 
         $backgrounds = [
-        '#3b82f6', // blue-500
-        '#ef4444', // red-500
-        '#22c55e', // green-500
-        '#f59e0b', // amber-500
-        '#8b5cf6', // violet-500
-        '#000000', // black
-        '#FFFFFF', // white
+            '#3b82f6', // blue-500
+            '#ef4444', // red-500
+            '#22c55e', // green-500
+            '#f59e0b', // amber-500
+            '#8b5cf6', // violet-500
+            '#000000', // black
+            '#FFFFFF', // white
         ];
 
         foreach ($backgrounds as $background) {
@@ -134,8 +134,8 @@ it(
     'generates from theme', function () {
         $generator = app(AccessibleColorGenerator::class);
         $theme = [
-        'light' => ['--color-primary' => '#ffffff'],
-        'dark' => ['--color-primary' => '#000000'],
+            'light' => ['--color-primary' => '#ffffff'],
+            'dark' => ['--color-primary' => '#000000'],
         ];
 
         expect($generator->fromTheme('var(--color-primary)', $theme, 'light'))->toBe('#000000');
@@ -165,4 +165,3 @@ test(
         expect($a11y->a11yCheckContrastColor($color, $accessibleColorNegative))->toBeTrue();
     }
 );
-

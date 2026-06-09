@@ -10,7 +10,7 @@ it('discovers example plugins from conventional directory and registers capabili
             'enabled' => true,
             'safe_mode' => false,
             'paths' => [
-                $root . '/plugins/examples',
+                $root.'/plugins/examples',
             ],
         ],
     ];
@@ -31,7 +31,7 @@ it('discovers example plugins from conventional directory and registers capabili
         'foreground' => '#000000',
         'background' => '#000001',
         'level' => 'AA',
-    ], new Context());
+    ], new Context);
     expect($results->all())->not->toBe([]);
 
     // Analysis tool present and returns report
@@ -42,7 +42,7 @@ it('discovers example plugins from conventional directory and registers capabili
             ['href' => '#', 'text' => ''],
             ['href' => '#', 'text' => 'Read more'],
         ],
-    ], new Context());
+    ], new Context);
     expect($report->title)->toBe('Links Analysis');
     expect($report->data['total'])->toBe(2);
     expect($report->data['missing_text'])->toBe(1);
@@ -55,7 +55,7 @@ it('honors allowlist and denylist', function () {
     $config = [
         'plugins' => [
             'enabled' => true,
-            'paths' => [$root . '/plugins/examples'],
+            'paths' => [$root.'/plugins/examples'],
             'allowlist' => ['example.contrast_rule'],
         ],
     ];
@@ -72,7 +72,9 @@ it('honors allowlist and denylist', function () {
 
     $rulePlugins = $manager->getRulePlugins();
     $ids = [];
-    foreach ($manager->getPlugins() as $id => $_p) { $ids[] = $id; }
+    foreach ($manager->getPlugins() as $id => $_p) {
+        $ids[] = $id;
+    }
     expect(in_array('example.contrast_rule', $ids, true))->toBeFalse();
 });
 
@@ -82,7 +84,7 @@ it('supports safe_mode to prevent activation', function () {
         'plugins' => [
             'enabled' => true,
             'safe_mode' => true,
-            'paths' => [$root . '/plugins/examples'],
+            'paths' => [$root.'/plugins/examples'],
         ],
     ];
 

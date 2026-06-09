@@ -6,9 +6,7 @@ use ArtisanPack\Accessibility\Core\WcagValidator;
 
 class ThemeValidator
 {
-    public function __construct(protected WcagValidator $wcagValidator)
-    {
-    }
+    public function __construct(protected WcagValidator $wcagValidator) {}
 
     public function validate(array $theme): bool
     {
@@ -16,7 +14,7 @@ class ThemeValidator
             foreach ($colors as $variableName => $color) {
                 // Assuming the background is either black or white based on the mode
                 $background = ($mode === 'light') ? '#ffffff' : '#000000';
-                if (!$this->wcagValidator->checkContrast($color, $background)) {
+                if (! $this->wcagValidator->checkContrast($color, $background)) {
                     return false;
                 }
             }

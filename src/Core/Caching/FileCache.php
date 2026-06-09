@@ -11,132 +11,138 @@ use stdClass;
 
 class FileCache implements CacheInterface
 {
-	protected string $path;
+    protected string $path;
 
-	public function __construct( string $path )
-	{
-		$this->path = $path;
-		if ( ! is_dir( $this->path ) ) {
-			mkdir( $this->path, 0777, true );
-		}
-	}
+    public function __construct(string $path)
+    {
+        $this->path = $path;
+        if (! is_dir($this->path)) {
+            mkdir($this->path, 0777, true);
+        }
+    }
 
-	public function clear(): bool
-	{
-		$files = new RecursiveIteratorIterator(
-			new RecursiveDirectoryIterator( $this->path, RecursiveDirectoryIterator::SKIP_DOTS ),
-			RecursiveIteratorIterator::CHILD_FIRST
-		);
+    public function clear(): bool
+    {
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($this->path, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST
+        );
 
-		foreach ( $files as $fileinfo ) {
-			$todo = ( $fileinfo->isDir() ? 'rmdir' : 'unlink' );
-			$todo( $fileinfo->getRealPath() );
-		}
+        foreach ($files as $fileinfo) {
+            $todo = ($fileinfo->isDir() ? 'rmdir' : 'unlink');
+            $todo($fileinfo->getRealPath());
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	public function getMultiple( iterable $keys, mixed $default = null ): iterable
-	{
-		$result = [];
-		foreach ( $keys as $key ) {
-			$result[ $key ] = $this->get( $key, $default );
-		}
-		return $result;
-	}
+    public function getMultiple(iterable $keys, mixed $default = null): iterable
+    {
+        $result = [];
+        foreach ($keys as $key) {
+            $result[$key] = $this->get($key, $default);
+        }
 
-	public function get( string $key, mixed $default = null ): mixed
-	{
-		$path = $this->getFilePath( $key );
-		if ( ! file_exists( $path ) ) {
-			return $default;
-		}
+        return $result;
+    }
 
-		$content = file_get_contents( $path );
-		if ( $content === false ) {
-			return $default;
-		}
+    public function get(string $key, mixed $default = null): mixed
+    {
+        $path = $this->getFilePath($key);
+        if (! file_exists($path)) {
+            return $default;
+        }
 
-		$data = @unserialize( $content, [ 'allowed_classes' => false ] );
-		if ( ! is_array( $data ) || ! array_key_exists( 'value', $data ) ) {
-			$this->delete( $key );
-			return $default;
-		}
+        $content = file_get_contents($path);
+        if ($content === false) {
+            return $default;
+        }
 
+        $data = @unserialize($content, ['allowed_classes' => false]);
+        if (! is_array($data) || ! array_key_exists('value', $data)) {
+            $this->delete($key);
 
-		if ( isset( $data['expires'] ) && time() > $data['expires'] ) {
-			$this->delete( $key );
-			return $default;
-		}
+            return $default;
+        }
 
-		return $data['value'];
-	}
+        if (isset($data['expires']) && time() > $data['expires']) {
+            $this->delete($key);
 
-	protected function getFilePath( string $key ): string
-	{
-		$hash = sha1( $key );
-		return $this->path . '/' . substr( $hash, 0, 2 ) . '/' . substr( $hash, 2, 2 ) . '/' . $hash;
-	}
+            return $default;
+        }
 
-	public function delete( string $key ): bool
-	{
-		$path = $this->getFilePath( $key );
-		if ( file_exists( $path ) ) {
-			return unlink( $path );
-		}
-		return true;
-	}
+        return $data['value'];
+    }
 
-	public function setMultiple( iterable $values, DateInterval|int|null $ttl = null ): bool
-	{
-		$success = true;
-		foreach ( $values as $key => $value ) {
-			if ( ! $this->set( $key, $value, $ttl ) ) {
-				$success = false;
-			}
-		}
-		return $success;
-	}
+    protected function getFilePath(string $key): string
+    {
+        $hash = sha1($key);
 
-	public function set( string $key, mixed $value, DateInterval|int|null $ttl = null ): bool
-	{
-		$path = $this->getFilePath( $key );
-		$dir  = dirname( $path );
+        return $this->path.'/'.substr($hash, 0, 2).'/'.substr($hash, 2, 2).'/'.$hash;
+    }
 
-		if ( ! is_dir( $dir ) ) {
-			mkdir( $dir, 0777, true );
-		}
+    public function delete(string $key): bool
+    {
+        $path = $this->getFilePath($key);
+        if (file_exists($path)) {
+            return unlink($path);
+        }
 
-		$data = [ 'value' => $value ];
-		if ( $ttl !== null ) {
-			if ( $ttl instanceof DateInterval ) {
-				$ttl = ( new DateTime() )->add( $ttl )->getTimestamp() - time();
-			}
-			$ttl = (int) $ttl;
-			if ( $ttl <= 0 ) {
-				return $this->delete( $key );
-			}
-			$data['expires'] = time() + $ttl;
-		}
+        return true;
+    }
 
+    public function setMultiple(iterable $values, DateInterval|int|null $ttl = null): bool
+    {
+        $success = true;
+        foreach ($values as $key => $value) {
+            if (! $this->set($key, $value, $ttl)) {
+                $success = false;
+            }
+        }
 
-		return file_put_contents( $path, serialize( $data ), LOCK_EX ) !== false;
-	}
+        return $success;
+    }
 
-	public function deleteMultiple( iterable $keys ): bool
-	{
-		$success = true;
-		foreach ( $keys as $key ) {
-			if ( ! $this->delete( $key ) ) {
-				$success = false;
-			}
-		}
-		return $success;
-	}
+    public function set(string $key, mixed $value, DateInterval|int|null $ttl = null): bool
+    {
+        $path = $this->getFilePath($key);
+        $dir = dirname($path);
 
-	public function has( string $key ): bool
-	{
-		$sentinel = new stdClass();
-		return $this->get( $key, $sentinel ) !== $sentinel;
-	}
+        if (! is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+
+        $data = ['value' => $value];
+        if ($ttl !== null) {
+            if ($ttl instanceof DateInterval) {
+                $ttl = (new DateTime)->add($ttl)->getTimestamp() - time();
+            }
+            $ttl = (int) $ttl;
+            if ($ttl <= 0) {
+                return $this->delete($key);
+            }
+            $data['expires'] = time() + $ttl;
+        }
+
+        return file_put_contents($path, serialize($data), LOCK_EX) !== false;
+    }
+
+    public function deleteMultiple(iterable $keys): bool
+    {
+        $success = true;
+        foreach ($keys as $key) {
+            if (! $this->delete($key)) {
+                $success = false;
+            }
+        }
+
+        return $success;
+    }
+
+    public function has(string $key): bool
+    {
+        $sentinel = new stdClass;
+
+        return $this->get($key, $sentinel) !== $sentinel;
+    }
 }

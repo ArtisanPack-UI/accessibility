@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use ArtisanPack\Accessibility\PaletteGeneration\PaletteGenerator;
-use ArtisanPack\Accessibility\PaletteGeneration\ExportFormats\JsonExporter;
 use ArtisanPack\Accessibility\Core\WcagValidator;
+use ArtisanPack\Accessibility\PaletteGeneration\ExportFormats\JsonExporter;
+use ArtisanPack\Accessibility\PaletteGeneration\PaletteGenerator;
 use PHPUnit\Framework\TestCase;
 
 class PaletteGeneratorTest extends TestCase
@@ -48,7 +48,7 @@ class PaletteGeneratorTest extends TestCase
     public function test_export()
     {
         $palette = $this->paletteGenerator->generatePalette('#0000ff');
-        $exporter = new JsonExporter();
+        $exporter = new JsonExporter;
         $json = $this->paletteGenerator->export($exporter, $palette);
 
         $this->assertJson($json);

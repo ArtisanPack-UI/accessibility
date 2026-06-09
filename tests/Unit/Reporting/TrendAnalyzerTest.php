@@ -5,9 +5,9 @@ namespace ArtisanPack\Accessibility\Tests\Unit\Reporting;
 use ArtisanPack\Accessibility\Models\ComplianceReport;
 use ArtisanPack\Accessibility\Models\Organization;
 use ArtisanPack\Accessibility\Reporting\TrendAnalyzer;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
+use Tests\TestCase;
 
 class TrendAnalyzerTest extends TestCase
 {
@@ -30,7 +30,7 @@ class TrendAnalyzerTest extends TestCase
             'created_at' => Carbon::now()->subDays(10),
         ]);
 
-        $analyzer = new TrendAnalyzer();
+        $analyzer = new TrendAnalyzer;
         $data = $analyzer->analyze($organization->id);
 
         $this->assertCount(2, $data);

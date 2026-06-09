@@ -2,15 +2,21 @@
 
 ## [Unreleased]
 
+## [2.1.2] - 2026-06-08
+
+This release adds Laravel 13 support alongside the existing Laravel 11 and 12 compatibility, and modernizes the release pipeline so tagged versions publish to Packagist automatically.
+
 ### Added
 - Added Laravel 13 support. The `illuminate/support` framework constraint now resolves against `^11.0|^12.0|^13.0`. Existing users on Laravel 11 or 12 are unaffected, and Laravel 13 is only selectable on PHP 8.3+ via Laravel's own constraint — no PHP-floor bump is required.
 - Added a CI matrix that runs the test suite against Laravel 11, 12, and 13 on every supported PHP version (8.2 for L11/12, 8.3+ for L13).
+- Added a dedicated `.github/workflows/release.yml` that triggers on `v*` tag pushes, runs the pre-release test suite, creates the GitHub Release with notes extracted from this changelog, and notifies the Packagist update-package API so the new version publishes without manual intervention.
 
 ### Changed
 - Promoted `illuminate/support` from `suggest` to a hard `require` so the multi-version framework constraint is enforced at install time. The Laravel integration layer (service provider, facade, HTTP/API controllers) has always required `illuminate/support` at runtime.
 - Widened dev dependency constraints to cover the Laravel 13 toolchain: `orchestra/testbench` to `^9.0|^10.2|^11.0`, `pestphp/pest` to `^3.8|^4.0`, and `pestphp/pest-plugin-laravel` to `^3.1|^4.0`. The lock file still resolves to the Laravel 12 toolchain for local development; the CI matrix overrides per-row to exercise the other framework versions.
 - Updated supported-versions notes in `README.md` and `docs/guides/getting-started.md` to reflect Laravel 11/12/13.
-- Removed Laravel 5.x manual-registration instructions from `docs/guides/getting-started.md` (auto-discovery is automatic on every supported Laravel version) and corrected the documented service-provider and facade class names to match the actual namespaces.
+- Removed Laravel 5.x manual-registration instructions from `docs/guides/getting-started.md` (auto-discovery is automatic on every supported Laravel version) and corrected the documented service-provider and facade class names to match the actual namespaces. The new manual-registration example uses `AliasLoader::getInstance()->alias()` from a service provider's `register()` method, which is the idiomatic approach in the streamlined Laravel 11+ app structure.
+- Removed the inline release job from `.github/workflows/ci.yml` and dropped its tag trigger; `ci.yml` now only fires on pushes to `main` and pull requests targeting `main`.
 
 ## [2.1.1] - 2026-01-09
 

@@ -5,8 +5,8 @@ namespace ArtisanPack\Accessibility\Tests\Unit\Reporting;
 use ArtisanPack\Accessibility\Models\ComplianceReport;
 use ArtisanPack\Accessibility\Models\Organization;
 use ArtisanPack\Accessibility\Reporting\Dashboard;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class DashboardTest extends TestCase
 {
@@ -19,7 +19,7 @@ class DashboardTest extends TestCase
         ComplianceReport::factory()->count(5)->create(['organization_id' => $organization->id, 'score' => 80]);
         ComplianceReport::factory()->count(5)->create(['organization_id' => $organization->id, 'score' => 90]);
 
-        $dashboard = new Dashboard();
+        $dashboard = new Dashboard;
         $data = $dashboard->getData($organization->id);
 
         $this->assertEquals(10, $data['total_reports']);

@@ -18,7 +18,7 @@ class CssExporter implements Exporter
             }
         }
 
-        $css .= "}";
+        $css .= '}';
 
         return $css;
     }

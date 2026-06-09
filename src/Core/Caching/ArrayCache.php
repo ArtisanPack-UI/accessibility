@@ -7,79 +7,86 @@ use Psr\SimpleCache\CacheInterface;
 
 class ArrayCache implements CacheInterface
 {
-	protected array $storage = [];
-	protected int $limit;
-	protected array $keys = [];
+    protected array $storage = [];
 
-	public function __construct( int $limit = 1000 )
-	{
-		$this->limit = $limit;
-	}
+    protected int $limit;
 
-	public function clear(): bool
-	{
-		$this->storage = [];
-		$this->keys    = [];
-		return true;
-	}
+    protected array $keys = [];
 
-	public function getMultiple( iterable $keys, mixed $default = null ): iterable
-	{
-		$result = [];
-		foreach ( $keys as $key ) {
-			$result[ $key ] = $this->get( $key, $default );
-		}
-		return $result;
-	}
+    public function __construct(int $limit = 1000)
+    {
+        $this->limit = $limit;
+    }
 
-	public function get( string $key, mixed $default = null ): mixed
-	{
-		return array_key_exists( $key, $this->storage ) ? $this->storage[ $key ] : $default;
-	}
+    public function clear(): bool
+    {
+        $this->storage = [];
+        $this->keys = [];
 
-	public function setMultiple( iterable $values, DateInterval|int|null $ttl = null ): bool
-	{
-		foreach ( $values as $key => $value ) {
-			$this->set( $key, $value, $ttl );
-		}
-		return true;
-	}
+        return true;
+    }
 
-	public function set( string $key, mixed $value, DateInterval|int|null $ttl = null ): bool
-	{
-		// Remove existing key if present to avoid duplicates
-		if ( isset( $this->storage[ $key ] ) ) {
-			$this->keys = array_values( array_diff( $this->keys, [ $key ] ) );
-		}
+    public function getMultiple(iterable $keys, mixed $default = null): iterable
+    {
+        $result = [];
+        foreach ($keys as $key) {
+            $result[$key] = $this->get($key, $default);
+        }
 
-		if ( count( $this->storage ) >= $this->limit ) {
-			$oldestKey = array_shift( $this->keys );
-			unset( $this->storage[ $oldestKey ] );
-		}
+        return $result;
+    }
 
-		$this->storage[ $key ] = $value;
-		$this->keys[]          = $key;
+    public function get(string $key, mixed $default = null): mixed
+    {
+        return array_key_exists($key, $this->storage) ? $this->storage[$key] : $default;
+    }
 
-		return true;
-	}
+    public function setMultiple(iterable $values, DateInterval|int|null $ttl = null): bool
+    {
+        foreach ($values as $key => $value) {
+            $this->set($key, $value, $ttl);
+        }
 
-	public function deleteMultiple( iterable $keys ): bool
-	{
-		foreach ( $keys as $key ) {
-			$this->delete( $key );
-		}
-		return true;
-	}
+        return true;
+    }
 
-	public function delete( string $key ): bool
-	{
-		unset( $this->storage[ $key ] );
-		$this->keys = array_values( array_diff( $this->keys, [ $key ] ) );
-		return true;
-	}
+    public function set(string $key, mixed $value, DateInterval|int|null $ttl = null): bool
+    {
+        // Remove existing key if present to avoid duplicates
+        if (isset($this->storage[$key])) {
+            $this->keys = array_values(array_diff($this->keys, [$key]));
+        }
 
-	public function has( string $key ): bool
-	{
-		return array_key_exists( $key, $this->storage );
-	}
+        if (count($this->storage) >= $this->limit) {
+            $oldestKey = array_shift($this->keys);
+            unset($this->storage[$oldestKey]);
+        }
+
+        $this->storage[$key] = $value;
+        $this->keys[] = $key;
+
+        return true;
+    }
+
+    public function deleteMultiple(iterable $keys): bool
+    {
+        foreach ($keys as $key) {
+            $this->delete($key);
+        }
+
+        return true;
+    }
+
+    public function delete(string $key): bool
+    {
+        unset($this->storage[$key]);
+        $this->keys = array_values(array_diff($this->keys, [$key]));
+
+        return true;
+    }
+
+    public function has(string $key): bool
+    {
+        return array_key_exists($key, $this->storage);
+    }
 }

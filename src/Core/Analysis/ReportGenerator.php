@@ -5,7 +5,9 @@ namespace ArtisanPack\Accessibility\Core\Analysis;
 class ReportGenerator
 {
     private ColorBlindnessSimulator $colorBlindnessSimulator;
+
     private PerceptualAnalyzer $perceptualAnalyzer;
+
     private AccessibilityScorer $accessibilityScorer;
 
     public function __construct(
@@ -13,9 +15,9 @@ class ReportGenerator
         ?PerceptualAnalyzer $perceptualAnalyzer = null,
         ?AccessibilityScorer $accessibilityScorer = null
     ) {
-        $this->colorBlindnessSimulator = $colorBlindnessSimulator ?? new ColorBlindnessSimulator();
-        $this->perceptualAnalyzer = $perceptualAnalyzer ?? new PerceptualAnalyzer();
-        $this->accessibilityScorer = $accessibilityScorer ?? new AccessibilityScorer();
+        $this->colorBlindnessSimulator = $colorBlindnessSimulator ?? new ColorBlindnessSimulator;
+        $this->perceptualAnalyzer = $perceptualAnalyzer ?? new PerceptualAnalyzer;
+        $this->accessibilityScorer = $accessibilityScorer ?? new AccessibilityScorer;
     }
 
     public function generate(string $foregroundColor, string $backgroundColor): array

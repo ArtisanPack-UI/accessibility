@@ -1,7 +1,7 @@
 <?php
 
-use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
 use ArtisanPack\Accessibility\Core\A11y;
+use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
 use Tests\TestCase;
 
 uses(TestCase::class);
@@ -40,7 +40,7 @@ test(
 // Test helper function
 test(
     'helper function generateAccessibleTextColor works', function () {
-        if (!function_exists('generateAccessibleTextColor')) {
+        if (! function_exists('generateAccessibleTextColor')) {
             $this->markTestSkipped('Helper function not available in test environment');
         }
 
@@ -56,11 +56,11 @@ test(
         $a11y = app(A11y::class);
 
         $backgrounds = [
-        '#3b82f6', // blue-500
-        '#ef4444', // red-500
-        '#22c55e', // green-500
-        '#000000', // black
-        '#FFFFFF', // white
+            '#3b82f6', // blue-500
+            '#ef4444', // red-500
+            '#22c55e', // green-500
+            '#000000', // black
+            '#FFFFFF', // white
         ];
 
         foreach ($backgrounds as $background) {

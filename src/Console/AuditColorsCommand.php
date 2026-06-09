@@ -3,9 +3,8 @@
 namespace ArtisanPack\Accessibility\Console;
 
 use ArtisanPack\Accessibility\Auditing\ColorAuditor;
-use ArtisanPack\Accessibility\Reporting\A11y\AuditReport;
-use ArtisanPack\Accessibility\Reporting\A11y\JsonWriter;
 use ArtisanPack\Accessibility\Reporting\A11y\HtmlWriter;
+use ArtisanPack\Accessibility\Reporting\A11y\JsonWriter;
 use ArtisanPack\Accessibility\Reporting\A11y\MarkdownWriter;
 use Illuminate\Console\Command;
 
@@ -31,23 +30,23 @@ class AuditColorsCommand extends Command
         if (empty($paths)) {
             $paths = config('artisanpack.accessibility.audit.paths', ['resources/views', 'resources/css', 'public/css']);
         }
-        $include = $this->option('include') ?: config('artisanpack.accessibility.audit.include_extensions', ['css','blade.php']);
-        $exclude = $this->option('exclude') ?: config('artisanpack.accessibility.audit.exclude', ['vendor','storage','node_modules']);
+        $include = $this->option('include') ?: config('artisanpack.accessibility.audit.include_extensions', ['css', 'blade.php']);
+        $exclude = $this->option('exclude') ?: config('artisanpack.accessibility.audit.exclude', ['vendor', 'storage', 'node_modules']);
         $formats = $this->option('format') ?: config('artisanpack.accessibility.report.formats', ['md']);
         $outputBase = $this->option('output') ?: config('artisanpack.accessibility.report.output_path', storage_path('app/a11y'));
         $strictness = strtoupper($this->option('strictness') ?: config('artisanpack.accessibility.audit.strictness', 'AA'));
         $progressOpt = $this->option('progress');
         $noProgressOpt = $this->option('no-progress');
-        $showProgress = $progressOpt || (config('artisanpack.accessibility.progress.enabled', true) && !$noProgressOpt);
+        $showProgress = $progressOpt || (config('artisanpack.accessibility.progress.enabled', true) && ! $noProgressOpt);
 
-        $auditor = new ColorAuditor();
+        $auditor = new ColorAuditor;
 
         $files = $auditor->listFiles($paths, $include, $exclude);
         $total = count($files);
-        if ($showProgress && $total >= (int)config('artisanpack.accessibility.progress.min_items_for_bar', 50)) {
+        if ($showProgress && $total >= (int) config('artisanpack.accessibility.progress.min_items_for_bar', 50)) {
             $bar = $this->output->createProgressBar($total);
             $bar->start();
-            $report = $auditor->audit($paths, $include, $exclude, $strictness, true, function($i,$t,$phase,$file) use ($bar){
+            $report = $auditor->audit($paths, $include, $exclude, $strictness, true, function ($i, $t, $phase, $file) use ($bar) {
                 $bar->advance();
             });
             $bar->finish();
@@ -68,14 +67,14 @@ class AuditColorsCommand extends Command
             $fmt = strtolower($fmt);
             $base = rtrim($outputBase, DIRECTORY_SEPARATOR);
             if (is_dir($base)) {
-                $path = $base . DIRECTORY_SEPARATOR . 'a11y-audit.' . $fmt;
+                $path = $base.DIRECTORY_SEPARATOR.'a11y-audit.'.$fmt;
             } else {
-                $path = $base . '.' . $fmt;
+                $path = $base.'.'.$fmt;
             }
             $writer = match ($fmt) {
-                'json' => new JsonWriter(),
-                'html' => new HtmlWriter(),
-                'md', 'markdown' => new MarkdownWriter(),
+                'json' => new JsonWriter,
+                'html' => new HtmlWriter,
+                'md', 'markdown' => new MarkdownWriter,
                 default => null,
             };
             if ($writer) {
@@ -95,9 +94,11 @@ class AuditColorsCommand extends Command
             $exitCode = 2;
         } elseif ($failOn === 'violation' && $tot['violations'] > 0) {
             $exitCode = 2;
-        } elseif (str_starts_with((string)$failOn, 'threshold:')) {
-            $n = (int)substr((string)$failOn, strlen('threshold:'));
-            if ($tot['violations'] >= $n) $exitCode = 2;
+        } elseif (str_starts_with((string) $failOn, 'threshold:')) {
+            $n = (int) substr((string) $failOn, strlen('threshold:'));
+            if ($tot['violations'] >= $n) {
+                $exitCode = 2;
+            }
         }
 
         return $exitCode;

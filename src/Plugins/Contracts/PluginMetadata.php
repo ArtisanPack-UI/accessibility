@@ -17,14 +17,13 @@ final class PluginMetadata
         public array $requires = [],
         public ?string $compatibleWith = null,
         public ?array $permissions = null
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $data): self
     {
         $required = ['id', 'name', 'version', 'capabilities'];
         foreach ($required as $key) {
-            if (!array_key_exists($key, $data)) {
+            if (! array_key_exists($key, $data)) {
                 throw new \InvalidArgumentException("Missing required metadata field: {$key}");
             }
         }

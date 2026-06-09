@@ -6,7 +6,7 @@ use ArtisanPack\Accessibility\Core\Analysis\ColorBlindnessSimulator;
 
 it(
     'simulates protanopia', function () {
-        $simulator = new ColorBlindnessSimulator();
+        $simulator = new ColorBlindnessSimulator;
 
         // Red
         expect($simulator->simulateProtanopia('#ff0000'))->toBe('#918e00');
@@ -19,7 +19,7 @@ it(
 
 it(
     'simulates deuteranopia', function () {
-        $simulator = new ColorBlindnessSimulator();
+        $simulator = new ColorBlindnessSimulator;
 
         // Red
         expect($simulator->simulateDeuteranopia('#ff0000'))->toBe('#9fb300');
@@ -32,10 +32,9 @@ it(
 
 it(
     'simulates blurred vision', function () {
-        $simulator = new ColorBlindnessSimulator();
+        $simulator = new ColorBlindnessSimulator;
 
         $blurred = $simulator->simulateBlurredVision('#ff0000', 1);
         expect($blurred)->toBe('#f20d0d');
     }
 );
-

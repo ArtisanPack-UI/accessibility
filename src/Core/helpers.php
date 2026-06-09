@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Accessibility Helper Functions
  *
@@ -6,13 +7,12 @@
  * These functions serve as convenient wrappers around the A11y class methods.
  *
  * @since   1.0.0
- * @package ArtisanPack\Accessibility
  */
 
 use ArtisanPack\Accessibility\Core\A11y;
 use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
 
-if (! function_exists('a11y') ) {
+if (! function_exists('a11y')) {
     /**
      * Get the A11y instance from the service container.
      *
@@ -29,7 +29,7 @@ if (! function_exists('a11y') ) {
     }
 }
 
-if (! function_exists('a11yCSSVarBlackOrWhite') ) {
+if (! function_exists('a11yCSSVarBlackOrWhite')) {
     /**
      * Returns whether a text color should be black or white based on the background color.
      *
@@ -39,16 +39,16 @@ if (! function_exists('a11yCSSVarBlackOrWhite') ) {
      *
      * @since 1.0.0
      *
-     * @param  string $hexColor The hex code for the background color.
-     * @return string          Either 'black' or 'white' as a string.
+     * @param  string  $hexColor  The hex code for the background color.
+     * @return string Either 'black' or 'white' as a string.
      */
-    function a11yCSSVarBlackOrWhite( string $hexColor ): string
+    function a11yCSSVarBlackOrWhite(string $hexColor): string
     {
         return a11y()->a11yCSSVarBlackOrWhite($hexColor);
     }
 }
 
-if (! function_exists('a11yGetContrastColor') ) {
+if (! function_exists('a11yGetContrastColor')) {
     /**
      * Determines whether black or white text has better contrast against a background color.
      *
@@ -58,18 +58,16 @@ if (! function_exists('a11yGetContrastColor') ) {
      *
      * @since 1.0.0
      *
-     * @param  string $hexColor The hex code for the background color.
-     * @return string          The hex code for either black (#000000) or white (#FFFFFF).
+     * @param  string  $hexColor  The hex code for the background color.
+     * @return string The hex code for either black (#000000) or white (#FFFFFF).
      */
-    function a11yGetContrastColor( string $hexColor ): string
+    function a11yGetContrastColor(string $hexColor): string
     {
         return a11y()->a11yGetContrastColor($hexColor);
     }
 }
 
-
-
-if (! function_exists('a11yCheckContrastColor') ) {
+if (! function_exists('a11yCheckContrastColor')) {
     /**
      * Checks if two colors have sufficient contrast for accessibility.
      *
@@ -80,17 +78,17 @@ if (! function_exists('a11yCheckContrastColor') ) {
      *
      * @since 1.0.0
      *
-     * @param  string $firstHexColor  The first color to check (hex format).
-     * @param  string $secondHexColor The second color to check (hex format).
-     * @return bool                  True if contrast is sufficient (≥4.5:1), false otherwise.
+     * @param  string  $firstHexColor  The first color to check (hex format).
+     * @param  string  $secondHexColor  The second color to check (hex format).
+     * @return bool True if contrast is sufficient (≥4.5:1), false otherwise.
      */
-    function a11yCheckContrastColor( string $firstHexColor, string $secondHexColor ): bool
+    function a11yCheckContrastColor(string $firstHexColor, string $secondHexColor): bool
     {
         return a11y()->a11yCheckContrastColor($firstHexColor, $secondHexColor);
     }
 }
 
-if (! function_exists('generateAccessibleTextColor') ) {
+if (! function_exists('generateAccessibleTextColor')) {
     /**
      * Generates an accessible text color for a given background color.
      *
@@ -102,14 +100,14 @@ if (! function_exists('generateAccessibleTextColor') ) {
      *
      * @since 1.0.0
      *
-     * @param  string $backgroundColor The background color. Can be a hex code (e.g., '#3b82f6')
-     *                                 or a Tailwind color name (e.g., 'blue-500').
-     * @param  bool   $tint            Optional. If true, generates an accessible tint or shade.
-     *                                 If false, returns black or white. Default false.
-     * @return string                 The generated accessible hex color string.
+     * @param  string  $backgroundColor  The background color. Can be a hex code (e.g., '#3b82f6')
+     *                                   or a Tailwind color name (e.g., 'blue-500').
+     * @param  bool  $tint  Optional. If true, generates an accessible tint or shade.
+     *                      If false, returns black or white. Default false.
+     * @return string The generated accessible hex color string.
      */
-    function generateAccessibleTextColor( string $backgroundColor, bool $tint = false ): string
+    function generateAccessibleTextColor(string $backgroundColor, bool $tint = false): string
     {
-        return ( new AccessibleColorGenerator() )->generateAccessibleTextColor($backgroundColor, $tint);
+        return (new AccessibleColorGenerator)->generateAccessibleTextColor($backgroundColor, $tint);
     }
 }

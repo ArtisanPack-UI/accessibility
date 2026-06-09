@@ -4,8 +4,8 @@ namespace ArtisanPack\Accessibility\Database\Factories;
 
 use ArtisanPack\Accessibility\Models\Organization;
 use ArtisanPack\Accessibility\Models\Team;
-use Tests\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Tests\User;
 
 class TeamFactory extends Factory
 {

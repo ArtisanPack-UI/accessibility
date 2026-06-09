@@ -5,13 +5,21 @@ namespace ArtisanPack\Accessibility\Reporting\A11y;
 class Finding
 {
     public string $file;
+
     public ?int $line;
+
     public string $context;
+
     public string $foreground;
+
     public string $background;
+
     public float $ratio;
+
     public string $severity; // violation|warning|info
+
     public ?array $recommendation;
+
     public array $tags;
 
     public function __construct(array $data)
@@ -21,7 +29,7 @@ class Finding
         $this->context = $data['context'] ?? '';
         $this->foreground = $data['foreground'] ?? '';
         $this->background = $data['background'] ?? '';
-        $this->ratio = (float)($data['ratio'] ?? 0.0);
+        $this->ratio = (float) ($data['ratio'] ?? 0.0);
         $this->severity = $data['severity'] ?? 'info';
         $this->recommendation = $data['recommendation'] ?? null;
         $this->tags = $data['tags'] ?? [];

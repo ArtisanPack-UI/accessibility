@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the ArtisanPack UI Accessibility package.
  *
@@ -8,10 +9,12 @@
  * file that was distributed with this source code.
  *
  * @category Accessibility
- * @package  ArtisanPack\Accessibility
+ *
  * @author   Jacob Martella <me@jacobmartella.com>
  * @license  https://www.gnu.org/licenses/gpl-3.0.html GPL-3.0-or-later
+ *
  * @link     https://artisanpack.com
+ *
  * @version  1.0.0
  */
 
@@ -23,9 +26,10 @@ use InvalidArgumentException;
  * Class WcagValidator.
  *
  * @category Accessibility
- * @package  ArtisanPack\Accessibility
+ *
  * @author   Jacob Martella <me@jacobmartella.com>
  * @license  https://www.gnu.org/licenses/gpl-3.0.html GPL-3.0-or-later
+ *
  * @link     https://artisanpack.com
  */
 class WcagValidator
@@ -40,12 +44,10 @@ class WcagValidator
     /**
      * Checks if two colors have sufficient contrast for accessibility.
      *
-     * @param string $color1      The first color.
-     * @param string $color2      The second color.
-     * @param string $level       The WCAG level.
-     * @param bool   $isLargeText Whether the text is large.
-     *
-     * @return bool
+     * @param  string  $color1  The first color.
+     * @param  string  $color2  The second color.
+     * @param  string  $level  The WCAG level.
+     * @param  bool  $isLargeText  Whether the text is large.
      */
     public function checkContrast(string $color1, string $color2, string $level = 'AA', bool $isLargeText = false): bool
     {
@@ -85,10 +87,8 @@ class WcagValidator
     /**
      * Calculates the contrast ratio between two colors.
      *
-     * @param string $color1 The first color.
-     * @param string $color2 The second color.
-     *
-     * @return float
+     * @param  string  $color1  The first color.
+     * @param  string  $color2  The second color.
      */
     public function calculateContrastRatio(string $color1, string $color2): float
     {
@@ -114,9 +114,7 @@ class WcagValidator
     /**
      * Calculates the relative luminance of a color.
      *
-     * @param array<string, int> $rgb The color.
-     *
-     * @return float
+     * @param  array<string, int>  $rgb  The color.
      */
     private function _calculateRelativeLuminance(array $rgb): float
     {
@@ -130,9 +128,7 @@ class WcagValidator
     /**
      * Converts an sRGB color component to a linear value.
      *
-     * @param float $color The color component.
-     *
-     * @return float
+     * @param  float  $color  The color component.
      */
     private function _sRGBtoLin(float $color): float
     {
@@ -147,15 +143,14 @@ class WcagValidator
     /**
      * Converts a hex color to an RGB array.
      *
-     * @param string $hex The hex color.
-     *
+     * @param  string  $hex  The hex color.
      * @return array<string, int>
      */
     private function _hexToRgb(string $hex): array
     {
         $hex = ltrim($hex, '#');
         if (strlen($hex) === 3) {
-            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+            $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
         }
 
         return [
@@ -168,13 +163,11 @@ class WcagValidator
     /**
      * Validates a hex color.
      *
-     * @param string $hex The hex color.
-     *
-     * @return void
+     * @param  string  $hex  The hex color.
      */
     private function _validateHexColor(string $hex): void
     {
-        if (!preg_match('/^#([a-f0-9]{6}|[a-f0-9]{3})$/i', $hex)) {
+        if (! preg_match('/^#([a-f0-9]{6}|[a-f0-9]{3})$/i', $hex)) {
             throw new InvalidArgumentException("Malformed hex color: {$hex}");
         }
     }
