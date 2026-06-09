@@ -102,7 +102,9 @@ For complete documentation, please visit the links below.
 ## Requirements
 
 - PHP 8.2 or higher
-- Laravel 5.3 or higher (for Laravel integration)
+- Laravel 11, 12, or 13 (for Laravel integration)
+
+> Laravel 13 requires PHP 8.3 or higher. Users staying on Laravel 11 or 12 may continue to use PHP 8.2.
 
 ## Contributing
 
