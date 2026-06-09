@@ -9,7 +9,9 @@ This guide will help you get started with the ArtisanPack UI Accessibility packa
 ## Requirements
 
 - PHP 8.2 or higher
-- Laravel 5.3 or higher (for Laravel integration)
+- Laravel 11, 12, or 13 (for Laravel integration)
+
+> Laravel 13 requires PHP 8.3 or higher. Users staying on Laravel 11 or 12 may continue to use PHP 8.2.
 
 ## Installation
 
@@ -21,27 +23,21 @@ composer require artisanpack-ui/accessibility
 
 ## Laravel Integration
 
-### Service Provider Registration
+The `A11yServiceProvider` and the `A11y` facade alias are registered automatically via Laravel's package auto-discovery — no manual registration required.
 
-If you're using Laravel 5.5 or higher with package auto-discovery, the service provider will be automatically registered.
-
-For Laravel 5.3 or 5.4, you need to manually add the service provider to your `config/app.php` file:
+If you have disabled auto-discovery for this package (for example by listing it in your application's `extra.laravel.dont-discover` array), register them manually:
 
 ```php
-'providers' => [
-    // Other service providers...
-    ArtisanPackUI\Accessibility\A11yServiceProvider::class,
-],
-```
+// bootstrap/providers.php
+return [
+    // ...
+    ArtisanPack\Accessibility\Laravel\A11yServiceProvider::class,
+];
 
-### Facade Registration
-
-If you want to use the A11y facade, you can add it to the aliases array in your `config/app.php` file:
-
-```php
+// config/app.php (only if you use the A11y facade alias)
 'aliases' => [
-    // Other aliases...
-    'A11y' => ArtisanPackUI\Accessibility\Facades\A11y::class,
+    // ...
+    'A11y' => ArtisanPack\Accessibility\Laravel\Facades\A11y::class,
 ],
 ```
 

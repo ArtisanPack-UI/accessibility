@@ -1,5 +1,17 @@
 # Digital Shopfront CMS Accessibility Changelog
 
+## [Unreleased]
+
+### Added
+- Added Laravel 13 support. The `illuminate/support` framework constraint now resolves against `^11.0|^12.0|^13.0`. Existing users on Laravel 11 or 12 are unaffected, and Laravel 13 is only selectable on PHP 8.3+ via Laravel's own constraint — no PHP-floor bump is required.
+- Added a CI matrix that runs the test suite against Laravel 11, 12, and 13 on every supported PHP version (8.2 for L11/12, 8.3+ for L13).
+
+### Changed
+- Promoted `illuminate/support` from `suggest` to a hard `require` so the multi-version framework constraint is enforced at install time. The Laravel integration layer (service provider, facade, HTTP/API controllers) has always required `illuminate/support` at runtime.
+- Widened dev dependency constraints to cover the Laravel 13 toolchain: `orchestra/testbench` to `^9.0|^10.2|^11.0`, `pestphp/pest` to `^3.8|^4.0`, and `pestphp/pest-plugin-laravel` to `^3.1|^4.0`. The lock file still resolves to the Laravel 12 toolchain for local development; the CI matrix overrides per-row to exercise the other framework versions.
+- Updated supported-versions notes in `README.md` and `docs/guides/getting-started.md` to reflect Laravel 11/12/13.
+- Removed Laravel 5.x manual-registration instructions from `docs/guides/getting-started.md` (auto-discovery is automatic on every supported Laravel version) and corrected the documented service-provider and facade class names to match the actual namespaces.
+
 ## [2.1.1] - 2026-01-09
 
 This release integrates the package with the core ArtisanPack UI package for a unified configuration structure.
