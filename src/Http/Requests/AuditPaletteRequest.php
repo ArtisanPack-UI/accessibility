@@ -24,7 +24,7 @@ class AuditPaletteRequest extends FormRequest
     public function rules()
     {
         return [
-            'colors'   => ['required', 'array'],
+            'colors' => ['required', 'array'],
             'colors.*' => ['string', 'regex:/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/'],
         ];
     }

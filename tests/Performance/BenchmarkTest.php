@@ -3,8 +3,8 @@
 namespace Tests\Performance;
 
 use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
-use ArtisanPack\Accessibility\Core\Performance\BatchProcessor;
 use ArtisanPack\Accessibility\Core\Caching\CacheManager;
+use ArtisanPack\Accessibility\Core\Performance\BatchProcessor;
 use ArtisanPack\Accessibility\Core\WcagValidator;
 
 class BenchmarkTest
@@ -28,18 +28,21 @@ class BenchmarkTest
             'default' => $cacheDriver,
             'stores' => [
                 'array' => ['driver' => 'array'],
-                'file' => ['driver' => 'file', 'path' => __DIR__ . '/cache'],
+                'file' => ['driver' => 'file', 'path' => __DIR__.'/cache'],
                 'null' => ['driver' => 'null'],
             ],
         ];
         $cacheManager = new CacheManager($config);
-        $colorGenerator = new AccessibleColorGenerator(new WcagValidator(), null, $cacheManager, null);
+        $colorGenerator = new AccessibleColorGenerator(new WcagValidator, null, $cacheManager, null);
+
         return new BatchProcessor($colorGenerator, $cacheManager->store(), null);
     }
 
     /**
      * @Revs(10)
+     *
      * @Iterations(5)
+     *
      * @ParamProviders({"provideCacheDrivers"})
      */
     public function benchBatchProcessor(array $params): void
@@ -50,7 +53,9 @@ class BenchmarkTest
 
     /**
      * @Revs(10)
+     *
      * @Iterations(5)
+     *
      * @ParamProviders({"provideCacheDrivers"})
      */
     public function benchBatchProcessorWithTint(array $params): void

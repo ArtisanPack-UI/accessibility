@@ -1,30 +1,30 @@
 <?php
+
 /**
  * Accessibility Service Provider
  *
  * Registers the accessibility services with the Laravel application.
  *
  * @since   1.0.0
- * @package ArtisanPack\Accessibility
  */
 
 namespace ArtisanPack\Accessibility\Laravel;
 
 use ArtisanPack\Accessibility\Console\AuditColorsCommand;
 use ArtisanPack\Accessibility\Console\GeneratePaletteCommand;
+use ArtisanPack\Accessibility\Core\A11y;
 use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
-use ArtisanPack\Accessibility\Core\Performance\BatchProcessor;
 use ArtisanPack\Accessibility\Core\Caching\CacheManager;
+use ArtisanPack\Accessibility\Core\Contracts\Config;
+use ArtisanPack\Accessibility\Core\Performance\BatchProcessor;
+use ArtisanPack\Accessibility\Events\ColorContrastChecked;
+use ArtisanPack\Accessibility\Listeners\LogColorContrastCheck;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
-use ArtisanPack\Accessibility\Core\A11y;
-use ArtisanPack\Accessibility\Core\Contracts\Config;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
-use ArtisanPack\Accessibility\Events\ColorContrastChecked;
-use ArtisanPack\Accessibility\Listeners\LogColorContrastCheck;
 
 /**
  * Service provider for the Accessibility package.
@@ -36,129 +36,120 @@ use ArtisanPack\Accessibility\Listeners\LogColorContrastCheck;
  */
 class A11yServiceProvider extends ServiceProvider
 {
-	/**
-	 * The event listener mappings for the application.
-	 *
-	 * @var array
-	 */
-	protected $listen = [
-		ColorContrastChecked::class => [
-			LogColorContrastCheck::class,
-		],
-	];
+    /**
+     * The event listener mappings for the application.
+     *
+     * @var array
+     */
+    protected $listen = [
+        ColorContrastChecked::class => [
+            LogColorContrastCheck::class,
+        ],
+    ];
 
-	/**
-	 * Register the accessibility services.
-	 *
-	 * Binds the A11y class to the service container as a singleton
-	 * with the key 'a11y'.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function register(): void
-	{
-		$this->app->singleton( Config::class, LaravelConfig::class );
+    /**
+     * Register the accessibility services.
+     *
+     * Binds the A11y class to the service container as a singleton
+     * with the key 'a11y'.
+     *
+     * @since 1.0.0
+     */
+    public function register(): void
+    {
+        $this->app->singleton(Config::class, LaravelConfig::class);
 
-		$this->app->singleton( 'a11y', function ( $app ) {
-			$config         = $app->make( Config::class );
-			$cacheConfig    = $config->get( 'artisanpack.accessibility.cache' );
-			$cacheManager   = new CacheManager( $cacheConfig );
-			$colorGenerator = new AccessibleColorGenerator( null, null, $cacheManager );
-			$batchProcessor = new BatchProcessor( $colorGenerator, $colorGenerator->getCache() );
+        $this->app->singleton('a11y', function ($app) {
+            $config = $app->make(Config::class);
+            $cacheConfig = $config->get('artisanpack.accessibility.cache');
+            $cacheManager = new CacheManager($cacheConfig);
+            $colorGenerator = new AccessibleColorGenerator(null, null, $cacheManager);
+            $batchProcessor = new BatchProcessor($colorGenerator, $colorGenerator->getCache());
 
-			return new A11y( $config, null, $colorGenerator, $batchProcessor );
-		} );
+            return new A11y($config, null, $colorGenerator, $batchProcessor);
+        });
 
-		$this->mergeConfigFrom(
-			__DIR__ . '/../../config/accessibility.php', 'artisanpack-accessibility-temp'
-		);
+        $this->mergeConfigFrom(
+            __DIR__.'/../../config/accessibility.php', 'artisanpack-accessibility-temp'
+        );
 
-		$this->app->afterResolving( 'eloquent.factory', function ( $factory ) {
-			$factory->load( __DIR__ . '/../../database/factories' );
-		} );
-	}
+        $this->app->afterResolving('eloquent.factory', function ($factory) {
+            $factory->load(__DIR__.'/../../database/factories');
+        });
+    }
 
-	/**
-	 * Perform post-registration booting of services.
-	 *
-	 * @since  1.0.0
-	 * @return void
-	 */
-	public function boot(): void
-	{
-		$this->mergeConfiguration();
+    /**
+     * Perform post-registration booting of services.
+     *
+     * @since  1.0.0
+     */
+    public function boot(): void
+    {
+        $this->mergeConfiguration();
 
-		RateLimiter::for( 'api', function ( Request $request ) {
-			return Limit::perMinute( 60 )->by( $request->user()?->id ?: $request->ip() );
-		} );
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
 
-		$this->loadViewsFrom( __DIR__ . '/../../resources/views', 'accessibility' );
+        $this->loadViewsFrom(__DIR__.'/../../resources/views', 'accessibility');
 
-		$this->loadRoutesFrom( __DIR__ . '/../../routes/api.php' );
+        $this->loadRoutesFrom(__DIR__.'/../../routes/api.php');
 
-		if ( $this->app->runningInConsole() ) {
-			$this->publishes(
-				[
-					__DIR__ . '/../../config/accessibility.php' => config_path( 'artisanpack/accessibility.php' ),
-				], 'artisanpack-package-config'
-			);
+        if ($this->app->runningInConsole()) {
+            $this->publishes(
+                [
+                    __DIR__.'/../../config/accessibility.php' => config_path('artisanpack/accessibility.php'),
+                ], 'artisanpack-package-config'
+            );
 
-			// Register CLI commands
-			$this->commands( [
-								 AuditColorsCommand::class,
-								 GeneratePaletteCommand::class,
-							 ] );
-		}
+            // Register CLI commands
+            $this->commands([
+                AuditColorsCommand::class,
+                GeneratePaletteCommand::class,
+            ]);
+        }
 
-		$this->validateConfig( config( 'artisanpack.accessibility' ) );
+        $this->validateConfig(config('artisanpack.accessibility'));
 
-		foreach ( $this->listen as $event => $listeners ) {
-			foreach ( $listeners as $listener ) {
-				$this->app['events']->listen( $event, $listener );
-			}
-		}
-	}
+        foreach ($this->listen as $event => $listeners) {
+            foreach ($listeners as $listener) {
+                $this->app['events']->listen($event, $listener);
+            }
+        }
+    }
 
-	/**
-	 * Merges the package's default configuration with the user's customizations.
-	 *
-	 * This method ensures that the user's settings in `config/artisanpack.php`
-	 * take precedence over the package's default values.
-	 *
-	 * @since 2.1.1
-	 *
-	 * @return void
-	 */
-	protected function mergeConfiguration(): void
-	{
-		$packageDefaults = config( 'artisanpack-accessibility-temp', [] );
-		$userConfig      = config( 'artisanpack.accessibility', [] );
-		$mergedConfig    = array_replace_recursive( $packageDefaults, $userConfig );
-		config( ['artisanpack.accessibility' => $mergedConfig] );
-	}
+    /**
+     * Merges the package's default configuration with the user's customizations.
+     *
+     * This method ensures that the user's settings in `config/artisanpack.php`
+     * take precedence over the package's default values.
+     *
+     * @since 2.1.1
+     */
+    protected function mergeConfiguration(): void
+    {
+        $packageDefaults = config('artisanpack-accessibility-temp', []);
+        $userConfig = config('artisanpack.accessibility', []);
+        $mergedConfig = array_replace_recursive($packageDefaults, $userConfig);
+        config(['artisanpack.accessibility' => $mergedConfig]);
+    }
 
-	/**
-	 * @param  $config
-	 * @return void
-	 */
-	protected function validateConfig( $config ): void
-	{
-		$validator = Validator::make(
-			$config, [
-					   'wcag_thresholds.aa'                => 'required|numeric|min:1|max:21',
-					   'wcag_thresholds.aaa'               => 'required|numeric|min:1|max:21',
-					   'large_text_thresholds.font_size'   => 'required|integer|min:1',
-					   'large_text_thresholds.font_weight' => 'required|string',
-					   'cache.default'                     => 'required|string|in:array,file,null',
-					   'cache.stores.array.limit'          => 'required_if:cache.default,array|integer|min:0',
-					   'cache.stores.file.path'            => 'required_if:cache.default,file|string',
-				   ]
-		);
+    protected function validateConfig($config): void
+    {
+        $validator = Validator::make(
+            $config, [
+                'wcag_thresholds.aa' => 'required|numeric|min:1|max:21',
+                'wcag_thresholds.aaa' => 'required|numeric|min:1|max:21',
+                'large_text_thresholds.font_size' => 'required|integer|min:1',
+                'large_text_thresholds.font_weight' => 'required|string',
+                'cache.default' => 'required|string|in:array,file,null',
+                'cache.stores.array.limit' => 'required_if:cache.default,array|integer|min:0',
+                'cache.stores.file.path' => 'required_if:cache.default,file|string',
+            ]
+        );
 
-		if ( $validator->fails() ) {
-			throw new InvalidArgumentException( 'Invalid accessibility configuration: ' . $validator->errors()->first() );
-		}
-	}
+        if ($validator->fails()) {
+            throw new InvalidArgumentException('Invalid accessibility configuration: '.$validator->errors()->first());
+        }
+    }
 }

@@ -23,7 +23,7 @@ class FrameworkAgnosticTest extends TestCase
     public function test_a11y_get_contrast_color()
     {
         $config = $this->createMock(Config::class);
-        $wcagValidator = new WcagValidator();
+        $wcagValidator = new WcagValidator;
         $a11y = new A11y($config, $wcagValidator, null, null, null);
 
         $this->assertEquals('#000000', $a11y->a11yGetContrastColor('#FFFFFF'));
@@ -33,7 +33,7 @@ class FrameworkAgnosticTest extends TestCase
     public function test_a11y_css_var_black_or_white()
     {
         $config = $this->createMock(Config::class);
-        $wcagValidator = new WcagValidator();
+        $wcagValidator = new WcagValidator;
         $a11y = new A11y($config, $wcagValidator, null, null, null);
 
         $this->assertEquals('black', $a11y->a11yCSSVarBlackOrWhite('#FFFFFF'));
@@ -43,7 +43,7 @@ class FrameworkAgnosticTest extends TestCase
     public function test_a11y_check_contrast_color()
     {
         $config = $this->createMock(Config::class);
-        $wcagValidator = new WcagValidator();
+        $wcagValidator = new WcagValidator;
         $a11y = new A11y($config, $wcagValidator, null, null, null);
 
         $this->assertTrue($a11y->a11yCheckContrastColor('#FFFFFF', '#000000'));

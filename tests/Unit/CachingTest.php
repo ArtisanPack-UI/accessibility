@@ -18,7 +18,7 @@ class CachingTest extends TestCase
             ],
         ];
         $cacheManager = new CacheManager($config);
-        $colorGenerator = new AccessibleColorGenerator(new WcagValidator(), null, $cacheManager);
+        $colorGenerator = new AccessibleColorGenerator(new WcagValidator, null, $cacheManager);
 
         $color = '#ff0000';
         $level = 'AA';

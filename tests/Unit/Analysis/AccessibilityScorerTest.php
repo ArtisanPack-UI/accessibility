@@ -2,16 +2,16 @@
 
 namespace ArtisanPack\Accessibility\Tests\Unit\Analysis;
 
-use ArtisanPack\Accessibility\Core\Analysis\AccessibilityScorer;
 use ArtisanPack\Accessibility\Core\AccessibleColorGenerator;
+use ArtisanPack\Accessibility\Core\Analysis\AccessibilityScorer;
 use ArtisanPack\Accessibility\Core\Caching\CacheManager;
 use ArtisanPack\Accessibility\Core\Theming\CssVariableParser;
 use ArtisanPack\Accessibility\Core\WcagValidator;
 
 it(
     'gets accessibility recommendations', function () {
-        $wcagValidator = new WcagValidator();
-        $parser = new CssVariableParser();
+        $wcagValidator = new WcagValidator;
+        $parser = new CssVariableParser;
         $cacheManager = new CacheManager(['default' => 'array', 'stores' => ['array' => ['driver' => 'array']]]);
         $colorGenerator = new AccessibleColorGenerator($wcagValidator, $parser, $cacheManager, null);
         $scorer = new AccessibilityScorer($wcagValidator, $colorGenerator);

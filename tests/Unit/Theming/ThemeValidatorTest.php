@@ -11,8 +11,8 @@ it(
         $validator = new ThemeValidator($wcagValidator);
 
         $theme = [
-        'light' => ['--color-primary' => '#000000'],
-        'dark' => ['--color-primary' => '#ffffff'],
+            'light' => ['--color-primary' => '#000000'],
+            'dark' => ['--color-primary' => '#ffffff'],
         ];
 
         expect($validator->validate($theme))->toBeTrue();
@@ -27,8 +27,8 @@ it(
         $validator = new ThemeValidator($wcagValidator);
 
         $theme = [
-        'light' => ['--color-primary' => '#ffffff'],
-        'dark' => ['--color-primary' => '#000000'],
+            'light' => ['--color-primary' => '#ffffff'],
+            'dark' => ['--color-primary' => '#000000'],
         ];
 
         expect($validator->validate($theme))->toBeFalse();

@@ -8,11 +8,12 @@ use ArtisanPack\Accessibility\Core\WcagValidator;
 class AccessibilityScorer
 {
     private WcagValidator $wcagValidator;
+
     private AccessibleColorGenerator $colorGenerator;
 
     public function __construct(?WcagValidator $wcagValidator = null, ?AccessibleColorGenerator $colorGenerator = null)
     {
-        $this->wcagValidator = $wcagValidator ?? new WcagValidator();
+        $this->wcagValidator = $wcagValidator ?? new WcagValidator;
         $this->colorGenerator = $colorGenerator ?? new AccessibleColorGenerator($this->wcagValidator);
     }
 
@@ -38,19 +39,19 @@ class AccessibilityScorer
             return ['message' => 'All WCAG standards are met.'];
         }
 
-        if (!$aa_normal) {
+        if (! $aa_normal) {
             $recommendations['AA_normal'] = $this->getSuggestion($foregroundColor, $backgroundColor, 'AA');
         }
 
-        if (!$aaa_normal) {
+        if (! $aaa_normal) {
             $recommendations['AAA_normal'] = $this->getSuggestion($foregroundColor, $backgroundColor, 'AAA');
         }
 
-        if (!$aa_large) {
+        if (! $aa_large) {
             $recommendations['AA_large'] = $this->getSuggestion($foregroundColor, $backgroundColor, 'AA', true);
         }
 
-        if (!$aaa_large) {
+        if (! $aaa_large) {
             $recommendations['AAA_large'] = $this->getSuggestion($foregroundColor, $backgroundColor, 'AAA', true);
         }
 

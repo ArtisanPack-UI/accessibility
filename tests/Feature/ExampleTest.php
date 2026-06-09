@@ -5,5 +5,5 @@ it(
         $status = true;
 
         $this->assertTrue($status);
-    } 
+    }
 );

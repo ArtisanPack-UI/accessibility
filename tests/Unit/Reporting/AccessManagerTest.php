@@ -5,9 +5,9 @@ namespace ArtisanPack\Accessibility\Tests\Unit\Reporting;
 use ArtisanPack\Accessibility\Models\Organization;
 use ArtisanPack\Accessibility\Models\Team;
 use ArtisanPack\Accessibility\Reporting\AccessManager;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Tests\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AccessManagerTest extends TestCase
 {
@@ -24,7 +24,7 @@ class AccessManagerTest extends TestCase
             'role' => 'editor',
         ]);
 
-        $accessManager = new AccessManager();
+        $accessManager = new AccessManager;
 
         $this->assertTrue($accessManager->can($user, 'view_reports', $organization));
         $this->assertTrue($accessManager->can($user, 'manage_reports', $organization));

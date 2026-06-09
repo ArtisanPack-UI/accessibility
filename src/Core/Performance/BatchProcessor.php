@@ -12,7 +12,9 @@ use Psr\SimpleCache\CacheInterface;
 class BatchProcessor
 {
     protected AccessibleColorGenerator $colorGenerator;
+
     protected CacheInterface $cache;
+
     protected ?EventDispatcherInterface $dispatcher;
 
     public function __construct(AccessibleColorGenerator $colorGenerator, CacheInterface $cache, ?EventDispatcherInterface $dispatcher = null)
@@ -66,7 +68,7 @@ class BatchProcessor
         }
 
         $generatedColors = [];
-        if (!empty($missedKeys)) {
+        if (! empty($missedKeys)) {
             foreach ($missedKeys as $key) {
                 $color = $backgroundColors[$key];
                 $generatedColor = $this->colorGenerator->generateAccessibleTextColor(
@@ -82,7 +84,7 @@ class BatchProcessor
                 $generatedColors[$cacheKey] = $generatedColor;
             }
 
-            if (!empty($generatedColors)) {
+            if (! empty($generatedColors)) {
                 $this->cache->setMultiple($generatedColors);
             }
         }

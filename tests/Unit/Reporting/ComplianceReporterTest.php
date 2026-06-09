@@ -2,11 +2,11 @@
 
 namespace ArtisanPack\Accessibility\Tests\Unit\Reporting;
 
+use ArtisanPack\Accessibility\Core\Analysis\AccessibilityScorer;
 use ArtisanPack\Accessibility\Models\Organization;
 use ArtisanPack\Accessibility\Reporting\ComplianceReporter;
-use ArtisanPack\Accessibility\Core\Analysis\AccessibilityScorer;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class ComplianceReporterTest extends TestCase
 {

@@ -8,18 +8,18 @@ use RuntimeException;
 
 class AuditTrail
 {
-	public function log( string $action, array $details = [] ): void
-	{
-		$userId = Auth::id();
+    public function log(string $action, array $details = []): void
+    {
+        $userId = Auth::id();
 
-		if ( $userId === null ) {
-			throw new RuntimeException( 'Cannot log audit trail: no authenticated user' );
-		}
+        if ($userId === null) {
+            throw new RuntimeException('Cannot log audit trail: no authenticated user');
+        }
 
-		AuditTrailModel::create( [
-									 'user_id' => $userId,
-									 'action'  => $action,
-									 'details' => $details,
-								 ] );
-	}
+        AuditTrailModel::create([
+            'user_id' => $userId,
+            'action' => $action,
+            'details' => $details,
+        ]);
+    }
 }

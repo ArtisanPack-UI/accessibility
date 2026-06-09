@@ -6,7 +6,7 @@ class ScssExporter implements Exporter
 {
     public function export(array $palette): string
     {
-        $scss = "";
+        $scss = '';
 
         foreach ($palette as $name => $colors) {
             if (is_array($colors)) {

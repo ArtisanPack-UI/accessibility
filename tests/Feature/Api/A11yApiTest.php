@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Api;
 
-use Tests\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
+use Tests\User;
 
 uses(TestCase::class, RefreshDatabase::class);
 

@@ -14,7 +14,7 @@ class ColorFormatTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->colorGenerator = new AccessibleColorGenerator();
+        $this->colorGenerator = new AccessibleColorGenerator;
     }
 
     #[Test]

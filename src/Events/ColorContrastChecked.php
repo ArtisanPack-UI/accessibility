@@ -10,9 +10,13 @@ class ColorContrastChecked
     use Dispatchable, SerializesModels;
 
     public string $color1;
+
     public string $color2;
+
     public string $level;
+
     public bool $isLargeText;
+
     public bool $result;
 
     public function __construct(string $color1, string $color2, string $level, bool $isLargeText, bool $result)

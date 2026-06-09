@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the ArtisanPack UI Accessibility package.
  *
@@ -8,10 +9,12 @@
  * file that was distributed with this source code.
  *
  * @since    1.0.0
+ *
  * @category Accessibility
- * @package  ArtisanPack\Accessibility
+ *
  * @author   Jacob Martella <me@jacobmartella.com>
  * @license  https://www.gnu.org/licenses/gpl-3.0.html GPL-3.0-or-later
+ *
  * @link     https://artisanpack.com
  */
 
@@ -30,22 +33,25 @@ use Psr\EventDispatcher\EventDispatcherInterface;
  * accessibility-related user settings.
  *
  * @since    1.0.0
+ *
  * @category Accessibility
- * @package  ArtisanPack\Accessibility
+ *
  * @author   Jacob Martella <me@jacobmartella.com>
  * @license  https://www.gnu.org/licenses/gpl-3.0.html GPL-3.0-or-later
+ *
  * @link     https://artisanpack.com
  */
 class A11y
 {
     /**
      * The WCAG validator.
-     *
-     * @var \ArtisanPack\Accessibility\Core\WcagValidator
      */
     private WcagValidator $_wcagValidator;
+
     private Config $_config;
+
     private AccessibleColorGenerator $colorGenerator;
+
     private BatchProcessor $batchProcessor;
 
     public function __construct(
@@ -56,7 +62,7 @@ class A11y
         ?EventDispatcherInterface $dispatcher = null
     ) {
         $this->_config = $config;
-        $this->_wcagValidator = $wcagValidator ?? new WcagValidator();
+        $this->_wcagValidator = $wcagValidator ?? new WcagValidator;
         $this->colorGenerator = $colorGenerator ?? new AccessibleColorGenerator($this->_wcagValidator, null, null, $dispatcher);
         $this->batchProcessor = $batchProcessor ?? new BatchProcessor($this->colorGenerator, $this->colorGenerator->getCache());
     }
@@ -69,12 +75,12 @@ class A11y
      *
      * @since 1.0.0
      *
-     * @param  string $hexColor The hex code for the background color.
-     * @return string          Either 'black' or 'white' as a string.
+     * @param  string  $hexColor  The hex code for the background color.
+     * @return string Either 'black' or 'white' as a string.
      */
     public function a11yCSSVarBlackOrWhite(string $hexColor): string
     {
-        return '#000000' === $this->colorGenerator->generateAccessibleTextColor($hexColor) ? 'black' : 'white';
+        return $this->colorGenerator->generateAccessibleTextColor($hexColor) === '#000000' ? 'black' : 'white';
     }
 
     /**
@@ -85,8 +91,8 @@ class A11y
      *
      * @since 1.0.0
      *
-     * @param  string $hexColor The hex code for the background color.
-     * @return string          The hex code for either black (#000000) or white (#FFFFFF).
+     * @param  string  $hexColor  The hex code for the background color.
+     * @return string The hex code for either black (#000000) or white (#FFFFFF).
      */
     public function a11yGetContrastColor(string $hexColor): string
     {
@@ -98,10 +104,10 @@ class A11y
      *
      * @since 1.0.0
      *
-     * @param  string $firstHexColor  The first color to check (hex format).
-     * @param  string $secondHexColor The second color to check (hex format).
-     * @param  string $level          The WCAG level to check against (e.g., 'AA', 'AAA', 'non-text').
-     * @param  bool   $isLargeText    Whether the text is large or not.
+     * @param  string  $firstHexColor  The first color to check (hex format).
+     * @param  string  $secondHexColor  The second color to check (hex format).
+     * @param  string  $level  The WCAG level to check against (e.g., 'AA', 'AAA', 'non-text').
+     * @param  bool  $isLargeText  Whether the text is large or not.
      * @return bool True if contrast is sufficient, false otherwise.
      */
     public function a11yCheckContrastColor(string $firstHexColor, string $secondHexColor, string $level = 'aa', bool $isLargeText = false): bool
@@ -121,9 +127,7 @@ class A11y
     /**
      * Get WCAG threshold by level with safe defaults when config is unavailable.
      *
-     * @param string $level The WCAG level.
-     *
-     * @return float
+     * @param  string  $level  The WCAG level.
      */
     private function _getWcagThreshold(string $level): float
     {
@@ -131,17 +135,17 @@ class A11y
         $default = $level === 'aaa' ? 7.0 : 4.5;
 
         $value = $this->_config->get("artisanpack.accessibility.wcag_thresholds.{$level}", $default);
+
         return is_numeric($value) ? (float) $value : (float) $default;
     }
 
     /**
      * Get cache size with a safe default when config is unavailable.
-     *
-     * @return int
      */
     private function _getCacheSize(): int
     {
         $value = $this->_config->get('artisanpack.accessibility.cache_size', 1000);
+
         return is_numeric($value) ? (int) $value : 1000;
     }
 }

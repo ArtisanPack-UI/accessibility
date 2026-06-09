@@ -10,7 +10,7 @@ use ArtisanPack\Accessibility\Plugins\Contracts\PluginInterface;
 use ArtisanPack\Accessibility\Plugins\Contracts\PluginMetadata;
 use ArtisanPack\Accessibility\Plugins\Contracts\ResultSet;
 
-class ContrastRulePlugin implements PluginInterface, AccessibilityRulePluginInterface
+class ContrastRulePlugin implements AccessibilityRulePluginInterface, PluginInterface
 {
     private ?Context $context = null;
 
@@ -44,19 +44,20 @@ class ContrastRulePlugin implements PluginInterface, AccessibilityRulePluginInte
 
     public function evaluate(array $data, Context $context): ResultSet
     {
-        $results = new ResultSet();
+        $results = new ResultSet;
         $fg = $data['foreground'] ?? null;
         $bg = $data['background'] ?? null;
         $level = $data['level'] ?? 'AA';
-        $large = (bool)($data['large'] ?? false);
+        $large = (bool) ($data['large'] ?? false);
 
-        if (!is_string($fg) || !is_string($bg)) {
+        if (! is_string($fg) || ! is_string($bg)) {
             $results->add('contrast.basic', 'error', 'foreground/background must be strings');
+
             return $results;
         }
-        $validator = new WcagValidator();
+        $validator = new WcagValidator;
         $ok = $validator->checkContrast($fg, $bg, $level, $large);
-        if (!$ok) {
+        if (! $ok) {
             $results->add('contrast.basic', 'error', 'Insufficient contrast', [
                 'foreground' => $fg,
                 'background' => $bg,
@@ -64,6 +65,7 @@ class ContrastRulePlugin implements PluginInterface, AccessibilityRulePluginInte
                 'large' => $large,
             ]);
         }
+
         return $results;
     }
 }

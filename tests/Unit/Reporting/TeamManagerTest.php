@@ -5,9 +5,9 @@ namespace ArtisanPack\Accessibility\Tests\Unit\Reporting;
 use ArtisanPack\Accessibility\Models\Organization;
 use ArtisanPack\Accessibility\Models\Team;
 use ArtisanPack\Accessibility\Reporting\TeamManager;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Tests\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class TeamManagerTest extends TestCase
 {
@@ -19,7 +19,7 @@ class TeamManagerTest extends TestCase
         $organization = Organization::factory()->create();
         $user = User::factory()->create();
 
-        $teamManager = new TeamManager();
+        $teamManager = new TeamManager;
         $teamManager->inviteUser($organization, $user, 'editor');
 
         $this->assertDatabaseHas('teams', [
@@ -34,7 +34,7 @@ class TeamManagerTest extends TestCase
     {
         $team = Team::factory()->create();
 
-        $teamManager = new TeamManager();
+        $teamManager = new TeamManager;
         $teamManager->removeUser($team);
 
         $this->assertDatabaseMissing('teams', [
@@ -48,7 +48,7 @@ class TeamManagerTest extends TestCase
         $organization = Organization::factory()->create();
         Team::factory()->count(5)->create(['organization_id' => $organization->id]);
 
-        $teamManager = new TeamManager();
+        $teamManager = new TeamManager;
         $users = $teamManager->listUsers($organization);
 
         $this->assertCount(5, $users);

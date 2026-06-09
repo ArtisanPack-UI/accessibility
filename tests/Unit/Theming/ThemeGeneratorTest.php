@@ -8,7 +8,7 @@ use ArtisanPack\Accessibility\Core\Theming\ThemeValidator;
 it(
     'generates light and dark themes', function () {
         $colorGenerator = Mockery::mock(AccessibleColorGenerator::class);
-        $parser = new CssVariableParser();
+        $parser = new CssVariableParser;
 
         $colorGenerator->shouldReceive('getHexFromColorString')->with('#ff0000')->andReturn('#ff0000');
         // Red on white doesn't pass AA, so generateAccessibleTextColor is called for light mode
@@ -20,8 +20,8 @@ it(
 
         expect($themes)->toBe(
             [
-            'light' => ['--color-primary' => '#000000'],
-            'dark' => ['--color-primary' => '#ff0000'],
+                'light' => ['--color-primary' => '#000000'],
+                'dark' => ['--color-primary' => '#ff0000'],
             ]
         );
     }
@@ -30,7 +30,7 @@ it(
 it(
     'generates for a specific mode', function () {
         $colorGenerator = Mockery::mock(AccessibleColorGenerator::class);
-        $parser = new CssVariableParser();
+        $parser = new CssVariableParser;
 
         $colorGenerator->shouldReceive('getHexFromColorString')->with('#ff0000')->andReturn('#ff0000');
         // Red on white doesn't pass AA, so generateAccessibleTextColor is called for light mode
@@ -47,7 +47,7 @@ it(
 it(
     'validates theme', function () {
         $colorGenerator = Mockery::mock(AccessibleColorGenerator::class);
-        $parser = new CssVariableParser();
+        $parser = new CssVariableParser;
         $validator = Mockery::mock(ThemeValidator::class);
 
         $colorGenerator->shouldReceive('getHexFromColorString')->with('#ffffff')->andReturn('#ffffff');
@@ -65,13 +65,13 @@ it(
 it(
     'exports to css', function () {
         $colorGenerator = Mockery::mock(AccessibleColorGenerator::class);
-        $parser = new CssVariableParser();
+        $parser = new CssVariableParser;
 
         $themeGenerator = new ThemeGenerator($colorGenerator, $parser);
 
         $theme = [
-        'light' => ['--color-primary' => '#000000'],
-        'dark' => ['--color-primary' => '#ffffff'],
+            'light' => ['--color-primary' => '#000000'],
+            'dark' => ['--color-primary' => '#ffffff'],
         ];
 
         $css = $themeGenerator->export($theme, 'css');
@@ -86,13 +86,13 @@ it(
 it(
     'exports to json', function () {
         $colorGenerator = Mockery::mock(AccessibleColorGenerator::class);
-        $parser = new CssVariableParser();
+        $parser = new CssVariableParser;
 
         $themeGenerator = new ThemeGenerator($colorGenerator, $parser);
 
         $theme = [
-        'light' => ['--color-primary' => '#000000'],
-        'dark' => ['--color-primary' => '#ffffff'],
+            'light' => ['--color-primary' => '#000000'],
+            'dark' => ['--color-primary' => '#ffffff'],
         ];
 
         $json = $themeGenerator->export($theme, 'json');

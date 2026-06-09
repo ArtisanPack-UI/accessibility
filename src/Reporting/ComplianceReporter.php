@@ -4,7 +4,6 @@ namespace ArtisanPack\Accessibility\Reporting;
 
 use ArtisanPack\Accessibility\Core\Analysis\AccessibilityScorer;
 use ArtisanPack\Accessibility\Models\ComplianceReport;
-use ArtisanPack\Accessibility\Core\WcagValidator;
 
 class ComplianceReporter
 {
