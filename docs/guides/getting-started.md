@@ -25,7 +25,7 @@ composer require artisanpack-ui/accessibility
 
 The `A11yServiceProvider` and the `A11y` facade alias are registered automatically via Laravel's package auto-discovery — no manual registration required.
 
-If you have disabled auto-discovery for this package (for example by listing it in your application's `extra.laravel.dont-discover` array), register them manually:
+If you have disabled auto-discovery for this package (for example by listing it in your application's `extra.laravel.dont-discover` array), register the service provider in `bootstrap/providers.php`:
 
 ```php
 // bootstrap/providers.php
@@ -33,12 +33,18 @@ return [
     // ...
     ArtisanPack\Accessibility\Laravel\A11yServiceProvider::class,
 ];
+```
 
-// config/app.php (only if you use the A11y facade alias)
-'aliases' => [
-    // ...
-    'A11y' => ArtisanPack\Accessibility\Laravel\Facades\A11y::class,
-],
+If you also want to use the short `A11y` facade alias, register it via the `AliasLoader` from the `register()` method of one of your application service providers (Laravel 11+ no longer ships an `aliases` array in `config/app.php`):
+
+```php
+use ArtisanPack\Accessibility\Laravel\Facades\A11y;
+use Illuminate\Foundation\AliasLoader;
+
+public function register(): void
+{
+    AliasLoader::getInstance()->alias('A11y', A11y::class);
+}
 ```
 
 ## Basic Usage
