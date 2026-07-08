@@ -121,10 +121,10 @@ For complete documentation, please visit the links below.
 
 ## Requirements
 
-- PHP 8.2 or higher
-- Laravel 11, 12, or 13 (for Laravel integration)
+- PHP 8.3 or higher
+- Laravel 12 or 13 (for Laravel integration)
 
-> Laravel 13 requires PHP 8.3 or higher. Users staying on Laravel 11 or 12 may continue to use PHP 8.2.
+> The PHP floor moved to 8.3 in **2.2.0** to match the `artisanpack-ui/ai` foundation dependency. Laravel 11 support was dropped in the same release. Users staying on PHP 8.2 or Laravel 11 should pin to `^2.1.2`.
 
 ## Contributing
 

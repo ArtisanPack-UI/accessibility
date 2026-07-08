@@ -6,6 +6,11 @@
 
 This release introduces AI-powered accessibility tooling on top of `artisanpack-ui/ai` v1.0. The three new agents — content-level issue analysis, ARIA attribute suggestion, and plain-language contrast-failure explanation — are delivered with framework surfaces for Livewire, React, and Vue that ship inside this package, so extending framework support does not require any changes to `@artisanpack-ui/react` or `@artisanpack-ui/vue`.
 
+### Changed
+
+- **BREAKING (support matrix):** PHP minimum raised from `^8.2` to `^8.3` to match the `artisanpack-ui/ai` foundation dependency. Users staying on PHP 8.2 should pin to `^2.1.2`.
+- **BREAKING (support matrix):** Laravel 11 support dropped. The `illuminate/support` constraint is now `^12.0|^13.0`. All Laravel 11 versions (`v11.0.0`–`v11.54.0`) are currently blocked by published security advisories with no unblocked release available, so the matrix cannot be honestly claimed to support Laravel 11. Users staying on Laravel 11 should pin to `^2.1.2`.
+
 ### Added
 - Three AI-powered accessibility agents built on top of `artisanpack-ui/ai` v1.0:
     - `ContentAccessibilityAgent` (`a11y.content_analysis`) — finds content-level issues (ambiguous link text, vague headings, undefined jargon) that static rules miss. Default model `claude-sonnet-4-6`.
