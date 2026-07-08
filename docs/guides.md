@@ -23,6 +23,14 @@ Detailed examples and practical implementations of the package's features. This 
 - Practical examples for real-world scenarios
 - Advanced usage patterns
 
+### [AI Features](Guides-Ai-Features)
+AI-powered accessibility tooling introduced in 2.2.0, built on top of `artisanpack-ui/ai` v1.0:
+- Content-level accessibility analysis (`ContentAccessibilityAgent`)
+- ARIA attribute suggestion (`AriaSuggestionAgent`)
+- Contrast-failure explanation (`ColorContrastExplanationAgent`)
+- In-package Livewire, React, and Vue trigger surfaces
+- JSON endpoints and Sanctum SPA setup
+
 ## Getting Help
 
 If you need additional help beyond what's covered in these guides, please refer to:
