@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+### Added
+- Three AI-powered accessibility agents built on top of `artisanpack-ui/ai` v1.0:
+    - `ContentAccessibilityAgent` (`a11y.content_analysis`) — finds content-level issues (ambiguous link text, vague headings, undefined jargon) that static rules miss. Default model `claude-sonnet-4-6`.
+    - `AriaSuggestionAgent` (`a11y.aria_suggestion`) — suggests ARIA roles, states, and properties for custom components from their markup and behavior description. Default model `claude-sonnet-4-6`.
+    - `ColorContrastExplanationAgent` (`a11y.contrast_explanation`) — explains contrast failures in plain language and proposes accessible alternatives that preserve brand intent. Contrast math is computed locally; the model only reasons about the explanation and suggestions. Default model `claude-haiku-4-5`.
+- Framework trigger surfaces for each agent, all shipped inside this package so extending to React or Vue does not require any changes to `@artisanpack-ui/react` or `@artisanpack-ui/vue`:
+    - Livewire components (`a11y-ai-content-analysis`, `a11y-ai-aria-suggestion`, `a11y-ai-contrast-explanation`).
+    - React trigger components under `resources/js/react/` with a barrel export in `resources/js/react/index.ts`.
+    - Vue 3 SFC trigger components under `resources/js/vue/`.
+- JSON API endpoints wrapping each agent under `/api/v1/a11y/ai/{content-analysis,aria-suggestion,contrast-explanation}` for framework-agnostic callers.
+- Each feature is registered via `A11yServiceProvider::aiFeatures()` and honors its own toggle through `artisanpack-ui/ai`'s `FeatureRegistry` — trigger UIs surface `FeatureDisabledException` as a friendly message when the toggle is off.
+
 ## [2.1.2] - 2026-06-08
 
 This release adds Laravel 13 support alongside the existing Laravel 11 and 12 compatibility, and modernizes the release pipeline so tagged versions publish to Packagist automatically.

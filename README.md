@@ -89,6 +89,26 @@ Now you can easily create accessible buttons with any background color.
 
 For more detailed examples, including Livewire components and dynamic theming, see the [Real-World Examples](docs/examples.md) documentation.
 
+## AI features
+
+When `artisanpack-ui/ai` v1.0+ is installed alongside this package, three AI-powered accessibility agents become available. Each is toggle-able through the shared `FeatureRegistry` and no-ops when the toggle is off.
+
+| Feature key                 | Agent                              | Purpose                                                                                                    |
+|-----------------------------|------------------------------------|------------------------------------------------------------------------------------------------------------|
+| `a11y.content_analysis`     | `ContentAccessibilityAgent`        | Finds content-level issues (ambiguous link text, vague headings, undefined jargon) that static rules miss. |
+| `a11y.aria_suggestion`      | `AriaSuggestionAgent`              | Suggests ARIA roles, states, and properties for custom components from their markup and behavior.          |
+| `a11y.contrast_explanation` | `ColorContrastExplanationAgent`    | Explains contrast failures in plain language and proposes alternatives that preserve brand intent.         |
+
+Trigger surfaces ship in-package for all three frontends so extending framework support does not require any changes to `@artisanpack-ui/react` or `@artisanpack-ui/vue`:
+
+- **Livewire** — `<livewire:a11y-ai-content-analysis />`, `<livewire:a11y-ai-aria-suggestion />`, `<livewire:a11y-ai-contrast-explanation />`.
+- **React** — TypeScript/TSX components at `resources/js/react/` (barrel exports through `resources/js/react/index.ts`). Copy into your app's asset pipeline or wire directly through your Vite/Webpack config.
+- **Vue** — the same three components as Vue 3 SFCs at `resources/js/vue/`.
+
+The React and Vue components POST to `/api/v1/a11y/ai/{content-analysis,aria-suggestion,contrast-explanation}` by default; pass an `endpoint` prop to override.
+
+The shipped endpoints sit behind `auth:sanctum` and `throttle:api`, so a stateful SPA needs Laravel Sanctum's SPA setup: `SANCTUM_STATEFUL_DOMAINS` configured for the frontend origin, a prior GET to `/sanctum/csrf-cookie` to seed the `XSRF-TOKEN` cookie, and same-origin requests. The bundled React and Vue triggers automatically read that cookie and send `X-XSRF-TOKEN` + `X-Requested-With: XMLHttpRequest`, so no per-caller header wiring is needed once the SPA is authenticated.
+
 ## Documentation
 
 For complete documentation, please visit the links below.

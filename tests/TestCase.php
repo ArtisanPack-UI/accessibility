@@ -20,8 +20,15 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
+            \Livewire\LivewireServiceProvider::class,
+            \ArtisanPackUI\Ai\AiServiceProvider::class,
             A11yServiceProvider::class,
             \Laravel\Sanctum\SanctumServiceProvider::class,
         ];
+    }
+
+    protected function defineEnvironment($app): void
+    {
+        $app['config']->set('app.key', 'base64:'.base64_encode(random_bytes(32)));
     }
 }
