@@ -197,3 +197,105 @@ Determines the best-contrasting text color. It can return either black or white,
 $textColor = generateAccessibleTextColor('#3b82f6'); // Returns '#000000' or '#FFFFFF'
 $tintedColor = generateAccessibleTextColor('#3b82f6', true); // Returns a tinted/shaded hex color
 ```
+## AI Agents (2.2.0+)
+
+Three AI-powered agents built on top of `artisanpack-ui/ai` v1.0. See the [AI Features guide](Guides-Ai-Features) for prose walkthroughs, framework surfaces, and Sanctum setup.
+
+Each agent is invoked through the shared `for()`→`run()` pattern inherited from `ArtisanPackUI\Ai\Agents\ArtisanPackAgent`:
+
+```php
+$output = SomeAgent::for( $input )->run();
+```
+
+### `ArtisanPack\Accessibility\Ai\Agents\ContentAccessibilityAgent`
+
+**Feature key:** `a11y.content_analysis` — **Default model:** `claude-sonnet-4-6`
+
+Finds content-level accessibility issues that static rules miss.
+
+**Input:**
+
+| Key         | Type   | Required | Notes                                                                            |
+|-------------|--------|----------|----------------------------------------------------------------------------------|
+| `content`   | string | yes      | Plain text, Markdown, or HTML to analyse. Non-empty.                             |
+| `structure` | array  | no       | Optional structural summary keyed by `headings`, `links`, `images`.              |
+
+**Output:**
+
+```
+{ issues: [ { location: string, issue_type: string, severity: 'info'|'warning'|'error', suggested_fix: string } ] }
+```
+
+### `ArtisanPack\Accessibility\Ai\Agents\AriaSuggestionAgent`
+
+**Feature key:** `a11y.aria_suggestion` — **Default model:** `claude-sonnet-4-6`
+
+Suggests ARIA roles, states, properties, and keyboard interactions for a custom component.
+
+**Input:**
+
+| Key             | Type   | Required | Notes                                                          |
+|-----------------|--------|----------|----------------------------------------------------------------|
+| `markup`        | string | yes      | HTML snippet for the component.                                |
+| `behavior`      | string | yes      | Plain-language description of what the component does.         |
+| `framework`     | string | no       | Hint at the framework (`livewire`, `react`, `vue`, …).         |
+| `existing_aria` | array  | no       | Map of ARIA attributes already present on the markup.          |
+
+**Output:**
+
+```
+{
+  role:       ?string,             // null when native semantics cover it
+  attributes: [ { name: string, value: string, rationale: string } ],
+  keyboard:   string[],
+  notes:      string[]
+}
+```
+
+### `ArtisanPack\Accessibility\Ai\Agents\ColorContrastExplanationAgent`
+
+**Feature key:** `a11y.contrast_explanation` — **Default model:** `claude-haiku-4-5`
+
+Explains a failing color pair in plain language and proposes accessible alternatives that preserve brand intent. Contrast math is computed locally via `WcagValidator`; every model-suggested alternative is re-checked and dropped if it still fails.
+
+**Input:**
+
+| Key             | Type   | Required | Notes                                                                   |
+|-----------------|--------|----------|-------------------------------------------------------------------------|
+| `foreground`    | string | yes      | Hex code or Tailwind color name. Unresolvable inputs throw `FeatureError`. |
+| `background`    | string | yes      | Hex code or Tailwind color name.                                        |
+| `context`       | string | no       | `body_text` (default, 4.5:1) / `large_text` (3:1) / `ui` (3:1).         |
+| `brand_palette` | array  | no       | Optional list of colors the agent should prefer for suggestions.        |
+
+**Output:**
+
+```
+{
+  explanation:            string,
+  current_ratio:          float,
+  required_ratio:         float,   // WCAG 2.1 AA
+  suggested_alternatives: [ { fg: string, bg: string, ratio: float, delta_from_original: float } ]
+}
+```
+
+## AI HTTP Controllers (2.2.0+)
+
+All three endpoints are registered under the same `api/v1` prefix as the existing accessibility API, behind `auth:sanctum` + `throttle:api`, and use `FormRequest` classes for validation.
+
+| Method | URI                                     | Controller                                     |
+|--------|-----------------------------------------|------------------------------------------------|
+| POST   | `/api/v1/a11y/ai/content-analysis`      | `ContentAccessibilityController`               |
+| POST   | `/api/v1/a11y/ai/aria-suggestion`       | `AriaSuggestionController`                     |
+| POST   | `/api/v1/a11y/ai/contrast-explanation`  | `ColorContrastExplanationController`           |
+
+Response envelope: `{ "data": { … } }` on 200; `{ "error": "…" }` on failure. See the [AI Features guide](Guides-Ai-Features) for the full status-code mapping.
+
+## AI Livewire Components (2.2.0+)
+
+Three components auto-registered by `A11yServiceProvider` when `livewire/livewire` is installed:
+
+| Tag                                     | Component class                                          |
+|-----------------------------------------|----------------------------------------------------------|
+| `<livewire:a11y-ai-content-analysis />` | `ArtisanPack\Accessibility\Livewire\Ai\ContentAnalysisTrigger` |
+| `<livewire:a11y-ai-aria-suggestion />`  | `ArtisanPack\Accessibility\Livewire\Ai\AriaSuggestionTrigger`  |
+| `<livewire:a11y-ai-contrast-explanation />` | `ArtisanPack\Accessibility\Livewire\Ai\ContrastExplanationTrigger` |

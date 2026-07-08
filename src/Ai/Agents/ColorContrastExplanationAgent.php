@@ -3,13 +3,11 @@
 /**
  * Color-contrast explanation agent.
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace ArtisanPack\Accessibility\Ai\Agents;
 
@@ -55,8 +53,6 @@ use ArtisanPackUI\Ai\Exceptions\FeatureError;
  * }
  * ```
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
@@ -110,22 +106,22 @@ PROMPT;
     public function outputSchema(): array
     {
         return [
-            'type'                 => 'object',
+            'type' => 'object',
             'additionalProperties' => false,
-            'required'             => [ 'explanation', 'suggested_alternatives' ],
-            'properties'           => [
-                'explanation'            => [ 'type' => 'string' ],
+            'required' => ['explanation', 'suggested_alternatives'],
+            'properties' => [
+                'explanation' => ['type' => 'string'],
                 'suggested_alternatives' => [
-                    'type'  => 'array',
+                    'type' => 'array',
                     'items' => [
-                        'type'                 => 'object',
+                        'type' => 'object',
                         'additionalProperties' => false,
-                        'required'             => [ 'fg', 'bg', 'delta_from_original' ],
-                        'properties'           => [
-                            'fg'                  => [ 'type' => 'string' ],
-                            'bg'                  => [ 'type' => 'string' ],
+                        'required' => ['fg', 'bg', 'delta_from_original'],
+                        'properties' => [
+                            'fg' => ['type' => 'string'],
+                            'bg' => ['type' => 'string'],
                             'delta_from_original' => [
-                                'type'    => 'number',
+                                'type' => 'number',
                                 'minimum' => 0,
                                 'maximum' => 1,
                             ],
@@ -139,61 +135,60 @@ PROMPT;
     /**
      * {@inheritDoc}
      */
-    protected function execute( Credentials $credentials, string $model, string $instructions ): array
+    protected function execute(Credentials $credentials, string $model, string $instructions): array
     {
-        $normalized = $this->normalizeInput( $this->input() );
+        $normalized = $this->normalizeInput($this->input());
 
-        $required = $this->requiredRatio( $normalized['context'] );
-        $current  = $this->measureRatio( $normalized['foreground'], $normalized['background'] );
+        $required = $this->requiredRatio($normalized['context']);
+        $current = $this->measureRatio($normalized['foreground'], $normalized['background']);
 
-        $prompter = app( AgentPrompter::class );
+        $prompter = app(AgentPrompter::class);
 
         $result = $prompter->prompt(
             credentials: $credentials,
             model: $model,
             instructions: $instructions,
-            message: $this->buildMessage( $normalized, $current, $required ),
+            message: $this->buildMessage($normalized, $current, $required),
             outputSchema: $this->outputSchema(),
         );
 
         return [
-            'output'        => $this->validateOutput( $result['output'], $current, $required ),
-            'input_tokens'  => (int) ( $result['input_tokens'] ?? 0 ),
-            'output_tokens' => (int) ( $result['output_tokens'] ?? 0 ),
+            'output' => $this->validateOutput($result['output'], $current, $required),
+            'input_tokens' => (int) ($result['input_tokens'] ?? 0),
+            'output_tokens' => (int) ($result['output_tokens'] ?? 0),
         ];
     }
 
     /**
      * @since 2.2.0
      *
-     * @param  mixed  $input Raw input.
-     *
+     * @param  mixed  $input  Raw input.
      * @return array{ foreground: string, background: string, context: string, brand_palette: array<int, string> }
      */
-    protected function normalizeInput( mixed $input ): array
+    protected function normalizeInput(mixed $input): array
     {
-        if ( ! is_array( $input ) ) {
+        if (! is_array($input)) {
             throw FeatureError::forFeature(
                 $this->featureKey,
                 'input must be an array with `foreground`, `background`, and `context` keys.',
             );
         }
 
-        $foreground = isset( $input['foreground'] ) && is_string( $input['foreground'] ) ? trim( $input['foreground'] ) : '';
-        $background = isset( $input['background'] ) && is_string( $input['background'] ) ? trim( $input['background'] ) : '';
-        $context    = isset( $input['context'] ) && is_string( $input['context'] ) ? trim( $input['context'] ) : 'body_text';
+        $foreground = isset($input['foreground']) && is_string($input['foreground']) ? trim($input['foreground']) : '';
+        $background = isset($input['background']) && is_string($input['background']) ? trim($input['background']) : '';
+        $context = isset($input['context']) && is_string($input['context']) ? trim($input['context']) : 'body_text';
 
-        if ( '' === $foreground || '' === $background ) {
+        if ($foreground === '' || $background === '') {
             throw FeatureError::forFeature(
                 $this->featureKey,
                 '`foreground` and `background` must be non-empty color values.',
             );
         }
 
-        $foregroundHex = $this->resolveToHex( $foreground );
-        $backgroundHex = $this->resolveToHex( $background );
+        $foregroundHex = $this->resolveToHex($foreground);
+        $backgroundHex = $this->resolveToHex($background);
 
-        if ( null === $foregroundHex || null === $backgroundHex ) {
+        if ($foregroundHex === null || $backgroundHex === null) {
             throw FeatureError::forFeature(
                 $this->featureKey,
                 sprintf(
@@ -207,27 +202,27 @@ PROMPT;
         $foreground = $foregroundHex;
         $background = $backgroundHex;
 
-        if ( ! in_array( $context, [ 'body_text', 'large_text', 'ui' ], true ) ) {
+        if (! in_array($context, ['body_text', 'large_text', 'ui'], true)) {
             throw FeatureError::forFeature(
                 $this->featureKey,
-                sprintf( 'unsupported context "%s"; expected one of body_text, large_text, ui.', $context ),
+                sprintf('unsupported context "%s"; expected one of body_text, large_text, ui.', $context),
             );
         }
 
         $palette = [];
 
-        if ( isset( $input['brand_palette'] ) && is_array( $input['brand_palette'] ) ) {
-            foreach ( $input['brand_palette'] as $color ) {
-                if ( is_string( $color ) && '' !== trim( $color ) ) {
-                    $palette[] = trim( $color );
+        if (isset($input['brand_palette']) && is_array($input['brand_palette'])) {
+            foreach ($input['brand_palette'] as $color) {
+                if (is_string($color) && trim($color) !== '') {
+                    $palette[] = trim($color);
                 }
             }
         }
 
         return [
-            'foreground'    => $foreground,
-            'background'    => $background,
-            'context'       => $context,
+            'foreground' => $foreground,
+            'background' => $background,
+            'context' => $context,
             'brand_palette' => $palette,
         ];
     }
@@ -235,13 +230,12 @@ PROMPT;
     /**
      * @since 2.2.0
      *
-     * @param  array{ foreground: string, background: string, context: string, brand_palette: array<int, string> }  $normalized Normalized input.
-     * @param  float                                                                                                  $current    Measured ratio.
-     * @param  float                                                                                                  $required   Required ratio.
-     *
+     * @param  array{ foreground: string, background: string, context: string, brand_palette: array<int, string> }  $normalized  Normalized input.
+     * @param  float  $current  Measured ratio.
+     * @param  float  $required  Required ratio.
      * @return array<int, array<string, string>>
      */
-    protected function buildMessage( array $normalized, float $current, float $required ): array
+    protected function buildMessage(array $normalized, float $current, float $required): array
     {
         $parts = [
             [
@@ -257,10 +251,10 @@ PROMPT;
             ],
         ];
 
-        if ( [] !== $normalized['brand_palette'] ) {
+        if ($normalized['brand_palette'] !== []) {
             $parts[] = [
                 'type' => 'text',
-                'text' => 'Brand palette (preferred sources for suggestions): ' . implode( ', ', $normalized['brand_palette'] ),
+                'text' => 'Brand palette (preferred sources for suggestions): '.implode(', ', $normalized['brand_palette']),
             ];
         }
 
@@ -270,53 +264,52 @@ PROMPT;
     /**
      * @since 2.2.0
      *
-     * @param  array<string, mixed>  $output   Decoded model output.
-     * @param  float                 $current  Measured ratio.
-     * @param  float                 $required Required ratio.
-     *
+     * @param  array<string, mixed>  $output  Decoded model output.
+     * @param  float  $current  Measured ratio.
+     * @param  float  $required  Required ratio.
      * @return array{ explanation: string, current_ratio: float, required_ratio: float, suggested_alternatives: array<int, array{fg: string, bg: string, ratio: float, delta_from_original: float}> }
      */
-    protected function validateOutput( array $output, float $current, float $required ): array
+    protected function validateOutput(array $output, float $current, float $required): array
     {
-        $explanation = isset( $output['explanation'] ) ? (string) $output['explanation'] : '';
+        $explanation = isset($output['explanation']) ? (string) $output['explanation'] : '';
 
         $alternatives = [];
 
-        if ( isset( $output['suggested_alternatives'] ) && is_array( $output['suggested_alternatives'] ) ) {
-            foreach ( $output['suggested_alternatives'] as $alt ) {
-                if ( ! is_array( $alt ) ) {
+        if (isset($output['suggested_alternatives']) && is_array($output['suggested_alternatives'])) {
+            foreach ($output['suggested_alternatives'] as $alt) {
+                if (! is_array($alt)) {
                     continue;
                 }
 
-                $fg = isset( $alt['fg'] ) ? $this->resolveToHex( (string) $alt['fg'] ) : null;
-                $bg = isset( $alt['bg'] ) ? $this->resolveToHex( (string) $alt['bg'] ) : null;
+                $fg = isset($alt['fg']) ? $this->resolveToHex((string) $alt['fg']) : null;
+                $bg = isset($alt['bg']) ? $this->resolveToHex((string) $alt['bg']) : null;
 
-                if ( null === $fg || null === $bg ) {
+                if ($fg === null || $bg === null) {
                     continue;
                 }
 
-                $ratio = $this->measureRatio( $fg, $bg );
+                $ratio = $this->measureRatio($fg, $bg);
 
-                if ( $ratio < $required ) {
+                if ($ratio < $required) {
                     continue;
                 }
 
-                $delta = isset( $alt['delta_from_original'] ) ? (float) $alt['delta_from_original'] : 0.5;
-                $delta = max( 0.0, min( 1.0, $delta ) );
+                $delta = isset($alt['delta_from_original']) ? (float) $alt['delta_from_original'] : 0.5;
+                $delta = max(0.0, min(1.0, $delta));
 
                 $alternatives[] = [
-                    'fg'                  => $fg,
-                    'bg'                  => $bg,
-                    'ratio'               => round( $ratio, 2 ),
+                    'fg' => $fg,
+                    'bg' => $bg,
+                    'ratio' => round($ratio, 2),
                     'delta_from_original' => $delta,
                 ];
             }
         }
 
         return [
-            'explanation'            => $explanation,
-            'current_ratio'          => round( $current, 2 ),
-            'required_ratio'         => $required,
+            'explanation' => $explanation,
+            'current_ratio' => round($current, 2),
+            'required_ratio' => $required,
             'suggested_alternatives' => $alternatives,
         ];
     }
@@ -326,16 +319,14 @@ PROMPT;
      *
      * @since 2.2.0
      *
-     * @param  string  $context Usage context.
-     *
-     * @return float
+     * @param  string  $context  Usage context.
      */
-    protected function requiredRatio( string $context ): float
+    protected function requiredRatio(string $context): float
     {
-        return match ( $context ) {
+        return match ($context) {
             'large_text' => 3.0,
-            'ui'         => 3.0,
-            default      => 4.5,
+            'ui' => 3.0,
+            default => 4.5,
         };
     }
 
@@ -347,14 +338,12 @@ PROMPT;
      *
      * @since 2.2.0
      *
-     * @param  string  $foreground Foreground hex.
-     * @param  string  $background Background hex.
-     *
-     * @return float
+     * @param  string  $foreground  Foreground hex.
+     * @param  string  $background  Background hex.
      */
-    protected function measureRatio( string $foreground, string $background ): float
+    protected function measureRatio(string $foreground, string $background): float
     {
-        return (float) app( WcagValidator::class )->calculateContrastRatio( $foreground, $background );
+        return (float) app(WcagValidator::class)->calculateContrastRatio($foreground, $background);
     }
 
     /**
@@ -365,24 +354,22 @@ PROMPT;
      *
      * @since 2.2.0
      *
-     * @param  string  $value Raw color string.
-     *
-     * @return string|null
+     * @param  string  $value  Raw color string.
      */
-    protected function resolveToHex( string $value ): ?string
+    protected function resolveToHex(string $value): ?string
     {
-        $resolved = app( AccessibleColorGenerator::class )->getHexFromColorString( $value );
+        $resolved = app(AccessibleColorGenerator::class)->getHexFromColorString($value);
 
-        if ( null === $resolved ) {
+        if ($resolved === null) {
             return null;
         }
 
-        $hex = ltrim( strtolower( $resolved ), '#' );
+        $hex = ltrim(strtolower($resolved), '#');
 
-        if ( 3 === strlen( $hex ) ) {
-            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+        if (strlen($hex) === 3) {
+            $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
         }
 
-        return 1 === preg_match( '/^[0-9a-f]{6}$/', $hex ) ? '#' . $hex : null;
+        return preg_match('/^[0-9a-f]{6}$/', $hex) === 1 ? '#'.$hex : null;
     }
 }

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-07-08
+
+This release introduces AI-powered accessibility tooling on top of `artisanpack-ui/ai` v1.0. The three new agents — content-level issue analysis, ARIA attribute suggestion, and plain-language contrast-failure explanation — are delivered with framework surfaces for Livewire, React, and Vue that ship inside this package, so extending framework support does not require any changes to `@artisanpack-ui/react` or `@artisanpack-ui/vue`.
+
 ### Added
 - Three AI-powered accessibility agents built on top of `artisanpack-ui/ai` v1.0:
     - `ContentAccessibilityAgent` (`a11y.content_analysis`) — finds content-level issues (ambiguous link text, vague headings, undefined jargon) that static rules miss. Default model `claude-sonnet-4-6`.

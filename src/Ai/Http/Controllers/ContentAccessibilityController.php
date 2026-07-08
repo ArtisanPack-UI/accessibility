@@ -3,13 +3,11 @@
 /**
  * Content accessibility JSON endpoint.
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace ArtisanPack\Accessibility\Ai\Http\Controllers;
 
@@ -24,8 +22,6 @@ use Illuminate\Routing\Controller;
  * an HTTP surface consumable by React, Vue, or any other client that
  * prefers a JSON endpoint over an in-language SDK.
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
@@ -39,16 +35,14 @@ class ContentAccessibilityController extends Controller
      * @since 2.2.0
      *
      * @param  ContentAccessibilityRequest  $request  Validated request.
-     *
-     * @return JsonResponse
      */
-    public function __invoke( ContentAccessibilityRequest $request ): JsonResponse
+    public function __invoke(ContentAccessibilityRequest $request): JsonResponse
     {
         $payload = $request->validated();
 
         return $this->runAgent(
-            fn (): array => ContentAccessibilityAgent::for( $payload )->run(),
-            __( 'Failed to analyze content.' ),
+            fn (): array => ContentAccessibilityAgent::for($payload)->run(),
+            __('Failed to analyze content.'),
         );
     }
 }

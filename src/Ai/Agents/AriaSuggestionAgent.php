@@ -3,13 +3,11 @@
 /**
  * ARIA suggestion agent.
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace ArtisanPack\Accessibility\Ai\Agents;
 
@@ -47,8 +45,6 @@ use ArtisanPackUI\Ai\Exceptions\FeatureError;
  * }
  * ```
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
@@ -97,33 +93,33 @@ PROMPT;
     public function outputSchema(): array
     {
         return [
-            'type'                 => 'object',
+            'type' => 'object',
             'additionalProperties' => false,
-            'required'             => [ 'role', 'attributes', 'keyboard', 'notes' ],
-            'properties'           => [
-                'role'       => [
-                    'type' => [ 'string', 'null' ],
+            'required' => ['role', 'attributes', 'keyboard', 'notes'],
+            'properties' => [
+                'role' => [
+                    'type' => ['string', 'null'],
                 ],
                 'attributes' => [
-                    'type'  => 'array',
+                    'type' => 'array',
                     'items' => [
-                        'type'                 => 'object',
+                        'type' => 'object',
                         'additionalProperties' => false,
-                        'required'             => [ 'name', 'value', 'rationale' ],
-                        'properties'           => [
-                            'name'      => [ 'type' => 'string' ],
-                            'value'     => [ 'type' => 'string' ],
-                            'rationale' => [ 'type' => 'string' ],
+                        'required' => ['name', 'value', 'rationale'],
+                        'properties' => [
+                            'name' => ['type' => 'string'],
+                            'value' => ['type' => 'string'],
+                            'rationale' => ['type' => 'string'],
                         ],
                     ],
                 ],
-                'keyboard'   => [
-                    'type'  => 'array',
-                    'items' => [ 'type' => 'string' ],
+                'keyboard' => [
+                    'type' => 'array',
+                    'items' => ['type' => 'string'],
                 ],
-                'notes'      => [
-                    'type'  => 'array',
-                    'items' => [ 'type' => 'string' ],
+                'notes' => [
+                    'type' => 'array',
+                    'items' => ['type' => 'string'],
                 ],
             ],
         ];
@@ -132,70 +128,69 @@ PROMPT;
     /**
      * {@inheritDoc}
      */
-    protected function execute( Credentials $credentials, string $model, string $instructions ): array
+    protected function execute(Credentials $credentials, string $model, string $instructions): array
     {
-        $normalized = $this->normalizeInput( $this->input() );
+        $normalized = $this->normalizeInput($this->input());
 
-        $prompter = app( AgentPrompter::class );
+        $prompter = app(AgentPrompter::class);
 
         $result = $prompter->prompt(
             credentials: $credentials,
             model: $model,
             instructions: $instructions,
-            message: $this->buildMessage( $normalized ),
+            message: $this->buildMessage($normalized),
             outputSchema: $this->outputSchema(),
         );
 
         return [
-            'output'        => $this->validateOutput( $result['output'] ),
-            'input_tokens'  => (int) ( $result['input_tokens'] ?? 0 ),
-            'output_tokens' => (int) ( $result['output_tokens'] ?? 0 ),
+            'output' => $this->validateOutput($result['output']),
+            'input_tokens' => (int) ($result['input_tokens'] ?? 0),
+            'output_tokens' => (int) ($result['output_tokens'] ?? 0),
         ];
     }
 
     /**
      * @since 2.2.0
      *
-     * @param  mixed  $input Raw input.
-     *
+     * @param  mixed  $input  Raw input.
      * @return array{ markup: string, behavior: string, framework: string, existing_aria: array<string, string> }
      */
-    protected function normalizeInput( mixed $input ): array
+    protected function normalizeInput(mixed $input): array
     {
-        if ( ! is_array( $input ) ) {
+        if (! is_array($input)) {
             throw FeatureError::forFeature(
                 $this->featureKey,
                 'input must be an array with `markup` and `behavior` keys.',
             );
         }
 
-        $markup   = isset( $input['markup'] ) && is_string( $input['markup'] ) ? trim( $input['markup'] ) : '';
-        $behavior = isset( $input['behavior'] ) && is_string( $input['behavior'] ) ? trim( $input['behavior'] ) : '';
+        $markup = isset($input['markup']) && is_string($input['markup']) ? trim($input['markup']) : '';
+        $behavior = isset($input['behavior']) && is_string($input['behavior']) ? trim($input['behavior']) : '';
 
-        if ( '' === $markup ) {
-            throw FeatureError::forFeature( $this->featureKey, '`markup` must be a non-empty string.' );
+        if ($markup === '') {
+            throw FeatureError::forFeature($this->featureKey, '`markup` must be a non-empty string.');
         }
 
-        if ( '' === $behavior ) {
-            throw FeatureError::forFeature( $this->featureKey, '`behavior` must be a non-empty string.' );
+        if ($behavior === '') {
+            throw FeatureError::forFeature($this->featureKey, '`behavior` must be a non-empty string.');
         }
 
-        $framework = isset( $input['framework'] ) && is_string( $input['framework'] ) ? trim( $input['framework'] ) : '';
+        $framework = isset($input['framework']) && is_string($input['framework']) ? trim($input['framework']) : '';
 
         $existingAria = [];
 
-        if ( isset( $input['existing_aria'] ) && is_array( $input['existing_aria'] ) ) {
-            foreach ( $input['existing_aria'] as $name => $value ) {
-                if ( is_string( $name ) && is_scalar( $value ) ) {
-                    $existingAria[ $name ] = (string) $value;
+        if (isset($input['existing_aria']) && is_array($input['existing_aria'])) {
+            foreach ($input['existing_aria'] as $name => $value) {
+                if (is_string($name) && is_scalar($value)) {
+                    $existingAria[$name] = (string) $value;
                 }
             }
         }
 
         return [
-            'markup'        => $markup,
-            'behavior'      => $behavior,
-            'framework'     => $framework,
+            'markup' => $markup,
+            'behavior' => $behavior,
+            'framework' => $framework,
             'existing_aria' => $existingAria,
         ];
     }
@@ -203,28 +198,27 @@ PROMPT;
     /**
      * @since 2.2.0
      *
-     * @param  array{ markup: string, behavior: string, framework: string, existing_aria: array<string, string> }  $normalized Normalized input.
-     *
+     * @param  array{ markup: string, behavior: string, framework: string, existing_aria: array<string, string> }  $normalized  Normalized input.
      * @return array<int, array<string, string>>
      */
-    protected function buildMessage( array $normalized ): array
+    protected function buildMessage(array $normalized): array
     {
         $parts = [
-            [ 'type' => 'text', 'text' => "Behavior:\n" . $normalized['behavior'] ],
-            [ 'type' => 'text', 'text' => "Markup:\n" . $normalized['markup'] ],
+            ['type' => 'text', 'text' => "Behavior:\n".$normalized['behavior']],
+            ['type' => 'text', 'text' => "Markup:\n".$normalized['markup']],
         ];
 
-        if ( '' !== $normalized['framework'] ) {
+        if ($normalized['framework'] !== '') {
             $parts[] = [
                 'type' => 'text',
-                'text' => 'Framework: ' . $normalized['framework'],
+                'text' => 'Framework: '.$normalized['framework'],
             ];
         }
 
-        if ( [] !== $normalized['existing_aria'] ) {
+        if ($normalized['existing_aria'] !== []) {
             $parts[] = [
                 'type' => 'text',
-                'text' => "Existing ARIA attributes:\n" . json_encode(
+                'text' => "Existing ARIA attributes:\n".json_encode(
                     $normalized['existing_aria'],
                     JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE,
                 ),
@@ -237,68 +231,66 @@ PROMPT;
     /**
      * @since 2.2.0
      *
-     * @param  array<string, mixed>  $output Decoded model output.
-     *
+     * @param  array<string, mixed>  $output  Decoded model output.
      * @return array{ role: ?string, attributes: array<int, array{name: string, value: string, rationale: string}>, keyboard: array<int, string>, notes: array<int, string> }
      */
-    protected function validateOutput( array $output ): array
+    protected function validateOutput(array $output): array
     {
         $role = null;
 
-        if ( array_key_exists( 'role', $output ) && is_string( $output['role'] ) && '' !== trim( $output['role'] ) ) {
-            $role = trim( $output['role'] );
+        if (array_key_exists('role', $output) && is_string($output['role']) && trim($output['role']) !== '') {
+            $role = trim($output['role']);
         }
 
         $attributes = [];
 
-        if ( isset( $output['attributes'] ) && is_array( $output['attributes'] ) ) {
-            foreach ( $output['attributes'] as $attribute ) {
-                if ( ! is_array( $attribute ) ) {
+        if (isset($output['attributes']) && is_array($output['attributes'])) {
+            foreach ($output['attributes'] as $attribute) {
+                if (! is_array($attribute)) {
                     continue;
                 }
 
-                $name      = isset( $attribute['name'] ) ? (string) $attribute['name'] : '';
-                $value     = isset( $attribute['value'] ) ? (string) $attribute['value'] : '';
-                $rationale = isset( $attribute['rationale'] ) ? (string) $attribute['rationale'] : '';
+                $name = isset($attribute['name']) ? (string) $attribute['name'] : '';
+                $value = isset($attribute['value']) ? (string) $attribute['value'] : '';
+                $rationale = isset($attribute['rationale']) ? (string) $attribute['rationale'] : '';
 
-                if ( '' === $name ) {
+                if ($name === '') {
                     continue;
                 }
 
                 $attributes[] = [
-                    'name'      => $name,
-                    'value'     => $value,
+                    'name' => $name,
+                    'value' => $value,
                     'rationale' => $rationale,
                 ];
             }
         }
 
         return [
-            'role'       => $role,
+            'role' => $role,
             'attributes' => $attributes,
-            'keyboard'   => $this->stringList( $output['keyboard'] ?? [] ),
-            'notes'      => $this->stringList( $output['notes'] ?? [] ),
+            'keyboard' => $this->stringList($output['keyboard'] ?? []),
+            'notes' => $this->stringList($output['notes'] ?? []),
         ];
     }
 
     /**
      * @since 2.2.0
      *
-     * @param  mixed  $value Raw list.
-     *
+     * @param  mixed  $value  Raw list.
      * @return array<int, string>
      */
-    protected function stringList( mixed $value ): array
+    protected function stringList(mixed $value): array
     {
-        if ( ! is_array( $value ) ) {
+        if (! is_array($value)) {
             return [];
         }
 
         $list = [];
 
-        foreach ( $value as $item ) {
-            if ( is_string( $item ) && '' !== trim( $item ) ) {
-                $list[] = trim( $item );
+        foreach ($value as $item) {
+            if (is_string($item) && trim($item) !== '') {
+                $list[] = trim($item);
             }
         }
 

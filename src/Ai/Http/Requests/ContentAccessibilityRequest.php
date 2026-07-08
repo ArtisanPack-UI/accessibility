@@ -3,13 +3,11 @@
 /**
  * FormRequest for the content-analysis JSON endpoint.
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace ArtisanPack\Accessibility\Ai\Http\Requests;
 
@@ -19,8 +17,6 @@ class ContentAccessibilityRequest extends FormRequest
 {
     /**
      * @since 2.2.0
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -35,8 +31,8 @@ class ContentAccessibilityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content'   => [ 'required', 'string' ],
-            'structure' => [ 'sometimes', 'array' ],
+            'content' => ['required', 'string'],
+            'structure' => ['sometimes', 'array'],
         ];
     }
 }

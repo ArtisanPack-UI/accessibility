@@ -3,13 +3,11 @@
 /**
  * FormRequest for the ARIA-suggestion JSON endpoint.
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace ArtisanPack\Accessibility\Ai\Http\Requests;
 
@@ -19,8 +17,6 @@ class AriaSuggestionRequest extends FormRequest
 {
     /**
      * @since 2.2.0
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -35,10 +31,10 @@ class AriaSuggestionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'markup'        => [ 'required', 'string' ],
-            'behavior'      => [ 'required', 'string' ],
-            'framework'     => [ 'sometimes', 'string' ],
-            'existing_aria' => [ 'sometimes', 'array' ],
+            'markup' => ['required', 'string'],
+            'behavior' => ['required', 'string'],
+            'framework' => ['sometimes', 'string'],
+            'existing_aria' => ['sometimes', 'array'],
         ];
     }
 }

@@ -3,13 +3,11 @@
 /**
  * Color-contrast explanation JSON endpoint.
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace ArtisanPack\Accessibility\Ai\Http\Controllers;
 
@@ -23,8 +21,6 @@ use Illuminate\Routing\Controller;
  * Thin controller that adapts the
  * {@see ColorContrastExplanationAgent} to a JSON endpoint.
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
@@ -36,16 +32,14 @@ class ColorContrastExplanationController extends Controller
      * @since 2.2.0
      *
      * @param  ColorContrastExplanationRequest  $request  Validated request.
-     *
-     * @return JsonResponse
      */
-    public function __invoke( ColorContrastExplanationRequest $request ): JsonResponse
+    public function __invoke(ColorContrastExplanationRequest $request): JsonResponse
     {
         $payload = $request->validated();
 
         return $this->runAgent(
-            fn (): array => ColorContrastExplanationAgent::for( $payload )->run(),
-            __( 'Failed to explain contrast failure.' ),
+            fn (): array => ColorContrastExplanationAgent::for($payload)->run(),
+            __('Failed to explain contrast failure.'),
         );
     }
 }

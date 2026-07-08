@@ -64,7 +64,7 @@ function surfaceEnableFeature(string $key): void
 {
     $registry = app(FeatureRegistry::class);
 
-    if (null === $registry->get($key)) {
+    if ($registry->get($key) === null) {
         $registry->register($key, match ($key) {
             'a11y.content_analysis' => ContentAccessibilityAgent::class,
             'a11y.aria_suggestion' => AriaSuggestionAgent::class,
@@ -145,7 +145,8 @@ it('surfaces the friendly message when credentials are missing', function (): vo
 
 it('collapses prompter-transport FeatureErrors to a generic message', function (): void {
     surfaceEnableFeature('a11y.aria_suggestion');
-    $throwing = new class implements AgentPrompter {
+    $throwing = new class implements AgentPrompter
+    {
         public function prompt(
             Credentials $credentials,
             string $model,

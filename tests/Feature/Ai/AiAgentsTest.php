@@ -60,7 +60,7 @@ function enableFeature(string $key): void
 {
     $registry = app(FeatureRegistry::class);
 
-    if (null === $registry->get($key)) {
+    if ($registry->get($key) === null) {
         // Not auto-discovered in this Testbench context; register manually.
         $registry->register($key, match ($key) {
             'a11y.content_analysis' => ContentAccessibilityAgent::class,

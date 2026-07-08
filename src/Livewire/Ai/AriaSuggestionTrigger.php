@@ -3,13 +3,11 @@
 /**
  * Livewire trigger for the AriaSuggestionAgent.
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace ArtisanPack\Accessibility\Livewire\Ai;
 
@@ -24,8 +22,6 @@ use Throwable;
  * concrete ARIA recommendation via {@see AriaSuggestionAgent}. Aimed at
  * developer-facing tooling (docs generators, component reviewers).
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
@@ -35,22 +31,16 @@ class AriaSuggestionTrigger extends Component
 
     /**
      * @since 2.2.0
-     *
-     * @var string
      */
     public string $markup = '';
 
     /**
      * @since 2.2.0
-     *
-     * @var string
      */
     public string $behavior = '';
 
     /**
      * @since 2.2.0
-     *
-     * @var string
      */
     public string $framework = '';
 
@@ -65,45 +55,39 @@ class AriaSuggestionTrigger extends Component
 
     /**
      * @since 2.2.0
-     *
-     * @var string
      */
     public string $error = '';
 
     /**
      * @since 2.2.0
-     *
-     * @return void
      */
     public function suggest(): void
     {
         $this->suggestion = null;
-        $this->error      = '';
+        $this->error = '';
 
-        $this->validate( [
-            'markup'    => 'required|string',
-            'behavior'  => 'required|string',
+        $this->validate([
+            'markup' => 'required|string',
+            'behavior' => 'required|string',
             'framework' => 'nullable|string',
-        ] );
+        ]);
 
         try {
-            $this->suggestion = AriaSuggestionAgent::for( [
-                'markup'    => $this->markup,
-                'behavior'  => $this->behavior,
+            $this->suggestion = AriaSuggestionAgent::for([
+                'markup' => $this->markup,
+                'behavior' => $this->behavior,
                 'framework' => $this->framework,
-            ] )->run();
-        } catch ( Throwable $e ) {
-            $this->error = $this->errorMessageForAgentException( $e, __( 'ARIA suggestion' ) );
+            ])->run();
+        } catch (Throwable $e) {
+            $this->error = $this->errorMessageForAgentException($e, __('ARIA suggestion'));
         }
     }
 
     /**
      * @since 2.2.0
-     *
-     * @return View
      */
     public function render(): View
     {
-        return view( 'accessibility::livewire.ai.aria-suggestion-trigger' );
+        return view('accessibility::livewire.ai.aria-suggestion-trigger');
     }
 }

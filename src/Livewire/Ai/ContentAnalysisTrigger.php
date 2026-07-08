@@ -3,13 +3,11 @@
 /**
  * Livewire trigger for the ContentAccessibilityAgent.
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace ArtisanPack\Accessibility\Livewire\Ai;
 
@@ -28,8 +26,6 @@ use Throwable;
  * and caching apply whether the agent is invoked from Livewire, the
  * JSON API, or a downstream package.
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
@@ -41,8 +37,6 @@ class ContentAnalysisTrigger extends Component
      * Author-supplied content to analyze.
      *
      * @since 2.2.0
-     *
-     * @var string
      */
     public string $content = '';
 
@@ -59,8 +53,6 @@ class ContentAnalysisTrigger extends Component
      * Message shown when a run fails.
      *
      * @since 2.2.0
-     *
-     * @var string
      */
     public string $error = '';
 
@@ -68,8 +60,6 @@ class ContentAnalysisTrigger extends Component
      * Whether the last run finished without any issues.
      *
      * @since 2.2.0
-     *
-     * @var bool
      */
     public bool $ran = false;
 
@@ -77,34 +67,30 @@ class ContentAnalysisTrigger extends Component
      * Run the agent.
      *
      * @since 2.2.0
-     *
-     * @return void
      */
     public function analyze(): void
     {
         $this->issues = [];
-        $this->error  = '';
-        $this->ran    = false;
+        $this->error = '';
+        $this->ran = false;
 
-        $this->validate( [ 'content' => 'required|string' ] );
+        $this->validate(['content' => 'required|string']);
 
         try {
-            $output = ContentAccessibilityAgent::for( [ 'content' => $this->content ] )->run();
+            $output = ContentAccessibilityAgent::for(['content' => $this->content])->run();
 
             $this->issues = $output['issues'] ?? [];
-            $this->ran    = true;
-        } catch ( Throwable $e ) {
-            $this->error = $this->errorMessageForAgentException( $e, __( 'AI content analysis' ) );
+            $this->ran = true;
+        } catch (Throwable $e) {
+            $this->error = $this->errorMessageForAgentException($e, __('AI content analysis'));
         }
     }
 
     /**
      * @since 2.2.0
-     *
-     * @return View
      */
     public function render(): View
     {
-        return view( 'accessibility::livewire.ai.content-analysis-trigger' );
+        return view('accessibility::livewire.ai.content-analysis-trigger');
     }
 }

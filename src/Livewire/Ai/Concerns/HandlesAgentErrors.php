@@ -3,13 +3,11 @@
 /**
  * Shared exception mapping for the AI Livewire trigger components.
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace ArtisanPack\Accessibility\Livewire\Ai\Concerns;
 
@@ -28,8 +26,6 @@ use Throwable;
  * collapse to a generic "provider unavailable" message and get
  * reported for observability instead of shown to the end user.
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
@@ -40,34 +36,32 @@ trait HandlesAgentErrors
      *
      * @since 2.2.0
      *
-     * @param  Throwable  $error         Exception raised by the agent run.
-     * @param  string     $featureLabel  Human-readable feature label (already translated).
-     *
-     * @return string
+     * @param  Throwable  $error  Exception raised by the agent run.
+     * @param  string  $featureLabel  Human-readable feature label (already translated).
      */
-    protected function errorMessageForAgentException( Throwable $error, string $featureLabel ): string
+    protected function errorMessageForAgentException(Throwable $error, string $featureLabel): string
     {
-        if ( $error instanceof FeatureDisabledException ) {
-            return __( ':feature is disabled for this site.', [ 'feature' => $featureLabel ] );
+        if ($error instanceof FeatureDisabledException) {
+            return __(':feature is disabled for this site.', ['feature' => $featureLabel]);
         }
 
-        if ( $error instanceof MissingCredentialsException ) {
-            return __( 'AI credentials are not configured.' );
+        if ($error instanceof MissingCredentialsException) {
+            return __('AI credentials are not configured.');
         }
 
-        if ( $error instanceof FeatureError ) {
-            if ( $this->isPrompterError( $error ) ) {
-                report( $error );
+        if ($error instanceof FeatureError) {
+            if ($this->isPrompterError($error)) {
+                report($error);
 
-                return __( 'The AI provider is currently unavailable.' );
+                return __('The AI provider is currently unavailable.');
             }
 
             return $error->getMessage();
         }
 
-        report( $error );
+        report($error);
 
-        return __( ':feature failed. Please try again.', [ 'feature' => $featureLabel ] );
+        return __(':feature failed. Please try again.', ['feature' => $featureLabel]);
     }
 
     /**
@@ -80,11 +74,9 @@ trait HandlesAgentErrors
      * @since 2.2.0
      *
      * @param  FeatureError  $error  Exception under inspection.
-     *
-     * @return bool
      */
-    protected function isPrompterError( FeatureError $error ): bool
+    protected function isPrompterError(FeatureError $error): bool
     {
-        return str_contains( $error->getMessage(), 'AI feature "(prompter)"' );
+        return str_contains($error->getMessage(), 'AI feature "(prompter)"');
     }
 }

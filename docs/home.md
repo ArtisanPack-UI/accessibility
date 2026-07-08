@@ -13,6 +13,7 @@ Complete guides to help you get started and effectively use the package:
 - [Getting Started](Guides-Getting-Started): Installation and basic setup instructions
 - [Usage Guide](Guides-Usage): Detailed examples of how to use the package's features
 - [Artisan Commands](Commands): Using CLI to audit colors and generate palettes
+- [AI Features](Guides-Ai-Features): AI-powered content analysis, ARIA suggestion, and contrast explanation (2.2.0+)
 
 ### [Reference](Reference)
 Comprehensive technical documentation and references:
@@ -32,6 +33,7 @@ The ArtisanPack UI Accessibility package provides tools for ensuring your web ap
 3. **Tailwind CSS Integration**: Support for Tailwind CSS color names
 4. **User Accessibility Settings**: Manage user preferences for accessibility features
 5. **Laravel Integration**: Seamless integration with Laravel applications
+6. **AI-Powered Accessibility Agents** (2.2.0+): Content-level issue analysis, ARIA attribute suggestion, and plain-language contrast-failure explanation — with in-package Livewire, React, and Vue trigger surfaces.
 
 ## Quick Start
 

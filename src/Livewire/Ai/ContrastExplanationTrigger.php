@@ -3,13 +3,11 @@
 /**
  * Livewire trigger for the ColorContrastExplanationAgent.
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace ArtisanPack\Accessibility\Livewire\Ai;
 
@@ -24,8 +22,6 @@ use Throwable;
  * explanation and a set of accessible alternatives via
  * {@see ColorContrastExplanationAgent}.
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
@@ -35,15 +31,11 @@ class ContrastExplanationTrigger extends Component
 
     /**
      * @since 2.2.0
-     *
-     * @var string
      */
     public string $foreground = '#777777';
 
     /**
      * @since 2.2.0
-     *
-     * @var string
      */
     public string $background = '#ffffff';
 
@@ -51,8 +43,6 @@ class ContrastExplanationTrigger extends Component
      * WCAG usage context (`body_text`, `large_text`, `ui`).
      *
      * @since 2.2.0
-     *
-     * @var string
      */
     public string $context = 'body_text';
 
@@ -67,45 +57,39 @@ class ContrastExplanationTrigger extends Component
 
     /**
      * @since 2.2.0
-     *
-     * @var string
      */
     public string $error = '';
 
     /**
      * @since 2.2.0
-     *
-     * @return void
      */
     public function explain(): void
     {
         $this->result = null;
-        $this->error  = '';
+        $this->error = '';
 
-        $this->validate( [
+        $this->validate([
             'foreground' => 'required|string',
             'background' => 'required|string',
-            'context'    => 'required|string|in:body_text,large_text,ui',
-        ] );
+            'context' => 'required|string|in:body_text,large_text,ui',
+        ]);
 
         try {
-            $this->result = ColorContrastExplanationAgent::for( [
+            $this->result = ColorContrastExplanationAgent::for([
                 'foreground' => $this->foreground,
                 'background' => $this->background,
-                'context'    => $this->context,
-            ] )->run();
-        } catch ( Throwable $e ) {
-            $this->error = $this->errorMessageForAgentException( $e, __( 'AI contrast explanation' ) );
+                'context' => $this->context,
+            ])->run();
+        } catch (Throwable $e) {
+            $this->error = $this->errorMessageForAgentException($e, __('AI contrast explanation'));
         }
     }
 
     /**
      * @since 2.2.0
-     *
-     * @return View
      */
     public function render(): View
     {
-        return view( 'accessibility::livewire.ai.contrast-explanation-trigger' );
+        return view('accessibility::livewire.ai.contrast-explanation-trigger');
     }
 }

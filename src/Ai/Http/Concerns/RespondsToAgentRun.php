@@ -3,13 +3,11 @@
 /**
  * Shared exception → JsonResponse mapping for the AI HTTP controllers.
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace ArtisanPack\Accessibility\Ai\Http\Concerns;
 
@@ -30,8 +28,6 @@ use Throwable;
  * problem, so they map to 502 with a generic message that does not leak
  * provider identity or HTTP status codes to callers.
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
@@ -43,36 +39,34 @@ trait RespondsToAgentRun
      *
      * @since 2.2.0
      *
-     * @param  callable  $run              Callable returning the agent's structured output.
-     * @param  string    $fallbackMessage  Message used for unexpected exceptions and reported provider transport failures.
-     *
-     * @return JsonResponse
+     * @param  callable  $run  Callable returning the agent's structured output.
+     * @param  string  $fallbackMessage  Message used for unexpected exceptions and reported provider transport failures.
      */
-    protected function runAgent( callable $run, string $fallbackMessage ): JsonResponse
+    protected function runAgent(callable $run, string $fallbackMessage): JsonResponse
     {
         try {
             $output = $run();
 
-            return new JsonResponse( [ 'data' => $output ] );
-        } catch ( FeatureDisabledException $e ) {
-            return new JsonResponse( [ 'error' => $e->getMessage() ], 403 );
-        } catch ( MissingCredentialsException $e ) {
-            return new JsonResponse( [ 'error' => $e->getMessage() ], 503 );
-        } catch ( FeatureError $e ) {
-            if ( $this->isPrompterError( $e ) ) {
-                report( $e );
+            return new JsonResponse(['data' => $output]);
+        } catch (FeatureDisabledException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 403);
+        } catch (MissingCredentialsException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 503);
+        } catch (FeatureError $e) {
+            if ($this->isPrompterError($e)) {
+                report($e);
 
                 return new JsonResponse(
-                    [ 'error' => __( 'The AI provider is currently unavailable.' ) ],
+                    ['error' => __('The AI provider is currently unavailable.')],
                     502,
                 );
             }
 
-            return new JsonResponse( [ 'error' => $e->getMessage() ], 422 );
-        } catch ( Throwable $e ) {
-            report( $e );
+            return new JsonResponse(['error' => $e->getMessage()], 422);
+        } catch (Throwable $e) {
+            report($e);
 
-            return new JsonResponse( [ 'error' => $fallbackMessage ], 500 );
+            return new JsonResponse(['error' => $fallbackMessage], 500);
         }
     }
 
@@ -88,11 +82,9 @@ trait RespondsToAgentRun
      * @since 2.2.0
      *
      * @param  FeatureError  $error  Exception under inspection.
-     *
-     * @return bool
      */
-    protected function isPrompterError( FeatureError $error ): bool
+    protected function isPrompterError(FeatureError $error): bool
     {
-        return str_contains( $error->getMessage(), 'AI feature "(prompter)"' );
+        return str_contains($error->getMessage(), 'AI feature "(prompter)"');
     }
 }

@@ -3,13 +3,11 @@
 /**
  * Content accessibility agent.
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace ArtisanPack\Accessibility\Ai\Agents;
 
@@ -52,8 +50,6 @@ use ArtisanPackUI\Ai\Exceptions\FeatureError;
  * }
  * ```
  *
- * @package    ArtisanPack_UI
- * @subpackage Accessibility
  *
  * @since      2.2.0
  */
@@ -112,24 +108,24 @@ PROMPT;
     public function outputSchema(): array
     {
         return [
-            'type'                 => 'object',
+            'type' => 'object',
             'additionalProperties' => false,
-            'required'             => [ 'issues' ],
-            'properties'           => [
+            'required' => ['issues'],
+            'properties' => [
                 'issues' => [
-                    'type'  => 'array',
+                    'type' => 'array',
                     'items' => [
-                        'type'                 => 'object',
+                        'type' => 'object',
                         'additionalProperties' => false,
-                        'required'             => [ 'location', 'issue_type', 'severity', 'suggested_fix' ],
-                        'properties'           => [
-                            'location'      => [ 'type' => 'string' ],
-                            'issue_type'    => [ 'type' => 'string' ],
-                            'severity'      => [
+                        'required' => ['location', 'issue_type', 'severity', 'suggested_fix'],
+                        'properties' => [
+                            'location' => ['type' => 'string'],
+                            'issue_type' => ['type' => 'string'],
+                            'severity' => [
                                 'type' => 'string',
-                                'enum' => [ 'info', 'warning', 'error' ],
+                                'enum' => ['info', 'warning', 'error'],
                             ],
-                            'suggested_fix' => [ 'type' => 'string' ],
+                            'suggested_fix' => ['type' => 'string'],
                         ],
                     ],
                 ],
@@ -140,24 +136,24 @@ PROMPT;
     /**
      * {@inheritDoc}
      */
-    protected function execute( Credentials $credentials, string $model, string $instructions ): array
+    protected function execute(Credentials $credentials, string $model, string $instructions): array
     {
-        $normalized = $this->normalizeInput( $this->input() );
+        $normalized = $this->normalizeInput($this->input());
 
-        $prompter = app( AgentPrompter::class );
+        $prompter = app(AgentPrompter::class);
 
         $result = $prompter->prompt(
             credentials: $credentials,
             model: $model,
             instructions: $instructions,
-            message: $this->buildMessage( $normalized ),
+            message: $this->buildMessage($normalized),
             outputSchema: $this->outputSchema(),
         );
 
         return [
-            'output'        => $this->validateOutput( $result['output'] ),
-            'input_tokens'  => (int) ( $result['input_tokens'] ?? 0 ),
-            'output_tokens' => (int) ( $result['output_tokens'] ?? 0 ),
+            'output' => $this->validateOutput($result['output']),
+            'input_tokens' => (int) ($result['input_tokens'] ?? 0),
+            'output_tokens' => (int) ($result['output_tokens'] ?? 0),
         ];
     }
 
@@ -165,36 +161,35 @@ PROMPT;
      * @since 2.2.0
      *
      * @param  mixed  $input  Raw input.
-     *
      * @return array{ content: string, structure: array<string, mixed> }
      */
-    protected function normalizeInput( mixed $input ): array
+    protected function normalizeInput(mixed $input): array
     {
-        if ( ! is_array( $input ) ) {
+        if (! is_array($input)) {
             throw FeatureError::forFeature(
                 $this->featureKey,
                 'input must be an array with a `content` key.',
             );
         }
 
-        $content = isset( $input['content'] ) && is_string( $input['content'] ) ? $input['content'] : '';
+        $content = isset($input['content']) && is_string($input['content']) ? $input['content'] : '';
 
-        if ( '' === trim( $content ) ) {
-            throw FeatureError::forFeature( $this->featureKey, '`content` must be a non-empty string.' );
+        if (trim($content) === '') {
+            throw FeatureError::forFeature($this->featureKey, '`content` must be a non-empty string.');
         }
 
         $structure = [];
 
-        if ( isset( $input['structure'] ) && is_array( $input['structure'] ) ) {
-            foreach ( [ 'headings', 'links', 'images' ] as $key ) {
-                if ( isset( $input['structure'][ $key ] ) && is_array( $input['structure'][ $key ] ) ) {
-                    $structure[ $key ] = array_values( $input['structure'][ $key ] );
+        if (isset($input['structure']) && is_array($input['structure'])) {
+            foreach (['headings', 'links', 'images'] as $key) {
+                if (isset($input['structure'][$key]) && is_array($input['structure'][$key])) {
+                    $structure[$key] = array_values($input['structure'][$key]);
                 }
             }
         }
 
         return [
-            'content'   => $content,
+            'content' => $content,
             'structure' => $structure,
         ];
     }
@@ -202,18 +197,17 @@ PROMPT;
     /**
      * @since 2.2.0
      *
-     * @param  array{ content: string, structure: array<string, mixed> }  $normalized Normalized input.
-     *
+     * @param  array{ content: string, structure: array<string, mixed> }  $normalized  Normalized input.
      * @return array<int, array<string, string>>
      */
-    protected function buildMessage( array $normalized ): array
+    protected function buildMessage(array $normalized): array
     {
         $parts = [];
 
-        if ( [] !== $normalized['structure'] ) {
+        if ($normalized['structure'] !== []) {
             $parts[] = [
                 'type' => 'text',
-                'text' => "Structural summary (JSON):\n" . json_encode(
+                'text' => "Structural summary (JSON):\n".json_encode(
                     $normalized['structure'],
                     JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT,
                 ),
@@ -222,7 +216,7 @@ PROMPT;
 
         $parts[] = [
             'type' => 'text',
-            'text' => "Content:\n" . $normalized['content'],
+            'text' => "Content:\n".$normalized['content'],
         ];
 
         return $parts;
@@ -231,42 +225,41 @@ PROMPT;
     /**
      * @since 2.2.0
      *
-     * @param  array<string, mixed>  $output Decoded model output.
-     *
+     * @param  array<string, mixed>  $output  Decoded model output.
      * @return array{ issues: array<int, array{location: string, issue_type: string, severity: string, suggested_fix: string}> }
      */
-    protected function validateOutput( array $output ): array
+    protected function validateOutput(array $output): array
     {
         $issues = [];
 
-        if ( isset( $output['issues'] ) && is_array( $output['issues'] ) ) {
-            foreach ( $output['issues'] as $issue ) {
-                if ( ! is_array( $issue ) ) {
+        if (isset($output['issues']) && is_array($output['issues'])) {
+            foreach ($output['issues'] as $issue) {
+                if (! is_array($issue)) {
                     continue;
                 }
 
-                $location     = isset( $issue['location'] ) ? (string) $issue['location'] : '';
-                $issueType    = isset( $issue['issue_type'] ) ? (string) $issue['issue_type'] : '';
-                $severity     = isset( $issue['severity'] ) ? (string) $issue['severity'] : 'warning';
-                $suggestedFix = isset( $issue['suggested_fix'] ) ? (string) $issue['suggested_fix'] : '';
+                $location = isset($issue['location']) ? (string) $issue['location'] : '';
+                $issueType = isset($issue['issue_type']) ? (string) $issue['issue_type'] : '';
+                $severity = isset($issue['severity']) ? (string) $issue['severity'] : 'warning';
+                $suggestedFix = isset($issue['suggested_fix']) ? (string) $issue['suggested_fix'] : '';
 
-                if ( ! in_array( $severity, [ 'info', 'warning', 'error' ], true ) ) {
+                if (! in_array($severity, ['info', 'warning', 'error'], true)) {
                     $severity = 'warning';
                 }
 
-                if ( '' === $location || '' === $issueType ) {
+                if ($location === '' || $issueType === '') {
                     continue;
                 }
 
                 $issues[] = [
-                    'location'      => $location,
-                    'issue_type'    => $issueType,
-                    'severity'      => $severity,
+                    'location' => $location,
+                    'issue_type' => $issueType,
+                    'severity' => $severity,
                     'suggested_fix' => $suggestedFix,
                 ];
             }
         }
 
-        return [ 'issues' => $issues ];
+        return ['issues' => $issues];
     }
 }

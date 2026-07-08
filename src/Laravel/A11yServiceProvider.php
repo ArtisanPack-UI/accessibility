@@ -146,22 +146,22 @@ class A11yServiceProvider extends ServiceProvider
         }
 
         return [
-            'a11y.content_analysis'     => [
-                'agent'       => ContentAccessibilityAgent::class,
-                'package'     => 'artisanpack-ui/accessibility',
-                'label'       => 'Content accessibility analysis',
+            'a11y.content_analysis' => [
+                'agent' => ContentAccessibilityAgent::class,
+                'package' => 'artisanpack-ui/accessibility',
+                'label' => 'Content accessibility analysis',
                 'description' => 'Finds content-level accessibility issues (ambiguous link text, vague headings, undefined jargon) that static rules miss.',
             ],
-            'a11y.aria_suggestion'      => [
-                'agent'       => AriaSuggestionAgent::class,
-                'package'     => 'artisanpack-ui/accessibility',
-                'label'       => 'ARIA attribute suggestion',
+            'a11y.aria_suggestion' => [
+                'agent' => AriaSuggestionAgent::class,
+                'package' => 'artisanpack-ui/accessibility',
+                'label' => 'ARIA attribute suggestion',
                 'description' => 'Given a custom component\'s markup and behavior, suggests appropriate ARIA roles, states, and properties.',
             ],
             'a11y.contrast_explanation' => [
-                'agent'       => ColorContrastExplanationAgent::class,
-                'package'     => 'artisanpack-ui/accessibility',
-                'label'       => 'Contrast failure explanation',
+                'agent' => ColorContrastExplanationAgent::class,
+                'package' => 'artisanpack-ui/accessibility',
+                'label' => 'Contrast failure explanation',
                 'description' => 'Explains in plain language why a color pair fails contrast and suggests alternatives that preserve brand intent.',
             ],
         ];
