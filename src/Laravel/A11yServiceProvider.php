@@ -10,6 +10,9 @@
 
 namespace ArtisanPack\Accessibility\Laravel;
 
+use ArtisanPack\Accessibility\Ai\Agents\AriaSuggestionAgent;
+use ArtisanPack\Accessibility\Ai\Agents\ColorContrastExplanationAgent;
+use ArtisanPack\Accessibility\Ai\Agents\ContentAccessibilityAgent;
 use ArtisanPack\Accessibility\Console\AuditColorsCommand;
 use ArtisanPack\Accessibility\Console\GeneratePaletteCommand;
 use ArtisanPack\Accessibility\Core\A11y;
@@ -19,6 +22,9 @@ use ArtisanPack\Accessibility\Core\Contracts\Config;
 use ArtisanPack\Accessibility\Core\Performance\BatchProcessor;
 use ArtisanPack\Accessibility\Events\ColorContrastChecked;
 use ArtisanPack\Accessibility\Listeners\LogColorContrastCheck;
+use ArtisanPack\Accessibility\Livewire\Ai\AriaSuggestionTrigger;
+use ArtisanPack\Accessibility\Livewire\Ai\ContentAnalysisTrigger;
+use ArtisanPack\Accessibility\Livewire\Ai\ContrastExplanationTrigger;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -116,6 +122,73 @@ class A11yServiceProvider extends ServiceProvider
                 $this->app['events']->listen($event, $listener);
             }
         }
+
+        $this->registerAiLivewireComponents();
+    }
+
+    /**
+     * AI features contributed by this package, discovered by
+     * `artisanpack-ui/ai` at boot via its `aiFeatures()` convention.
+     *
+     * Each feature is toggle-able independently and no-ops when the
+     * toggle is off — the trigger UIs shipped with this package all
+     * surface the resulting `FeatureDisabledException` as a friendly
+     * error message.
+     *
+     * @since 2.2.0
+     *
+     * @return array<string, array{agent: class-string, package: string, label: string, description: string}>
+     */
+    public function aiFeatures(): array
+    {
+        if (! class_exists(\ArtisanPackUI\Ai\Agents\ArtisanPackAgent::class)) {
+            return [];
+        }
+
+        return [
+            'a11y.content_analysis'     => [
+                'agent'       => ContentAccessibilityAgent::class,
+                'package'     => 'artisanpack-ui/accessibility',
+                'label'       => 'Content accessibility analysis',
+                'description' => 'Finds content-level accessibility issues (ambiguous link text, vague headings, undefined jargon) that static rules miss.',
+            ],
+            'a11y.aria_suggestion'      => [
+                'agent'       => AriaSuggestionAgent::class,
+                'package'     => 'artisanpack-ui/accessibility',
+                'label'       => 'ARIA attribute suggestion',
+                'description' => 'Given a custom component\'s markup and behavior, suggests appropriate ARIA roles, states, and properties.',
+            ],
+            'a11y.contrast_explanation' => [
+                'agent'       => ColorContrastExplanationAgent::class,
+                'package'     => 'artisanpack-ui/accessibility',
+                'label'       => 'Contrast failure explanation',
+                'description' => 'Explains in plain language why a color pair fails contrast and suggests alternatives that preserve brand intent.',
+            ],
+        ];
+    }
+
+    /**
+     * Register the Livewire trigger surfaces if Livewire is installed.
+     *
+     * Skipped silently when `livewire/livewire` is not available so the
+     * package still installs in non-Livewire apps that consume the
+     * agents via the JSON endpoints or the React/Vue components.
+     *
+     * @since 2.2.0
+     */
+    protected function registerAiLivewireComponents(): void
+    {
+        if (! class_exists(\Livewire\Livewire::class)) {
+            return;
+        }
+
+        if (! class_exists(\ArtisanPackUI\Ai\Agents\ArtisanPackAgent::class)) {
+            return;
+        }
+
+        \Livewire\Livewire::component('a11y-ai-content-analysis', ContentAnalysisTrigger::class);
+        \Livewire\Livewire::component('a11y-ai-aria-suggestion', AriaSuggestionTrigger::class);
+        \Livewire\Livewire::component('a11y-ai-contrast-explanation', ContrastExplanationTrigger::class);
     }
 
     /**
