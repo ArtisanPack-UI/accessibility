@@ -3,7 +3,7 @@
   "description": "A package for all accessibility functions for ArtisanPack UI.",
   "type": "library",
   "license": "MIT",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "autoload": {
     "psr-4": {
       "ArtisanPack\\Accessibility\\": "src/",
@@ -41,6 +41,7 @@
     "php": "^8.3",
     "artisanpack-ui/ai": "^1.0",
     "artisanpack-ui/core": "^1.0",
+    "artisanpack-ui/hooks": "^1.3",
     "illuminate/support": "^12.0|^13.0"
   },
   "suggest": {
