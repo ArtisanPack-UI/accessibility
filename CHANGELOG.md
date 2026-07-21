@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+## [2.3.0] - 2026-07-21
+
+This release joins the cross-package hooks standardization initiative. `artisanpack-ui/hooks` (`^1.3`) is now a hard dependency, and the color-contrast pipeline fires three filter hooks that let applications override the WCAG threshold, extend the Tailwind color map, and take a final say on the generated text color.
+
+### Added
+- New filter hook `ap.accessibility.contrastThreshold` — `(float $ratio, string $context)`. Fires inside `WcagValidator::checkContrast()` right before the ratio comparison, with the default WCAG threshold and a context string (`aa`, `aa-large`, `aaa`, `aaa-large`, `non-text`). Return a different float to bump every check globally (e.g. force AAA) without touching call sites.
+- New filter hook `ap.accessibility.contrastColorMap` — `(array $map)`. Fires the first time `AccessibleColorGenerator` loads its Tailwind name → hex map, allowing apps to register custom palette entries or replace the map entirely.
+- New filter hook `ap.accessibility.textColorGenerated` — `(string $color, string $bg, bool $tinted)`. Fires at every return path of `AccessibleColorGenerator::generateAccessibleTextColor()` (including cached results), giving apps an escape hatch to override the algorithm for specific backgrounds.
+
+### Changed
+- Added `artisanpack-ui/hooks: ^1.3` as a required dependency.
+
 ## [2.2.0] - 2026-07-08
 
 This release introduces AI-powered accessibility tooling on top of `artisanpack-ui/ai` v1.0. The three new agents — content-level issue analysis, ARIA attribute suggestion, and plain-language contrast-failure explanation — are delivered with framework surfaces for Livewire, React, and Vue that ship inside this package, so extending framework support does not require any changes to `@artisanpack-ui/react` or `@artisanpack-ui/vue`.

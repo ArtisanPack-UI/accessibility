@@ -89,6 +89,37 @@ Now you can easily create accessible buttons with any background color.
 
 For more detailed examples, including Livewire components and dynamic theming, see the [Real-World Examples](docs/examples.md) documentation.
 
+## Hooks
+
+This package ships with three filter hooks (via `artisanpack-ui/hooks`) that let applications customize the color-contrast pipeline without patching the package:
+
+| Hook                                     | Type   | Payload                                                | Purpose                                                                                                    |
+|------------------------------------------|--------|--------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
+| `ap.accessibility.contrastThreshold`     | filter | `(float $ratio, string $context)`                      | Override the default WCAG threshold. Context is one of `aa`, `aa-large`, `aaa`, `aaa-large`, `non-text`.   |
+| `ap.accessibility.contrastColorMap`      | filter | `(array $map)`                                         | Register custom Tailwind-name → hex mappings or replace the map entirely.                                  |
+| `ap.accessibility.textColorGenerated`    | filter | `(string $color, string $background, bool $tinted)`    | Take a final say on the generated text color. Useful for per-background overrides.                         |
+
+```php
+// Force AAA thresholds everywhere.
+addFilter('ap.accessibility.contrastThreshold', fn (float $ratio, string $context) => match ($context) {
+    'aa', 'aaa'             => 7.0,
+    'aa-large', 'aaa-large' => 4.5,
+    default                 => $ratio,
+});
+
+// Add brand colors that the Tailwind palette does not cover.
+addFilter('ap.accessibility.contrastColorMap', function (array $map) {
+    $map['brand-primary'] = '#123456';
+
+    return $map;
+});
+
+// Force a specific text color for a specific background.
+addFilter('ap.accessibility.textColorGenerated', function (string $color, string $background, bool $tinted) {
+    return $background === '#123456' ? '#fefefe' : $color;
+});
+```
+
 ## AI features
 
 When `artisanpack-ui/ai` v1.0+ is installed alongside this package, three AI-powered accessibility agents become available. Each is toggle-able through the shared `FeatureRegistry` and no-ops when the toggle is off.

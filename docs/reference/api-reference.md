@@ -197,6 +197,46 @@ Determines the best-contrasting text color. It can return either black or white,
 $textColor = generateAccessibleTextColor('#3b82f6'); // Returns '#000000' or '#FFFFFF'
 $tintedColor = generateAccessibleTextColor('#3b82f6', true); // Returns a tinted/shaded hex color
 ```
+## Filter Hooks (2.3.0+)
+
+Three filter hooks (fired via `artisanpack-ui/hooks`) let applications customize the color-contrast pipeline. See the [Hooks guide](Guides-Hooks) for narrative walkthroughs and registration examples.
+
+### `ap.accessibility.contrastThreshold`
+
+Fires inside `WcagValidator::checkContrast()` immediately before the ratio comparison.
+
+**Signature:** `(float $ratio, string $context): float`
+
+**Parameters:**
+- `$ratio` (float): The default WCAG threshold for the given context.
+- `$context` (string): One of `aa`, `aa-large`, `aaa`, `aaa-large`, `non-text`.
+
+**Returns:** The threshold (as a float) that `checkContrast()` should use.
+
+### `ap.accessibility.contrastColorMap`
+
+Fires the first time `AccessibleColorGenerator` loads its Tailwind name → hex map.
+
+**Signature:** `(array $map): array`
+
+**Parameters:**
+- `$map` (array<string, string>): The Tailwind color name → hex mapping.
+
+**Returns:** The map to use. Add entries to extend the palette or return a completely different map to replace it.
+
+### `ap.accessibility.textColorGenerated`
+
+Fires at every return path of `AccessibleColorGenerator::generateAccessibleTextColor()`, including cached results.
+
+**Signature:** `(string $color, string $background, bool $tinted): string`
+
+**Parameters:**
+- `$color` (string): The generated hex text color.
+- `$background` (string): The hex background color that was passed in.
+- `$tinted` (bool): Whether the tinted variant was requested.
+
+**Returns:** The final hex text color.
+
 ## AI Agents (2.2.0+)
 
 Three AI-powered agents built on top of `artisanpack-ui/ai` v1.0. See the [AI Features guide](Guides-Ai-Features) for prose walkthroughs, framework surfaces, and Sanctum setup.

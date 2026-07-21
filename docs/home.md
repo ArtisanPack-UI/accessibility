@@ -13,6 +13,7 @@ Complete guides to help you get started and effectively use the package:
 - [Getting Started](Guides-Getting-Started): Installation and basic setup instructions
 - [Usage Guide](Guides-Usage): Detailed examples of how to use the package's features
 - [Artisan Commands](Commands): Using CLI to audit colors and generate palettes
+- [Hooks](Guides-Hooks): Filter hooks for customizing the color-contrast pipeline (2.3.0+)
 - [AI Features](Guides-Ai-Features): AI-powered content analysis, ARIA suggestion, and contrast explanation (2.2.0+)
 
 ### [Reference](Reference)

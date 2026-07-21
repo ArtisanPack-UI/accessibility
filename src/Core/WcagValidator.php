@@ -55,25 +55,24 @@ class WcagValidator
         $this->_validateHexColor($color2);
 
         $ratio = $this->calculateContrastRatio($color1, $color2);
+        $normalizedLevel = strtolower($level);
 
-        if ($isLargeText) {
-            return match (strtoupper($level)) {
-                'AA' => $ratio >= 3,
-                'AAA' => $ratio >= 4.5,
-                'NON-TEXT' => $ratio >= 3,
-                default => false,
-            };
-        }
-
-        $result = match (strtoupper($level)) {
-            'AA' => $ratio >= 4.5,
-            'AAA' => $ratio >= 7,
-            'NON-TEXT' => $ratio >= 3,
-            default => false,
+        $defaultThreshold = match ($normalizedLevel) {
+            'aa' => $isLargeText ? 3.0 : 4.5,
+            'aaa' => $isLargeText ? 4.5 : 7.0,
+            'non-text' => 3.0,
+            default => INF,
         };
 
-        // Only dispatch the event if the Laravel event helper is available
-        if (function_exists('event')) {
+        $context = ($isLargeText && $normalizedLevel !== 'non-text')
+            ? "{$normalizedLevel}-large"
+            : $normalizedLevel;
+
+        $threshold = (float) Hooks::filter('ap.accessibility.contrastThreshold', $defaultThreshold, $context);
+
+        $result = $ratio >= $threshold;
+
+        if (! $isLargeText && function_exists('event')) {
             try {
                 event(new \ArtisanPack\Accessibility\Events\ColorContrastChecked($color1, $color2, $level, $isLargeText, $result));
             } catch (\Throwable $e) {

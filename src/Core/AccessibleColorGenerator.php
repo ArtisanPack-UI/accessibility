@@ -71,7 +71,7 @@ class AccessibleColorGenerator
         $hexColor = $this->getHexFromColorString($backgroundColor);
 
         if (! $hexColor) {
-            return '#000000';
+            return Hooks::filter('ap.accessibility.textColorGenerated', '#000000', $backgroundColor, $tint);
         }
 
         $cacheKey = $this->getCacheKey($hexColor, $tint, $level, $isLargeText);
@@ -80,7 +80,7 @@ class AccessibleColorGenerator
                 $this->dispatcher->dispatch(new CacheHit($cacheKey));
             }
 
-            return $this->cache->get($cacheKey);
+            return Hooks::filter('ap.accessibility.textColorGenerated', $this->cache->get($cacheKey), $hexColor, $tint);
         }
 
         if ($this->dispatcher) {
@@ -91,7 +91,7 @@ class AccessibleColorGenerator
             $result = $this->findClosestAccessibleShade($hexColor, $level, $isLargeText);
             $this->cache->set($cacheKey, $result);
 
-            return $result;
+            return Hooks::filter('ap.accessibility.textColorGenerated', $result, $hexColor, $tint);
         }
 
         $blackContrast = $this->wcagValidator->calculateContrastRatio($hexColor, '#000000');
@@ -100,7 +100,7 @@ class AccessibleColorGenerator
         $result = $blackContrast > $whiteContrast ? '#000000' : '#FFFFFF';
         $this->cache->set($cacheKey, $result);
 
-        return $result;
+        return Hooks::filter('ap.accessibility.textColorGenerated', $result, $hexColor, $tint);
     }
 
     public function getCacheKey(string $hexColor, bool $tint, string $level, bool $isLargeText): string
@@ -165,7 +165,9 @@ class AccessibleColorGenerator
 
         // Check if it's a known Tailwind color.
         if ($this->tailwindColors === null) {
-            $this->tailwindColors = require __DIR__.'/../../resources/tailwind-colors.php';
+            $map = require __DIR__.'/../../resources/tailwind-colors.php';
+            $filtered = Hooks::filter('ap.accessibility.contrastColorMap', $map);
+            $this->tailwindColors = is_array($filtered) ? $filtered : $map;
         }
 
         return $this->tailwindColors[$colorString] ?? null;
