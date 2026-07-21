@@ -23,6 +23,12 @@ Detailed examples and practical implementations of the package's features. This 
 - Practical examples for real-world scenarios
 - Advanced usage patterns
 
+### [Hooks](Guides-Hooks)
+Filter hooks (introduced in 2.3.0) that let applications customize the color-contrast pipeline without patching the package:
+- `ap.accessibility.contrastThreshold` — override the WCAG threshold globally
+- `ap.accessibility.contrastColorMap` — extend or replace the Tailwind color map
+- `ap.accessibility.textColorGenerated` — final say on generated text colors
+
 ### [AI Features](Guides-Ai-Features)
 AI-powered accessibility tooling introduced in 2.2.0, built on top of `artisanpack-ui/ai` v1.0:
 - Content-level accessibility analysis (`ContentAccessibilityAgent`)
